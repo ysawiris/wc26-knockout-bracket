@@ -1003,3 +1003,22 @@ nav, main, header, footer { position: relative; z-index: 1; }
 .rc-pcountry em { color: var(--text-faint); font-style: normal; }
 
 .rc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+
+/* ---------- Penalty shootout (BB5) ---------- */
+
+.bk-match.is-pk { border-color: var(--panel-edge-strong); box-shadow: 0 0 0 1px rgba(232, 196, 106, 0.18); }
+.bk-pens {
+  font-size: 0.64rem; font-weight: 800; letter-spacing: 0.03em;
+  color: #1a1206; background: var(--gold-grad); border-radius: 5px; padding: 1px 5px; margin-left: 4px;
+  vertical-align: middle;
+}
+.bk-pk-hint {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 11px; font-size: 0.7rem; letter-spacing: 0.02em;
+  color: var(--gold-2); border-top: 1px dashed var(--panel-edge);
+  background: rgba(232, 196, 106, 0.06);
+}
+.bk-pk-tag {
+  font-weight: 800; font-size: 0.6rem; letter-spacing: 0.05em;
+  color: #1a1206; background: var(--gold-grad); border-radius: 4px; padding: 2px 5px;
+}

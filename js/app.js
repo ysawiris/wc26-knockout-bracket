@@ -504,12 +504,45 @@
     }
   }
 
+  /* BB1: copy the exportable shared-bracket JSON to the clipboard, with a
+     legacy fallback for browsers without navigator.clipboard. */
+  function copyExport() {
+    var text = exportState();
+    var ok = function () { toast("Copied — commit to data/results.json"); };
+    var fail = function () { toast("Copy failed"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok, fail);
+      return;
+    }
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      var done = document.execCommand("copy");
+      document.body.removeChild(ta);
+      done ? ok() : fail();
+    } catch (e) { fail(); }
+  }
+
   /* ---------------- TAB: Bracket ---------------- */
 
   function renderBracket() {
     var host = document.getElementById("bracket-host");
     if (!host) return;
     host.textContent = "";
+
+    /* BB1: understated commissioner action — copy the shared bracket JSON to the
+       clipboard so it can be committed to data/results.json. */
+    var tools = el("div", "bk-tools");
+    var exportBtn = el("button", "sd-btn-ghost", "⬇ Export for the league");
+    exportBtn.setAttribute("type", "button");
+    exportBtn.addEventListener("click", copyExport);
+    tools.appendChild(exportBtn);
+    host.appendChild(tools);
 
     var owners = ownersByCountry(state);
     var rounds = buildBracket(state);
@@ -559,19 +592,30 @@
   function bracketMatchEl(mt, owners) {
     var node = el("div", "bk-match");
     node.setAttribute("data-match", mt.id);
+
+    /* BB5: both goals entered and EQUAL → the winner is a shootout result.
+       Scoring is unchanged (winner advances, both goals still count); we only
+       add the visual "decide on penalties" hint + a "(pens)" tag on the winner. */
+    var tied = typeof mt.homeGoals === "number" &&
+      typeof mt.awayGoals === "number" && mt.homeGoals === mt.awayGoals;
+    if (tied) node.classList.add("is-pk");
+
     [["home", "ga", "homeGoals"], ["away", "gb", "awayGoals"]].forEach(function (side) {
       var slot = mt[side[0]];
       var cid = slot.countryId;
       var row = el("div", "bk-side");
       var isWinner = mt.winnerId && mt.winnerId === cid;
+      var wonOnPens = tied && isWinner;
       if (cid) {
         row.setAttribute("data-pick", cid);
         row.setAttribute("role", "button");
         row.setAttribute("tabindex", "0");
         row.setAttribute("aria-pressed", isWinner ? "true" : "false");
         var team = TEAM_BY_ABBR[owners[cid]];
+        var act = tied ? " — decide on penalties (set shootout winner)" : " — set winner";
         row.setAttribute("aria-label",
-          (slot.name || "") + " — set winner" + (team ? " (drafted by " + team.name + ")" : ""));
+          (slot.name || "") + act + (wonOnPens ? " (won on penalties)" : "") +
+          (team ? " (drafted by " + team.name + ")" : ""));
       }
       if (isWinner) row.classList.add("win");
       if (mt.winnerId && cid && mt.winnerId !== cid) row.classList.add("lose");
@@ -580,13 +624,22 @@
       var goalLabel = slot.name ? slot.name + " goals" : "goals";
       row.innerHTML =
         '<span class="bk-flag">' + (slot.flag || "·") + "</span>" +
-        '<span class="bk-name">' + (slot.name ? esc(slot.name) : "TBD") + "</span>" +
+        '<span class="bk-name">' + (slot.name ? esc(slot.name) : "TBD") +
+          (wonOnPens ? ' <span class="bk-pens">(pens)</span>' : "") + "</span>" +
         (cid && owners[cid] ? ownerBadge(owners[cid]) : "") +
         '<input class="bk-score" type="number" min="0" inputmode="numeric" ' +
         'data-side="' + side[1] + '" value="' + (goalVal == null ? "" : goalVal) + '" ' +
         (cid ? "" : "disabled") + ' aria-label="' + esc(goalLabel) + '" />';
       node.appendChild(row);
     });
+
+    /* BB5: PK hint sits under the two sides whenever the score is level — it
+       tells the commissioner the winner tap is a shootout call. Once a winner
+       is set, surface it as "decided on penalties". */
+    if (tied) {
+      var pkLabel = mt.winnerId ? "PK · decided on penalties" : "PK · decide on penalties";
+      node.appendChild(el("div", "bk-pk-hint", '<span class="bk-pk-tag">PK</span>' + esc(pkLabel.slice(5))));
+    }
     return node;
   }
 
@@ -1181,6 +1234,20 @@
       /* Initial render is offline-safe — never blocks on Live.load(). */
       renderAll(null);
       setTab(activeTab, { noScroll: true });
+      /* BB1: pull the league's authoritative shared bracket. If it's newer than
+         local state, applyShared() overwrites the shared fields and we re-render
+         so the shared bracket shows. Silent on any failure (offline render stays). */
+      try {
+        fetch("data/results.json?cb=" + Date.now(), { cache: "no-store" })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (json) {
+            if (json && applyShared(json)) {
+              renderAll();
+              setTab(activeTab, { noScroll: true });
+            }
+          })
+          .catch(function () {});
+      } catch (e) { /* silent */ }
       /* Best-effort live overlay; failure leaves the offline render in place. */
       Live.load().then(function (data) { if (data) renderAll(data); }).catch(function () {});
     } catch (err) {

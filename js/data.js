@@ -88,6 +88,28 @@ var FIELD = [
 ];
 
 /* ------------------------------------------------------------
+   REAL DRAWN ROUND-OF-32 MATCHUPS (optional override).
+
+   Default null → the bracket falls back to the seed-based
+   serpentine pairing (seedSlots/firstRoundPairs: 1v32, 2v31, …).
+
+   To wire the ACTUAL drawn Round of 32, you ONLY edit this one
+   array. Fill it with 16 [homeCountryId, awayCountryId] pairs —
+   country ids from FIELD — in bracket order r32-1 .. r32-16
+   (top of bracket to bottom). When non-null, this replaces the
+   serpentine pairing entirely. Example shape:
+
+     var R32_PAIRINGS = [
+       ["ARG", "PAN"],   // r32-1
+       ["NED", "JPN"],   // r32-2
+       ...               // 14 more, 16 pairs total
+       ["FRA", "IRN"]    // r32-16
+     ];
+
+   Do NOT change FIELD/TEAMS/etc. to wire the draw — just this array. */
+var R32_PAIRINGS = null;
+
+/* ------------------------------------------------------------
    HISTORICAL SOURCE DATA — NOT SCORED.
 
    The original 12 group-stage groups (A–L) of the 2026 World Cup.
@@ -251,6 +273,16 @@ function seedSlots(n) {
    order, derived from the seed list above. A slot is null when no
    country carries that seed (only happens if FIELD is short). */
 function firstRoundPairs() {
+  /* BB6: when the REAL Round-of-32 draw is wired into R32_PAIRINGS (16 valid
+     [homeId, awayId] pairs), it takes precedence over the seed serpentine. */
+  if (R32_PAIRINGS && R32_PAIRINGS.length === FIELD.length / 2) {
+    var ok = R32_PAIRINGS.every(function (p) {
+      return p && p.length === 2 &&
+        (p[0] == null || COUNTRY_BY_ID[p[0]]) &&
+        (p[1] == null || COUNTRY_BY_ID[p[1]]);
+    });
+    if (ok) return R32_PAIRINGS.map(function (p) { return [p[0], p[1]]; });
+  }
   var bySeed = {};
   FIELD.forEach(function (t) { bySeed[t.seed] = t; });
   var order = seedSlots(FIELD.length);

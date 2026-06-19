@@ -1,0 +1,7 @@
+{
+  "_comment": "Authoritative SHARED bracket for the league. The commissioner enters results in the hub, taps 'Export for the league' on the Bracket tab, and commits the exported JSON here. Every device loads this over its local copy when this file is newer (updatedAt). Empty = no shared state yet; each device uses its own until a commit lands.",
+  "updatedAt": null,
+  "draftOrder": null,
+  "pickLog": null,
+  "results": null
+}

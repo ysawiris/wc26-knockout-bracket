@@ -32,8 +32,48 @@ function defaultState() {
     },
     draftOrder: TEAMS.map(function (t) { return t.abbr; }),
     pickLog: [],
-    results: {}
+    results: {},
+    updatedAt: 0
   };
+}
+
+/* Coerce an arbitrary value to an exact permutation of the 12 known team
+   abbrs: drop unknowns/dupes, then append any missing teams in default
+   order. If it can't be repaired to the full 12, fall back to default. */
+function repairDraftOrder(value) {
+  var def = defaultState();
+  if (!Array.isArray(value)) return def.draftOrder;
+  var seenAbbr = {};
+  var cleaned = [];
+  value.forEach(function (abbr) {
+    if (TEAM_BY_ABBR[abbr] && !seenAbbr[abbr]) {
+      seenAbbr[abbr] = true;
+      cleaned.push(abbr);
+    }
+  });
+  def.draftOrder.forEach(function (abbr) {
+    if (!seenAbbr[abbr]) {
+      seenAbbr[abbr] = true;
+      cleaned.push(abbr);
+    }
+  });
+  return cleaned.length === def.draftOrder.length ? cleaned : def.draftOrder;
+}
+
+/* Filter an arbitrary value to a de-duped list of countryIds that exist
+   in COUNTRY_BY_ID. Non-arrays yield []. */
+function filterPickLog(value) {
+  var pickLog = [];
+  if (Array.isArray(value)) {
+    var seenId = {};
+    value.forEach(function (id) {
+      if (COUNTRY_BY_ID[id] && !seenId[id]) {
+        seenId[id] = true;
+        pickLog.push(id);
+      }
+    });
+  }
+  return pickLog;
 }
 
 function loadState() {
@@ -44,41 +84,8 @@ function loadState() {
     var def = defaultState();
     var cfg = saved.config || {};
 
-    // Coerce saved.draftOrder to an exact permutation of the 12 known team
-    // abbrs: drop unknowns/dupes, then append any missing teams in default
-    // order. If it can't be repaired to the full 12, fall back to default.
-    var draftOrder;
-    if (Array.isArray(saved.draftOrder)) {
-      var seenAbbr = {};
-      var cleaned = [];
-      saved.draftOrder.forEach(function (abbr) {
-        if (TEAM_BY_ABBR[abbr] && !seenAbbr[abbr]) {
-          seenAbbr[abbr] = true;
-          cleaned.push(abbr);
-        }
-      });
-      def.draftOrder.forEach(function (abbr) {
-        if (!seenAbbr[abbr]) {
-          seenAbbr[abbr] = true;
-          cleaned.push(abbr);
-        }
-      });
-      draftOrder = cleaned.length === def.draftOrder.length ? cleaned : def.draftOrder;
-    } else {
-      draftOrder = def.draftOrder;
-    }
-
-    // Filter saved.pickLog to ids that exist in COUNTRY_BY_ID, de-duped.
-    var pickLog = [];
-    if (Array.isArray(saved.pickLog)) {
-      var seenId = {};
-      saved.pickLog.forEach(function (id) {
-        if (COUNTRY_BY_ID[id] && !seenId[id]) {
-          seenId[id] = true;
-          pickLog.push(id);
-        }
-      });
-    }
+    var draftOrder = repairDraftOrder(saved.draftOrder);
+    var pickLog = filterPickLog(saved.pickLog);
 
     return {
       config: {
@@ -89,7 +96,8 @@ function loadState() {
       },
       draftOrder: draftOrder,
       pickLog: pickLog,
-      results: saved.results && typeof saved.results === "object" ? saved.results : {}
+      results: saved.results && typeof saved.results === "object" ? saved.results : {},
+      updatedAt: typeof saved.updatedAt === "number" ? saved.updatedAt : 0
     };
   } catch (e) {
     return defaultState();
@@ -98,12 +106,61 @@ function loadState() {
 
 function saveState(state) {
   try {
+    state.updatedAt = Date.now();
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
   } catch (e) {
     /* private mode / quota — keep working in-memory */
   }
+}
+
+/* ---------- Shared league feed (data/results.json) ---------- */
+
+/* Merge an authoritative shared bracket into the current state when it is
+   strictly newer (by updatedAt). Overwrites only the SHARED fields present
+   in `shared` (draftOrder, pickLog, results), validated the same way
+   loadState validates them; keeps state.config; stamps state.updatedAt to
+   the shared timestamp; persists. Returns true if anything changed. */
+function applyShared(shared) {
+  if (!shared || typeof shared.updatedAt !== "number") return false;
+  var state = loadState();
+  if (shared.updatedAt <= (state.updatedAt || 0)) return false;
+
+  if (typeof shared.draftOrder !== "undefined") {
+    state.draftOrder = repairDraftOrder(shared.draftOrder);
+  }
+  if (typeof shared.pickLog !== "undefined") {
+    state.pickLog = filterPickLog(shared.pickLog);
+  }
+  if (typeof shared.results !== "undefined") {
+    state.results = shared.results && typeof shared.results === "object"
+      ? shared.results
+      : {};
+  }
+
+  state.updatedAt = shared.updatedAt;
+  // Persist without re-stamping updatedAt (preserve the shared timestamp).
+  try {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+  } catch (e) {
+    /* private mode / quota — keep working in-memory */
+  }
+  return true;
+}
+
+/* Pretty JSON string of the SHARED fields, stamped with the current time,
+   suitable to paste into data/results.json. */
+function exportState() {
+  var state = loadState();
+  return JSON.stringify({
+    updatedAt: Date.now(),
+    draftOrder: state.draftOrder,
+    pickLog: state.pickLog,
+    results: state.results
+  }, null, 2);
 }
 
 /* ---------- Draft selectors ---------- */
