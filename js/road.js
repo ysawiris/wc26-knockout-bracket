@@ -68,20 +68,28 @@
     var rounds = ctx.bracket.rounds || [];
     var playedOrd = 0; // furthest round this country appears in as a participant
     var alive = true;
+    var wonFurthest = false; // already won its furthest round (no points left there)
     rounds.forEach(function (round) {
       round.matches.forEach(function (mt) {
         var inMatch = (mt.home && mt.home.countryId === countryId) ||
           (mt.away && mt.away.countryId === countryId);
         if (!inMatch) return;
-        if (round.ordinal > playedOrd) playedOrd = round.ordinal;
+        if (round.ordinal > playedOrd) {
+          playedOrd = round.ordinal;
+          wonFurthest = mt.winnerId === countryId;
+        }
         if (mt.winnerId && mt.winnerId !== countryId) alive = false;
       });
     });
     if (!playedOrd || !alive) return 0;
-    /* Every round from the one it's currently in onward is still winnable. */
+    /* The furthest round's points are only on the table if it hasn't been won
+       yet; once won (e.g. champion winning the Final) that round banks 0 and
+       only strictly later rounds count. Everything after is still winnable. */
     var sum = 0;
     rounds.forEach(function (round) {
-      if (round.ordinal >= playedOrd) sum += (round.points || 0);
+      if (wonFurthest ? round.ordinal > playedOrd : round.ordinal >= playedOrd) {
+        sum += (round.points || 0);
+      }
     });
     return sum;
   }

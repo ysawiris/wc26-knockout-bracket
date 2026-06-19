@@ -43,6 +43,43 @@ function loadState() {
     var saved = JSON.parse(raw);
     var def = defaultState();
     var cfg = saved.config || {};
+
+    // Coerce saved.draftOrder to an exact permutation of the 12 known team
+    // abbrs: drop unknowns/dupes, then append any missing teams in default
+    // order. If it can't be repaired to the full 12, fall back to default.
+    var draftOrder;
+    if (Array.isArray(saved.draftOrder)) {
+      var seenAbbr = {};
+      var cleaned = [];
+      saved.draftOrder.forEach(function (abbr) {
+        if (TEAM_BY_ABBR[abbr] && !seenAbbr[abbr]) {
+          seenAbbr[abbr] = true;
+          cleaned.push(abbr);
+        }
+      });
+      def.draftOrder.forEach(function (abbr) {
+        if (!seenAbbr[abbr]) {
+          seenAbbr[abbr] = true;
+          cleaned.push(abbr);
+        }
+      });
+      draftOrder = cleaned.length === def.draftOrder.length ? cleaned : def.draftOrder;
+    } else {
+      draftOrder = def.draftOrder;
+    }
+
+    // Filter saved.pickLog to ids that exist in COUNTRY_BY_ID, de-duped.
+    var pickLog = [];
+    if (Array.isArray(saved.pickLog)) {
+      var seenId = {};
+      saved.pickLog.forEach(function (id) {
+        if (COUNTRY_BY_ID[id] && !seenId[id]) {
+          seenId[id] = true;
+          pickLog.push(id);
+        }
+      });
+    }
+
     return {
       config: {
         points: Object.assign({}, def.config.points, cfg.points || {}),
@@ -50,10 +87,8 @@ function loadState() {
           ? cfg.goalBonusPerGoal
           : def.config.goalBonusPerGoal
       },
-      draftOrder: Array.isArray(saved.draftOrder) && saved.draftOrder.length
-        ? saved.draftOrder
-        : def.draftOrder,
-      pickLog: Array.isArray(saved.pickLog) ? saved.pickLog : [],
+      draftOrder: draftOrder,
+      pickLog: pickLog,
       results: saved.results && typeof saved.results === "object" ? saved.results : {}
     };
   } catch (e) {
@@ -186,9 +221,25 @@ function buildBracket(state) {
       var ga = typeof res.ga === "number" ? res.ga : null;
       var gb = typeof res.gb === "number" ? res.gb : null;
 
-      // A stored winner only stands while both teams are present.
+      // Goal-attribution guard: a stored result is only valid while the
+      // match's slots still hold the same countries they did when the
+      // result was entered. If aId/bId were recorded (non-legacy) and they
+      // no longer match the current resolved slots, drop the stale goals.
+      // Missing aId/bId (legacy saved state) -> no change.
+      if (typeof res.aId !== "undefined" && typeof res.bId !== "undefined" &&
+          (res.aId !== aId || res.bId !== bId)) {
+        ga = null;
+        gb = null;
+      }
+
+      // A stored winner only stands while both teams are present, and (when
+      // aId/bId are present) while the slots still match the recorded teams.
       var winnerId = null;
-      if (res.winner && (res.winner === aId || res.winner === bId)) winnerId = res.winner;
+      if (res.winner && (res.winner === aId || res.winner === bId) &&
+          !(typeof res.aId !== "undefined" && typeof res.bId !== "undefined" &&
+            (res.aId !== aId || res.bId !== bId))) {
+        winnerId = res.winner;
+      }
 
       var winner = null;
       if (winnerId) winner = winnerId === aId ? "home" : "away";

@@ -9,10 +9,57 @@
   "use strict";
 
   var WAIT = "waiting for kickoff";
+  var SITE_URL = "https://ysawiris.github.io/wc26-knockout-bracket/";
+
+  /* The plain-text headlines from the most recent render, captured so the
+     "Copy today's wire" button can flatten them on click. The host is rebuilt
+     every render, so we lean on a single delegated document listener (below)
+     rather than per-render listeners. */
+  var lastWire = null;
 
   /* ---------------- small utils ---------------- */
 
   function plural(n, one, many) { return n === 1 ? one : many; }
+
+  /* Strip HTML tags and decode the few entities our headlines emit, for the
+     plain-text digest. */
+  function stripTags(html) {
+    return String(html)
+      .replace(/<[^>]*>/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&mdash;/g, "—");
+  }
+
+  /* Clipboard write with a graceful fallback (mirrors board-extras). */
+  function clipboardFallback(text) {
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok;
+      try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) resolve();
+      else reject(new Error("copy failed"));
+    });
+  }
+
+  function writeClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function () {
+        return clipboardFallback(text);
+      });
+    }
+    return clipboardFallback(text);
+  }
 
   function isFinished(fx) { return !!Live.FINISHED[fx.status]; }
   function isInPlay(fx) { return !!Live.INPLAY[fx.status]; }
@@ -193,11 +240,50 @@
 
   function headlinesHtml(ctx) {
     var lines = (ctx.started ? liveLines(ctx) : preseasonLines(ctx)).slice(0, 5);
+    // Stash the plain-text headlines so the copy button can flatten them.
+    lastWire = lines.map(stripTags);
     var items = lines.map(function (line) { return '<li class="st-line">' + line + "</li>"; }).join("");
     return '<section class="st-block">' +
       '<div class="st-head">📡 Wire Report</div>' +
       '<div class="st-headlines"><ul class="st-lines">' + items + "</ul></div>" +
+      '<div class="st-wire-actions">' +
+        '<button type="button" class="st-wire-copy" data-st-action="copy-wire" ' +
+          'aria-label="Copy today\'s wire report to your clipboard">📋 Copy today\'s wire</button>' +
+      "</div>" +
       "</section>";
+  }
+
+  /* Flatten the current headlines into a dated plain-text digest. */
+  function wireDigest() {
+    var lines = lastWire || [];
+    var date = new Date();
+    var stamp = date.getFullYear() + "-" +
+      ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+      ("0" + date.getDate()).slice(-2);
+    var out = ["📡 Wire Report — " + stamp];
+    lines.forEach(function (line) { if (line) out.push("• " + line); });
+    out.push("");
+    out.push(SITE_URL);
+    return out.join("\n");
+  }
+
+  /* Single delegated listener — the host is rebuilt every render, so we bind
+     once at module load rather than per render. */
+  function onWireClick(e) {
+    var btn = e.target.closest ? e.target.closest("[data-st-action='copy-wire']") : null;
+    if (!btn) return;
+    writeClipboard(wireDigest()).then(function () {
+      if (btn.getAttribute("data-flashing")) return;
+      btn.setAttribute("data-flashing", "1");
+      var original = btn.textContent;
+      btn.textContent = "Copied ✓";
+      btn.classList.add("is-copied");
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove("is-copied");
+        btn.removeAttribute("data-flashing");
+      }, 1600);
+    }).catch(function () {});
   }
 
   /* ---------------- record book ---------------- */
@@ -538,5 +624,6 @@
       "</div>";
   }
 
+  document.addEventListener("click", onWireClick);
   if (window.Hub) Hub.onRender(render);
 })();

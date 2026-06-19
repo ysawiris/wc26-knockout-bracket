@@ -96,7 +96,7 @@ button.mc-act {
 .mc-close { width: 28px; height: 28px; font-size: 0.85rem; }
 .mc-back:hover, .mc-close:hover { background: rgba(0, 0, 0, 0.5); color: var(--gold-1); }
 
-.mc-scroll { max-height: calc(100vh - 120px); overflow-y: auto; }
+.mc-scroll { max-height: calc(100vh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; }
 
 /* ---------------- hero ---------------- */
 

@@ -29,7 +29,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "lyko-v1";
+  var VERSION = "lyko-v2";
   var CACHE_NAME = "wc26-cache-" + VERSION;
   var CACHE_PREFIX = "wc26-cache-";
   var DATA_DIR_RE = /\/data\/[^/]+\.json$/;
@@ -57,6 +57,7 @@
     "css/recaps.css",
     "css/matchcenter.css",
     "js/data.js",
+    "js/store.js",
     "js/my-team.js",
     "js/schedule.js",
     "js/live.js",
@@ -72,6 +73,7 @@
     "js/alerts.js",
     "js/share-card.js",
     "js/recaps.js",
+    "js/xg.js",
     "js/matchcenter.js",
     "js/sw-register.js"
   ];

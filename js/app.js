@@ -227,6 +227,10 @@
       var i = parseInt(btn.getAttribute("data-idx"), 10);
       var j = btn.getAttribute("data-move") === "up" ? i - 1 : i + 1;
       if (j < 0 || j >= state.draftOrder.length) return;
+      /* Q6: once picks exist, reordering silently reassigns drafted countries —
+         gate it behind a confirm (mirrors the Reset-draft confirm). */
+      if (state.pickLog.length > 0 &&
+          !confirm("Draft has started — reordering reshuffles who picked what. Reorder anyway?")) return;
       var nextOrder = state.draftOrder.slice();
       var tmp = nextOrder[i]; nextOrder[i] = nextOrder[j]; nextOrder[j] = tmp;
       commit(merge(state, { draftOrder: nextOrder }));
@@ -235,6 +239,9 @@
     var actions = el("div", "do-actions");
     var flip = el("button", "do-btn", "⇅ Flip best-first / worst-first");
     flip.addEventListener("click", function () {
+      /* Q6: same guard for the whole-order flip. */
+      if (state.pickLog.length > 0 &&
+          !confirm("Draft has started — flipping reshuffles who picked what. Flip anyway?")) return;
       commit(merge(state, { draftOrder: state.draftOrder.slice().reverse() }));
       toast("Draft order flipped");
     });
@@ -533,6 +540,13 @@
 
     wrap.addEventListener("click", onBracketClick);
     wrap.addEventListener("change", onScoreChange);
+    wrap.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      var side = e.target.closest(".bk-side[data-pick]");
+      if (!side) return;
+      e.preventDefault();
+      onBracketClick(e);
+    });
   }
 
   function ownerBadge(abbr) {
@@ -549,21 +563,42 @@
       var slot = mt[side[0]];
       var cid = slot.countryId;
       var row = el("div", "bk-side");
-      if (cid) row.setAttribute("data-pick", cid);
-      if (mt.winnerId && mt.winnerId === cid) row.classList.add("win");
+      var isWinner = mt.winnerId && mt.winnerId === cid;
+      if (cid) {
+        row.setAttribute("data-pick", cid);
+        row.setAttribute("role", "button");
+        row.setAttribute("tabindex", "0");
+        row.setAttribute("aria-pressed", isWinner ? "true" : "false");
+        var team = TEAM_BY_ABBR[owners[cid]];
+        row.setAttribute("aria-label",
+          (slot.name || "") + " — set winner" + (team ? " (drafted by " + team.name + ")" : ""));
+      }
+      if (isWinner) row.classList.add("win");
       if (mt.winnerId && cid && mt.winnerId !== cid) row.classList.add("lose");
       if (!cid) row.classList.add("tbd");
       var goalVal = mt[side[2]];
+      var goalLabel = slot.name ? slot.name + " goals" : "goals";
       row.innerHTML =
         '<span class="bk-flag">' + (slot.flag || "·") + "</span>" +
         '<span class="bk-name">' + (slot.name ? esc(slot.name) : "TBD") + "</span>" +
         (cid && owners[cid] ? ownerBadge(owners[cid]) : "") +
         '<input class="bk-score" type="number" min="0" inputmode="numeric" ' +
         'data-side="' + side[1] + '" value="' + (goalVal == null ? "" : goalVal) + '" ' +
-        (cid ? "" : "disabled") + ' aria-label="goals" />';
+        (cid ? "" : "disabled") + ' aria-label="' + esc(goalLabel) + '" />';
       node.appendChild(row);
     });
     return node;
+  }
+
+  /* The home/away countryIds for a match, read live from the rendered DOM
+     (the bk-side rows carry data-pick). Returns { aId, bId } with nulls for
+     any TBD slot. Used to stamp results with the slots they were entered for
+     (B1 shared contract) and to reconcile winner vs. goals (B5). */
+  function matchSlotIds(matchEl) {
+    var sides = matchEl.querySelectorAll(".bk-side");
+    var aId = sides[0] ? (sides[0].getAttribute("data-pick") || null) : null;
+    var bId = sides[1] ? (sides[1].getAttribute("data-pick") || null) : null;
+    return { aId: aId, bId: bId };
   }
 
   function onBracketClick(e) {
@@ -573,22 +608,60 @@
     var matchEl = side.closest(".bk-match");
     var matchId = matchEl.getAttribute("data-match");
     var countryId = side.getAttribute("data-pick");
+    var slots = matchSlotIds(matchEl);
     var prev = state.results[matchId] || {};
     /* Internally the winner is a countryId; tap the winner again to clear. */
     var winner = prev.winner === countryId ? null : countryId;
     var results = merge(state.results, {});
-    results[matchId] = merge(prev, { winner: winner });
+    /* B1: stamp the slots this result was entered for. */
+    results[matchId] = merge(prev, { winner: winner, aId: slots.aId, bId: slots.bId });
     commit(merge(state, { results: results }));
+  }
+
+  /* B6: parse a goal input. Returns:
+       undefined  -> reject the edit (keep prior stored value)
+       null       -> the field was cleared (distinct from a real 0)
+       0..20      -> a valid, clamped integer
+     Non-finite, non-integer ("abc", "3.5") inputs are rejected. */
+  function parseGoals(raw) {
+    var s = String(raw).trim();
+    if (s === "") return null;            // cleared, not a 0
+    if (!/^[0-9]+$/.test(s)) return undefined; // non-integer / garbage -> reject
+    var n = Number(s);
+    if (!isFinite(n)) return undefined;
+    return Math.max(0, Math.min(20, n));  // clamp 0..20
   }
 
   function onScoreChange(e) {
     if (!e.target.classList.contains("bk-score")) return;
-    var matchId = e.target.closest(".bk-match").getAttribute("data-match");
+    var matchEl = e.target.closest(".bk-match");
+    var matchId = matchEl.getAttribute("data-match");
     var sideKey = e.target.getAttribute("data-side"); // "ga" | "gb"
     var raw = e.target.value;
-    var val = raw === "" ? null : Math.max(0, parseInt(raw, 10) || 0);
     var prev = state.results[matchId] || {};
-    var patch = {}; patch[sideKey] = val;
+    var val = parseGoals(raw);
+    if (val === undefined) {
+      /* B6: reject — restore the prior stored value in the input and bail. */
+      var prior = prev[sideKey];
+      e.target.value = (prior == null ? "" : prior);
+      return;
+    }
+    var slots = matchSlotIds(matchEl);
+    var patch = {};
+    patch[sideKey] = val;
+    /* B1: stamp the slots this result was entered for. */
+    patch.aId = slots.aId;
+    patch.bId = slots.bId;
+
+    /* B5: reconcile winner with goals. When both goals are entered and differ,
+       the winner MUST be the higher-scoring side (auto-correct on edit). An
+       equal score is left to an explicit winner tap (shootout pick). */
+    var ga = sideKey === "ga" ? val : prev.ga;
+    var gb = sideKey === "gb" ? val : prev.gb;
+    if (typeof ga === "number" && typeof gb === "number" && ga !== gb) {
+      patch.winner = ga > gb ? slots.aId : slots.bId;
+    }
+
     var results = merge(state.results, {});
     results[matchId] = merge(prev, patch);
     commit(merge(state, { results: results }));
