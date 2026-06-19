@@ -46,45 +46,47 @@ var TEAMS = [
   { abbr: "SST",  name: "Seth's Splendid Team",    managers: [], accent: "#d6336c", record: "6-8-0"  }
 ];
 
-/* The 32 Round-of-32 countries, ordered by a strength seed (1 =
-   strongest). `seed` drives both bracket pairing (1v32, 2v31, …) and
-   the strong/weak split in the snake draft. c1/c2 are the gradient
-   colors of each country's bar (c2 mirrors c1 where the source had
-   only one). goals/yellows/reds/fouls start at 0 and may be overlaid
-   from the live feed. Cards/fouls are display-only (never scored). */
+/* The 32 Round-of-32 countries — the projected knockout field: the 32
+   strongest of the 48 WC26 qualifiers, seeded by the FIFA Men's World
+   Ranking (11 June 2026). `seed` drives both bracket pairing (1v32,
+   2v31, …) and the strong/weak split in the snake draft. c1/c2 are the
+   gradient colors of each country's bar. goals/yellows/reds/fouls start
+   at 0 and may be overlaid from the live feed (cards/fouls are
+   display-only, never scored). When the real Round of 32 is set, wire
+   the drawn matchups into R32_PAIRINGS below — no need to touch seeds. */
 var FIELD = [
-  { id: "ARG", name: "Argentina",     flag: "🇦🇷", seed: 1,  c1: "#4a92d0", c2: "#4a92d0", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "FRA", name: "France",        flag: "🇫🇷", seed: 2,  c1: "#1f3c9e", c2: "#1f3c9e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "ESP", name: "Spain",         flag: "🇪🇸", seed: 3,  c1: "#c60b1e", c2: "#c60b1e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "ENG", name: "England",       flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", seed: 4,  c1: "#c8102e", c2: "#c8102e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "BRA", name: "Brazil",        flag: "🇧🇷", seed: 5,  c1: "#009739", c2: "#009739", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "POR", name: "Portugal",      flag: "🇵🇹", seed: 6,  c1: "#a3122a", c2: "#a3122a", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "NED", name: "Netherlands",   flag: "🇳🇱", seed: 7,  c1: "#f36c21", c2: "#f36c21", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "GER", name: "Germany",       flag: "🇩🇪", seed: 8,  c1: "#3a3a3a", c2: "#3a3a3a", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "BEL", name: "Belgium",       flag: "🇧🇪", seed: 9,  c1: "#5b5651", c2: "#5b5651", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "CRO", name: "Croatia",       flag: "🇭🇷", seed: 10, c1: "#d12127", c2: "#d12127", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "URU", name: "Uruguay",       flag: "🇺🇾", seed: 11, c1: "#3f87bd", c2: "#3f87bd", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "COL", name: "Colombia",      flag: "🇨🇴", seed: 12, c1: "#caa10a", c2: "#caa10a", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "MAR", name: "Morocco",       flag: "🇲🇦", seed: 13, c1: "#c1272d", c2: "#c1272d", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "USA", name: "United States", flag: "🇺🇸", seed: 14, c1: "#2b4ea0", c2: "#2b4ea0", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "MEX", name: "Mexico",        flag: "🇲🇽", seed: 15, c1: "#006847", c2: "#006847", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "JPN", name: "Japan",         flag: "🇯🇵", seed: 16, c1: "#bc002d", c2: "#bc002d", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "SUI", name: "Switzerland",   flag: "🇨🇭", seed: 17, c1: "#da291c", c2: "#da291c", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "SEN", name: "Senegal",       flag: "🇸🇳", seed: 18, c1: "#00853f", c2: "#00853f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "ECU", name: "Ecuador",       flag: "🇪🇨", seed: 19, c1: "#d4a017", c2: "#d4a017", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "CIV", name: "Ivory Coast",   flag: "🇨🇮", seed: 20, c1: "#f77f00", c2: "#f77f00", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "SWE", name: "Sweden",        flag: "🇸🇪", seed: 21, c1: "#006aa7", c2: "#006aa7", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "AUS", name: "Australia",     flag: "🇦🇺", seed: 22, c1: "#cf9400", c2: "#cf9400", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "KOR", name: "South Korea",   flag: "🇰🇷", seed: 23, c1: "#cd2e3a", c2: "#cd2e3a", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "CAN", name: "Canada",        flag: "🇨🇦", seed: 24, c1: "#c8102e", c2: "#c8102e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "EGY", name: "Egypt",         flag: "🇪🇬", seed: 25, c1: "#ce1126", c2: "#ce1126", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "GHA", name: "Ghana",         flag: "🇬🇭", seed: 26, c1: "#006b3f", c2: "#006b3f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "AUT", name: "Austria",       flag: "🇦🇹", seed: 27, c1: "#ed2939", c2: "#ed2939", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "NOR", name: "Norway",        flag: "🇳🇴", seed: 28, c1: "#ba0c2f", c2: "#ba0c2f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "TUR", name: "Türkiye",       flag: "🇹🇷", seed: 29, c1: "#e30a17", c2: "#e30a17", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "PAR", name: "Paraguay",      flag: "🇵🇾", seed: 30, c1: "#d52b1e", c2: "#d52b1e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "IRN", name: "Iran",          flag: "🇮🇷", seed: 31, c1: "#239f40", c2: "#239f40", goals: 0, yellows: 0, reds: 0, fouls: 0 },
-  { id: "PAN", name: "Panama",        flag: "🇵🇦", seed: 32, c1: "#005293", c2: "#005293", goals: 0, yellows: 0, reds: 0, fouls: 0 }
+  { id: "ARG", name: "Argentina",     flag: "🇦🇷", seed: 1,  c1: "#4a92d0", c2: "#2f6ea3", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "ESP", name: "Spain",         flag: "🇪🇸", seed: 2,  c1: "#c60b1e", c2: "#9a0816", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "FRA", name: "France",        flag: "🇫🇷", seed: 3,  c1: "#1f3c9e", c2: "#0c1f63", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "ENG", name: "England",       flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", seed: 4,  c1: "#c8102e", c2: "#8a0b1f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "POR", name: "Portugal",      flag: "🇵🇹", seed: 5,  c1: "#a3122a", c2: "#046a38", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "BRA", name: "Brazil",        flag: "🇧🇷", seed: 6,  c1: "#009739", c2: "#006227", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "MAR", name: "Morocco",       flag: "🇲🇦", seed: 7,  c1: "#c1272d", c2: "#7a1419", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "NED", name: "Netherlands",   flag: "🇳🇱", seed: 8,  c1: "#f36c21", c2: "#b84a0d", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "BEL", name: "Belgium",       flag: "🇧🇪", seed: 9,  c1: "#5b5651", c2: "#2a2724", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "GER", name: "Germany",       flag: "🇩🇪", seed: 10, c1: "#3a3a3a", c2: "#111111", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "CRO", name: "Croatia",       flag: "🇭🇷", seed: 11, c1: "#d12127", c2: "#16387f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "COL", name: "Colombia",      flag: "🇨🇴", seed: 12, c1: "#caa10a", c2: "#946f00", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "MEX", name: "Mexico",        flag: "🇲🇽", seed: 13, c1: "#006847", c2: "#00472f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "SEN", name: "Senegal",       flag: "🇸🇳", seed: 14, c1: "#00853f", c2: "#005226", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "URU", name: "Uruguay",       flag: "🇺🇾", seed: 15, c1: "#3f87bd", c2: "#28628f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "USA", name: "United States", flag: "🇺🇸", seed: 16, c1: "#2b4ea0", c2: "#b22234", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "JPN", name: "Japan",         flag: "🇯🇵", seed: 17, c1: "#bc002d", c2: "#7a001e", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "SUI", name: "Switzerland",   flag: "🇨🇭", seed: 18, c1: "#da291c", c2: "#9e1c12", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "IRN", name: "Iran",          flag: "🇮🇷", seed: 19, c1: "#239f40", c2: "#136127", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "TUR", name: "Türkiye",       flag: "🇹🇷", seed: 20, c1: "#e30a17", c2: "#9e0710", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "ECU", name: "Ecuador",       flag: "🇪🇨", seed: 21, c1: "#d4a017", c2: "#8c6900", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "AUT", name: "Austria",       flag: "🇦🇹", seed: 22, c1: "#ed2939", c2: "#a31621", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "KOR", name: "South Korea",   flag: "🇰🇷", seed: 23, c1: "#cd2e3a", c2: "#8e1f28", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "AUS", name: "Australia",     flag: "🇦🇺", seed: 24, c1: "#cf9400", c2: "#00843d", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "ALG", name: "Algeria",       flag: "🇩🇿", seed: 25, c1: "#006233", c2: "#003d1f", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "EGY", name: "Egypt",         flag: "🇪🇬", seed: 26, c1: "#ce1126", c2: "#8c0b1a", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "CAN", name: "Canada",        flag: "🇨🇦", seed: 27, c1: "#c8102e", c2: "#8f0b21", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "NOR", name: "Norway",        flag: "🇳🇴", seed: 28, c1: "#ba0c2f", c2: "#00205b", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "CIV", name: "Ivory Coast",   flag: "🇨🇮", seed: 29, c1: "#f77f00", c2: "#c95e00", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "PAN", name: "Panama",        flag: "🇵🇦", seed: 30, c1: "#005293", c2: "#d21034", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "SWE", name: "Sweden",        flag: "🇸🇪", seed: 31, c1: "#006aa7", c2: "#004b76", goals: 0, yellows: 0, reds: 0, fouls: 0 },
+  { id: "CZE", name: "Czechia",       flag: "🇨🇿", seed: 32, c1: "#11457e", c2: "#0b2f57", goals: 0, yellows: 0, reds: 0, fouls: 0 }
 ];
 
 /* ------------------------------------------------------------

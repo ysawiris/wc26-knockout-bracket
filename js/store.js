@@ -1,7 +1,7 @@
 /* ============================================================
    STORE — single source of truth, persisted to localStorage.
 
-   STATE shape (localStorage key "wc26ko.v3"):
+   STATE shape (localStorage key "wc26ko.v4"):
      config     : tunable scoring config (copy of POINTS_CONFIG +
                   GOAL_BONUS_PER_GOAL), editable
      draftOrder : [abbr] — the 12-team knockout draft order (seed)
@@ -22,7 +22,7 @@
      Both always agree: winner === "home" iff winnerId === home.countryId.
    ============================================================ */
 
-var STORAGE_KEY = "wc26ko.v3";
+var STORAGE_KEY = "wc26ko.v4";
 
 function defaultState() {
   return {
