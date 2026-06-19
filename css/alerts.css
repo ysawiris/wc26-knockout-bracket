@@ -1,0 +1,156 @@
+/* ============================================================
+   Goal alerts — bell toggle in the top nav, bottom-right toast
+   stack, and the board-row goal flash. All selectors namespaced
+   .ga-* and riding on the global gold & black theme variables.
+   ============================================================ */
+
+/* ---------- Bell toggle (in .topnav, after #tabs) ---------- */
+
+.ga-bell {
+  flex: 0 0 auto;
+  justify-self: end; /* sit at the far right of the topnav grid's 3rd column */
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.02rem; line-height: 1;
+  color: var(--gold-2); background: transparent; cursor: pointer;
+  border: 1px solid var(--gold-4); border-radius: 999px;
+  position: relative;
+  transition: color .15s, border-color .15s, transform .12s, box-shadow .12s, opacity .15s;
+}
+.ga-bell:hover {
+  color: var(--gold-1); border-color: var(--gold-3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 196, 106, 0.18);
+}
+.ga-bell.is-notify { border-color: var(--gold-3); }
+.ga-bell.is-notify::after {
+  content: "";
+  position: absolute; top: 4px; right: 5px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--you);
+  box-shadow: 0 0 6px rgba(243, 177, 59, 0.8);
+}
+.ga-bell.is-off { opacity: 0.55; border-style: dashed; }
+
+/* ---------- Toast stack (fixed, bottom-right) ---------- */
+
+.ga-stack {
+  position: fixed;
+  right: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 60;
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 8px;
+  width: min(340px, calc(100vw - 28px));
+  pointer-events: none; /* only the toasts themselves are clickable */
+}
+
+.ga-toast {
+  pointer-events: auto;
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-edge-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 10px 14px 11px;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  animation: ga-slide-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+  transition: opacity 0.24s, transform 0.24s;
+}
+.ga-toast.ga-out {
+  opacity: 0;
+  transform: translateX(24px);
+  pointer-events: none;
+}
+
+.ga-title {
+  font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+  color: var(--gold-1);
+}
+.ga-sub {
+  font-size: 0.74rem; color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* Flavor borders per alert kind */
+.ga-goal {
+  border-color: var(--gold-2);
+  background: linear-gradient(180deg, rgba(212, 168, 84, 0.16), rgba(34, 24, 12, 0.92));
+}
+/* A country wins its tie and a fantasy team banks round points. */
+.ga-advance {
+  border-color: rgba(96, 211, 148, 0.55);
+  background: linear-gradient(180deg, rgba(72, 187, 120, 0.14), rgba(16, 30, 22, 0.92));
+}
+.ga-advance .ga-title { color: #7ee0a6; }
+/* A drafted country is knocked out. */
+.ga-eliminate {
+  border-color: rgba(255, 99, 99, 0.5);
+  background: linear-gradient(180deg, rgba(120, 40, 40, 0.18), rgba(30, 14, 12, 0.92));
+}
+.ga-eliminate .ga-title { color: #ff9b9b; }
+/* New league #1 or World Cup champion — full gold treatment. */
+.ga-champion {
+  border-color: var(--gold-1);
+  background: linear-gradient(180deg, rgba(243, 209, 138, 0.22), rgba(40, 28, 12, 0.94));
+  box-shadow: 0 0 0 1px var(--gold-3), var(--shadow);
+}
+.ga-champion .ga-title { color: var(--gold-1); }
+.ga-rank { border-color: var(--panel-edge-strong); }
+.ga-info, .ga-more { border-color: var(--panel-edge); }
+.ga-info .ga-title, .ga-more .ga-title { color: var(--gold-2); }
+
+@keyframes ga-slide-in {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Board-row goal flash (3s gold pulse) ---------- */
+
+#board-list li.row.goal-flash {
+  border-color: var(--gold-2);
+  animation: ga-goal-pulse 1s ease-in-out 3;
+}
+
+@keyframes ga-goal-pulse {
+  0%, 100% { box-shadow: var(--shadow); }
+  50% { box-shadow: 0 0 0 2px var(--gold-2), 0 0 28px rgba(243, 209, 138, 0.4); }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 700px) {
+  /* Keep the centered brand centered; pin the bell to the right edge. */
+  .ga-bell {
+    position: absolute;
+    right: max(10px, env(safe-area-inset-right));
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px; height: 34px;
+  }
+  .ga-bell:hover { transform: translateY(-50%); }
+
+  /* Sit above the fixed bottom nav (66px + safe area). */
+  .ga-stack {
+    right: 10px; left: 10px;
+    width: auto;
+    align-items: stretch;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 380px) {
+  .ga-toast { padding: 9px 12px 10px; }
+  .ga-title { font-size: 0.78rem; }
+  .ga-sub { font-size: 0.7rem; }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ga-toast { animation: none; transition: opacity 0.24s; }
+  .ga-toast.ga-out { transform: none; }
+  #board-list li.row.goal-flash { animation: none; }
+}

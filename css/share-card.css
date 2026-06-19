@@ -1,0 +1,40 @@
+/* ============================================================
+   Share card — button states for the 📸 PNG share feature.
+   All selectors namespaced .sc-*. The button itself also carries
+   .bx-btn to inherit the ghost-gold pill look from board-extras;
+   only the busy/error variants live here. The card itself is a
+   canvas PNG, so there is no card markup to style.
+   ============================================================ */
+
+/* Fallback toolbar — only created when #bx-toolbar is missing.
+   Mirrors the .bx-toolbar layout so the button sits identically. */
+.sc-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 8px;
+  margin: -4px 0 18px;
+}
+
+/* While the canvas renders / the share sheet opens. */
+.sc-btn.is-busy {
+  opacity: 0.65;
+  cursor: progress;
+  pointer-events: none;
+}
+
+/* Brief inline failure state ("Couldn't share"), auto-restored by JS. */
+.sc-btn.is-error {
+  color: #ff8d8d;
+  border-color: rgba(255, 107, 107, 0.55);
+  box-shadow: none;
+}
+.sc-btn.is-error:hover {
+  color: #ffb3b3;
+  border-color: rgba(255, 107, 107, 0.75);
+  transform: none;
+}
+
+/* Compact phones — tighten the fallback toolbar only;
+   #bx-toolbar already handles its own wrapping. */
+@media (max-width: 380px) {
+  .sc-toolbar { gap: 6px; }
+}

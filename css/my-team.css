@@ -1,0 +1,82 @@
+/* Team picker — per-viewer identity overlay + hero pill. */
+
+.tp-pill { cursor: pointer; font-family: inherit; color: var(--gold-2); }
+.tp-pill:hover { border-color: var(--gold-3); }
+
+body.tp-open { overflow: hidden; }
+
+.tp-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center;
+  padding: 18px;
+  background: rgba(5, 3, 1, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.tp-overlay[hidden] { display: none; }
+
+.tp-panel {
+  width: min(560px, 100%);
+  max-height: 86vh; overflow-y: auto;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-edge-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+  padding: 22px 20px 18px;
+}
+
+.tp-title {
+  font-family: "Cinzel", serif; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-size: 1.15rem; text-align: center;
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.tp-sub {
+  text-align: center; color: var(--text-dim);
+  font-size: 0.8rem; line-height: 1.5; margin: 8px auto 0;
+  max-width: 420px;
+}
+
+.tp-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px; margin-top: 16px;
+}
+.tp-team {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 11px; text-align: left;
+  font-family: inherit; color: var(--text); cursor: pointer;
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 10px; transition: border-color .14s, transform .14s;
+}
+.tp-team:hover { border-color: var(--gold-3); transform: translateY(-1px); }
+.tp-team.current { border-color: var(--you); box-shadow: 0 0 0 1px var(--you) inset; }
+
+.tp-crest {
+  flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: "Cinzel", serif; font-weight: 900; font-size: 0.56rem;
+  color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(249, 230, 179, 0.4);
+  background: radial-gradient(circle at 32% 28%, #4a4036, #1c140b);
+}
+.tp-name {
+  min-width: 0; font-weight: 700; font-style: italic;
+  text-transform: uppercase; letter-spacing: 0.02em;
+  font-size: 0.8rem; line-height: 1.2;
+}
+.tp-grp {
+  display: block; font-style: normal; font-weight: 600;
+  font-size: 0.62rem; letter-spacing: 0.08em;
+  color: var(--text-faint); margin-top: 2px;
+  text-transform: none;
+}
+
+.tp-skip {
+  display: block; width: 100%; margin-top: 14px;
+  font-family: inherit; font-size: 0.78rem; font-weight: 600;
+  color: var(--text-dim); cursor: pointer;
+  background: transparent; border: 1px solid var(--panel-edge);
+  border-radius: 999px; padding: 8px;
+}
+.tp-skip:hover { color: var(--gold-1); border-color: var(--gold-3); }

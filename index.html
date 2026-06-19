@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Longest Yard · WC26 Knockout Pool</title>
+  <meta name="description" content="2026 FIFA World Cup knockout fantasy pool — snake-draft 2 of the 32 Round-of-32 countries, score by how far they advance. The Longest Yard." />
+  <meta name="theme-color" content="#0d0905" />
+  <meta property="og:title" content="WC26 Knockout Pool · The Longest Yard" />
+  <meta property="og:description" content="Snake-draft 2 of the 32 Round-of-32 countries. Score by how far they advance — R32 → Final — plus a per-goal bonus." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ysawiris.github.io/wc26-knockout-bracket/" />
+  <meta property="og:image" content="https://ysawiris.github.io/wc26-knockout-bracket/assets/og-banner.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://ysawiris.github.io/wc26-knockout-bracket/assets/og-banner.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/board-extras.css" />
+  <link rel="stylesheet" href="css/stats.css" />
+  <link rel="stylesheet" href="css/race.css" />
+  <link rel="stylesheet" href="css/simulator.css" />
+  <link rel="stylesheet" href="css/odds.css" />
+  <link rel="stylesheet" href="css/extras.css" />
+  <link rel="stylesheet" href="css/my-team.css" />
+  <link rel="stylesheet" href="css/alerts.css" />
+  <link rel="stylesheet" href="css/share-card.css" />
+  <link rel="stylesheet" href="css/road.css" />
+  <link rel="stylesheet" href="css/recaps.css" />
+  <link rel="stylesheet" href="css/matchcenter.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-rays" aria-hidden="true"></div>
+
+  <nav class="topnav">
+    <a class="brand" href="#" data-tab="board">
+      <span class="brand-mark">🏆</span>
+      <span class="brand-text">WC26 · <em>Longest Yard</em></span>
+    </a>
+    <div class="tabs" id="tabs" role="tablist">
+      <button class="tab is-active" data-tab="draft-order" role="tab">Draft&nbsp;Order</button>
+      <button class="tab" data-tab="snake" role="tab">Snake&nbsp;Draft</button>
+      <button class="tab" data-tab="recap" role="tab" hidden>Draft&nbsp;Recap</button>
+      <button class="tab" data-tab="bracket" role="tab">Bracket</button>
+      <button class="tab" data-tab="board" role="tab">Standings</button>
+      <button class="tab" data-tab="odds" role="tab">Forecast</button>
+      <button class="tab" data-tab="stats" role="tab">Stats</button>
+      <button class="tab" data-tab="rules" role="tab">Rules</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="hero-kicker">2026 FIFA World Cup · Knockout Pool</p>
+    <h1 class="hero-title">The Longest Yard</h1>
+    <p class="hero-sub">Snake-draft <em>two</em> of the 32 Round-of-32 countries. Score by how far they go.</p>
+    <div class="hero-meta" id="hero-meta"></div>
+  </header>
+
+  <main>
+    <!-- LIVE / NEXT UP strip (always visible above the tabs' content) -->
+    <section class="livewrap" id="livewrap" aria-live="polite"></section>
+
+    <!-- DRAFT ORDER (setup tab — always unlocked) -->
+    <section class="tab-panel is-active" id="tab-draft-order">
+      <h2 class="section-title"><span>Draft Order</span></h2>
+      <p class="panel-hint" id="draft-order-hint"></p>
+      <div id="draft-order-host"></div>
+    </section>
+
+    <!-- SNAKE DRAFT (setup tab — always unlocked) -->
+    <section class="tab-panel" id="tab-snake" hidden>
+      <h2 class="section-title"><span>Snake Draft · Round of 32</span></h2>
+      <p class="panel-hint" id="snake-hint"></p>
+      <div id="snake-host"></div>
+    </section>
+
+    <!-- DRAFT RECAP (replaces the two setup tabs once the draft is complete) -->
+    <section class="tab-panel" id="tab-recap" hidden>
+      <h2 class="section-title"><span>Draft Recap</span></h2>
+      <p class="panel-hint" id="recap-hint"></p>
+      <div id="recap-host"></div>
+    </section>
+
+    <!-- BRACKET -->
+    <section class="tab-panel" id="tab-bracket" hidden>
+      <h2 class="section-title"><span>The Bracket</span></h2>
+      <p class="panel-hint">Tap a side to advance it. Optional goal inputs feed each owner's goal bonus.</p>
+      <div id="bracket-host"></div>
+    </section>
+
+    <!-- STANDINGS (was Draft Board) -->
+    <section class="tab-panel" id="tab-board" hidden>
+      <h2 class="section-title"><span>The Standings</span></h2>
+      <p class="panel-hint" id="board-hint"></p>
+      <ol class="board" id="board-list"></ol>
+    </section>
+
+    <!-- FORECAST (hosts Road + Odds, ported later) -->
+    <section class="tab-panel" id="tab-odds" hidden>
+      <h2 class="section-title"><span>Forecast</span></h2>
+      <!-- Road to your pick — personal race, atop the full forecast (js/road.js) -->
+      <div id="road-host"></div>
+      <div id="odds-host"></div>
+    </section>
+
+    <!-- STATS -->
+    <section class="tab-panel" id="tab-stats" hidden>
+      <h2 class="section-title"><span>Stats &amp; Records</span></h2>
+      <div id="race-host"></div>
+      <div id="stats-host"></div>
+    </section>
+
+    <!-- RULES -->
+    <section class="tab-panel" id="tab-rules" hidden>
+      <h2 class="section-title"><span>How It Works</span></h2>
+
+      <div class="rules-card">
+        <h3 class="rules-h">The pool, in four steps</h3>
+        <ol class="rules-steps">
+          <li><span class="step-n">1</span><div><b>Set the order.</b> The 12 teams snake-draft in last-season finish order. Flip best-first / worst-first on the Draft Order tab.</div></li>
+          <li><span class="step-n">2</span><div><b>Draft your two.</b> Snake draft means each team grabs one stronger and one weaker of the 32 Round-of-32 countries — 24 picks total.</div></li>
+          <li><span class="step-n">3</span><div><b>Advance to score.</b> Every round your country wins is worth points — R32&nbsp;3, R16&nbsp;5, QF&nbsp;8, SF&nbsp;13, Final&nbsp;21 — plus 0.1 per goal.</div></li>
+          <li><span class="step-n">4</span><div><b>Most points wins.</b> Ties break on advancement points, then draft slot. Cards and fouls are shown but never count.</div></li>
+        </ol>
+      </div>
+
+      <div class="rules-card rules-prose">
+        <h3 class="rules-h">World Cup 2026 — the knockout</h3>
+        <p>The biggest World Cup ever: <b>48 teams</b>, <b>three hosts</b> (United States, Mexico, Canada), 104 matches. After the group stage, <b>32 teams</b> reach the brand-new Round of 32 — and that's where our pool lives.</p>
+        <p>The bracket is single-elimination: <b>R32 → R16 → quarterfinals → semifinals → final</b>, 31 matches in all. Top seeds can only meet in the final (1v32, 2v31, …). The final is <b>July&nbsp;19 at MetLife Stadium</b>, New York / New Jersey.</p>
+        <p class="rules-key"><b>For the pool, only the knockout counts. You own two countries; you score every round they survive plus a small bonus for the goals they score. The further they go, the more you win.</b></p>
+      </div>
+
+      <div class="rules-card">
+        <h3 class="rules-h">Around the hub</h3>
+        <ul class="rules-list">
+          <li>🧮 <b>Draft Order</b> — reorder the 12 teams and flip best-first / worst-first before the draft.</li>
+          <li>🐍 <b>Snake Draft</b> — go on the clock and draft your two countries. Auto-pick, auto-fill, undo and reset are all there. <b>The hub stays locked until all 24 picks are in.</b></li>
+          <li>🗺 <b>Bracket</b> — R32 → Final. Tap a side to advance it, type goals to feed the bonus.</li>
+          <li>🏆 <b>Standings</b> — the live order by points, with each team's two country flags and how far they've reached.</li>
+          <li>🔮 <b>Forecast</b> — your personal Road and the advancement odds (ported next).</li>
+          <li>📊 <b>Stats</b> — the race chart, the wire report and the record book.</li>
+          <li>🏷 <b>Team picker</b> — claim your team once; <code>?team=</code> share links pre-assign it.</li>
+          <li>📲 <b>Home screen</b> — add it like an app: loads instantly and works offline.</li>
+        </ul>
+      </div>
+
+      <div class="rules-card live-explain" id="live-explain"></div>
+    </section>
+  </main>
+
+  <!-- Mobile app-style bottom nav (mirrors the top tabs; hidden on desktop) -->
+  <nav class="bottomnav" role="tablist" aria-label="Sections">
+    <button class="tab is-active" data-tab="draft-order" role="tab"><span class="bn-ico">🧮</span><span class="bn-label">Order</span></button>
+    <button class="tab" data-tab="snake" role="tab"><span class="bn-ico">🐍</span><span class="bn-label">Draft</span></button>
+    <button class="tab" data-tab="recap" role="tab" hidden><span class="bn-ico">📋</span><span class="bn-label">Recap</span></button>
+    <button class="tab" data-tab="bracket" role="tab"><span class="bn-ico">🗺</span><span class="bn-label">Bracket</span></button>
+    <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
+    <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
+    <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>
+    <button class="tab" data-tab="rules" role="tab"><span class="bn-ico">📜</span><span class="bn-label">Rules</span></button>
+  </nav>
+
+  <footer class="footer">
+    <p class="footer-draw" id="draw-note"></p>
+    <p class="footer-fine">Bracket results are entered by hand for v1. Disputes go to the commissioner.</p>
+  </footer>
+
+  <!-- A global toast (draft gate + draft actions) -->
+  <div class="hub-toast" id="toast" hidden></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/my-team.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/live.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/board-extras.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/odds.js"></script>
+  <script src="js/race.js"></script>
+  <script src="js/alerts.js"></script>
+  <script src="js/share-card.js"></script>
+  <script src="js/road.js"></script>
+  <script src="js/recaps.js"></script>
+  <script src="js/xg.js"></script>
+  <script src="js/matchcenter.js"></script>
+  <script src="js/live-direct.js"></script>
+  <script src="js/refresh.js"></script>
+  <script src="js/sw-register.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+/* ============================================================
+   Road to No. 1 — personal race command center (js/road.js).
+   Sits at the top of the Forecast tab. Themed to the team's accent
+   via --team-accent, over the gold & black broadcast base. Tracks
+   your knockout draft-slot rank by advancement points.
+   ============================================================ */
+
+#road-host { margin: 0 0 18px; }
+
+.road-card {
+  position: relative;
+  border-radius: var(--radius);
+  padding: 16px clamp(14px, 3vw, 22px) 18px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--team-accent, #c89638) 22%, transparent) 0%, transparent 46%),
+    var(--panel-2);
+  border: 1px solid var(--panel-edge);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.road-card::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--team-accent, var(--gold-3)), transparent);
+  opacity: 0.9;
+}
+
+/* ---------- head ---------- */
+
+.road-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px;
+}
+.road-eyebrow {
+  font-family: "Cinzel", serif; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 0.82rem; color: var(--gold-2);
+}
+.road-team-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: inherit; font-size: 0.82rem; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--panel-edge);
+  border-radius: 999px; padding: 5px 12px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.road-team-pill:hover { border-color: var(--panel-edge-strong); background: rgba(0, 0, 0, 0.4); }
+.rtp-caret { color: var(--text-faint); font-size: 0.7rem; }
+
+/* ---------- live strip ---------- */
+
+.road-live {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px;
+  margin: 0 0 13px; padding: 8px 12px;
+  background: rgba(255, 80, 80, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.32);
+  border-radius: 10px;
+  font-size: 0.84rem;
+}
+.rl-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #ff5a5a; box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.6);
+  animation: rl-pulse 1.4s infinite;
+}
+@keyframes rl-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.55); }
+  70% { box-shadow: 0 0 0 7px rgba(255, 90, 90, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0); }
+}
+.rl-tag {
+  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: 0.68rem; font-weight: 700; color: #ff9a9a;
+}
+.rl-item b { color: var(--gold-1); }
+.rl-min { color: var(--text-dim); font-size: 0.76rem; }
+.rl-rd {
+  color: #ffb3b3; font-size: 0.64rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ---------- top: rank + status ---------- */
+
+.road-top {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(14px, 3vw, 22px);
+  align-items: center;
+}
+.road-rank {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 92px; padding: 10px 6px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-edge);
+}
+.road-rank.is-first {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(243, 209, 138, 0.22), rgba(0, 0, 0, 0.3) 70%);
+  border-color: var(--panel-edge-strong);
+}
+
+/* ---------- eliminated state (both countries knocked out) ---------- */
+
+.road-card.is-eliminated {
+  filter: saturate(0.6);
+}
+.road-card.is-eliminated::before {
+  background: linear-gradient(90deg, transparent, #8a8a8a, transparent);
+  opacity: 0.6;
+}
+.road-rank.is-out {
+  background: rgba(120, 120, 120, 0.16);
+  border-color: rgba(160, 160, 160, 0.28);
+}
+.road-rank.is-out .rr-num {
+  background: linear-gradient(180deg, #b9b9b9, #7d7d7d);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.road-rank.is-out .rr-ord { color: var(--text-faint); }
+.rm.is-out .rm-val { color: var(--text-dim); }
+.rr-num {
+  font-family: "Cinzel", serif; font-weight: 900;
+  font-size: 2.9rem; line-height: 0.9;
+  background: var(--gold-grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.rr-ord { font-family: "Cinzel", serif; font-weight: 700; color: var(--gold-3); font-size: 0.95rem; margin-top: 2px; }
+.rr-label {
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-size: 0.6rem; color: var(--text-faint); margin-top: 6px;
+}
+
+.road-status { min-width: 0; }
+.road-line { font-size: clamp(0.96rem, 2.4vw, 1.08rem); font-weight: 500; color: var(--text); }
+.road-proj-line { margin-top: 5px; font-size: 0.86rem; color: var(--text-dim); }
+.road-group {
+  margin-top: 9px; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.rg-flags { letter-spacing: 0.12em; font-size: 0.95rem; }
+
+/* ---------- metrics ---------- */
+
+.road-metrics {
+  margin-top: 14px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.rm {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 11px 6px; min-height: 64px;
+  background: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(212, 168, 84, 0.18);
+  border-radius: 10px; text-align: center;
+}
+.rm-val {
+  font-family: "Cinzel", serif; font-weight: 700; font-size: 1.45rem;
+  color: var(--gold-1); line-height: 1;
+}
+.rm.is-crown .rm-val { font-size: 1.5rem; }
+.rm-key {
+  margin-top: 6px; font-size: 0.64rem; line-height: 1.25;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint);
+}
+
+/* ---------- "what you need" callout ---------- */
+
+.road-need {
+  margin-top: 13px;
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--team-accent, #c89638) 16%, transparent),
+    rgba(0, 0, 0, 0.16));
+  border: 1px solid color-mix(in srgb, var(--team-accent, #c89638) 30%, var(--panel-edge));
+  border-left-width: 3px;
+  border-radius: 10px;
+}
+.rn-icon { font-size: 0.95rem; line-height: 1.45; flex: 0 0 auto; }
+.rn-text { font-size: 0.9rem; line-height: 1.45; color: var(--text); font-weight: 500; }
+
+/* ---------- projected-finish track ---------- */
+
+.road-proj { margin-top: 15px; }
+.rp-head {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.8rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.rp-head b { color: var(--gold-2); font-family: "Cinzel", serif; font-size: 0.95rem; }
+.rp-range { margin-left: auto; color: var(--text-faint); text-transform: none; letter-spacing: 0; }
+.rp-track {
+  position: relative; height: 12px; margin-top: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 168, 84, 0.18);
+}
+.rp-band {
+  position: absolute; top: 0; bottom: 0; min-width: 6px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--team-accent, #c89638) 65%, transparent), color-mix(in srgb, var(--team-accent, #c89638) 30%, transparent));
+  border-radius: 999px;
+}
+.rp-now, .rp-exp {
+  position: absolute; top: 50%; width: 13px; height: 13px;
+  transform: translate(-50%, -50%); border-radius: 50%;
+}
+.rp-now {
+  background: rgba(244, 237, 224, 0.35);
+  border: 2px solid var(--text-dim);
+}
+.rp-exp {
+  background: var(--gold-1);
+  border: 2px solid var(--gold-3);
+  box-shadow: 0 0 8px rgba(243, 209, 138, 0.7);
+}
+.rp-scale {
+  display: flex; justify-content: space-between;
+  margin-top: 5px; font-size: 0.64rem; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.rp-legend {
+  display: flex; flex-wrap: wrap; gap: 5px 14px;
+  margin-top: 7px; font-size: 0.62rem; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.rp-k { display: inline-flex; align-items: center; gap: 5px; }
+.rp-k::before {
+  content: ""; width: 10px; height: 10px; border-radius: 50%;
+  box-sizing: border-box; flex: 0 0 auto;
+}
+.rp-k-now::before { background: rgba(244, 237, 224, 0.35); border: 2px solid var(--text-dim); }
+.rp-k-exp::before {
+  background: var(--gold-1); border: 2px solid var(--gold-3);
+  box-shadow: 0 0 6px rgba(243, 209, 138, 0.6);
+}
+.rp-k-band::before {
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--team-accent, #c89638) 50%, transparent);
+}
+
+/* ---------- actions ---------- */
+
+.road-actions { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
+.road-btn {
+  flex: 1 1 auto; min-width: 140px;
+  font: inherit; font-size: 0.84rem; font-weight: 600; cursor: pointer;
+  padding: 9px 14px; border-radius: 10px;
+  color: var(--text); background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-edge);
+  transition: border-color 0.15s, background 0.15s, transform 0.08s;
+}
+.road-btn:hover { border-color: var(--panel-edge-strong); background: rgba(0, 0, 0, 0.42); }
+.road-btn:active { transform: translateY(1px); }
+.road-btn.primary {
+  color: #1a1206;
+  background: var(--gold-grad);
+  border-color: transparent;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.road-btn.primary:hover { filter: brightness(1.05); }
+.road-btn.is-copied { color: #0b3d1a; background: linear-gradient(180deg, #bff0c8, #7fd89a); }
+
+/* ---------- empty (no team claimed) ---------- */
+
+.road-empty { text-align: center; padding: 22px 18px 20px; }
+.road-empty .road-eyebrow { display: block; margin-bottom: 10px; }
+.road-empty-line {
+  max-width: 60ch; margin: 0 auto 14px;
+  font-size: 0.95rem; color: var(--text-dim);
+}
+.road-empty .road-btn { flex: 0 0 auto; min-width: 0; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 560px) {
+  .road-top { grid-template-columns: 1fr; }
+  .road-rank { flex-direction: row; gap: 8px; min-width: 0; align-self: start; padding: 8px 14px; }
+  .rr-num { font-size: 2.1rem; }
+  .rr-label { margin-top: 0; }
+  .road-metrics { grid-template-columns: repeat(2, 1fr); }
+}

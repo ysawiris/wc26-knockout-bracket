@@ -1,0 +1,112 @@
+/* ============================================================
+   The Race (.rc-*) — draft-order bump chart, top of the Stats tab.
+   Rendered by js/race.js into #race-host. Gold & black theme.
+   ============================================================ */
+
+.rc-block { margin-bottom: 30px; }
+
+.rc-head {
+  display: flex; align-items: center; gap: 9px;
+  font-family: "Cinzel", serif; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; font-size: 0.82rem; color: var(--gold-2);
+  margin-bottom: 10px;
+}
+
+.rc-panel {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px;
+}
+
+/* ---------- chart ---------- */
+
+.rc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* min-width is set inline per render (depends on snapshot count); the
+   fixed height + meet keeps the chart at native 1:1 scale on desktop
+   while the container scrolls horizontally on phones. */
+.rc-svg { display: block; width: 100%; height: 380px; }
+
+.rc-grid { stroke: rgba(212, 168, 84, 0.14); stroke-dasharray: 3 5; }
+
+.rc-rank, .rc-x {
+  font-family: "Archivo", sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; fill: var(--text-faint);
+}
+.rc-x { fill: var(--text-dim); }
+.rc-x.start { font-style: italic; fill: var(--text-faint); }
+
+/* One <g> per team — others slightly dimmed, the viewer's team full-on. */
+.rc-team { opacity: 0.55; cursor: pointer; transition: opacity 0.2s ease; }
+.rc-team.rc-mine { opacity: 1; }
+
+.rc-hit {
+  fill: none; stroke: #000; stroke-opacity: 0;
+  stroke-width: 18; pointer-events: stroke;
+}
+.rc-path {
+  fill: none; stroke-width: 2.5;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.rc-mine .rc-path {
+  stroke-width: 4;
+  filter: drop-shadow(0 0 5px rgba(243, 177, 59, 0.65));
+}
+.rc-dot { stroke: rgba(11, 7, 3, 0.85); stroke-width: 1; }
+.rc-tag {
+  font-family: "Archivo", sans-serif; font-size: 12px; font-weight: 800;
+  font-style: italic; letter-spacing: 0.03em;
+}
+
+/* Hover + pinned highlight. */
+.rc-svg .rc-team:hover { opacity: 1; }
+.rc-svg.rc-has-hot .rc-team { opacity: 0.16; }
+.rc-svg.rc-has-hot .rc-team.is-hot { opacity: 1; }
+.rc-svg.rc-has-hot .rc-team.is-hot .rc-path {
+  filter: drop-shadow(0 0 5px rgba(232, 196, 106, 0.6));
+}
+.rc-svg.rc-has-hot .rc-team:hover { opacity: 1; }
+
+/* ---------- movers ---------- */
+
+.rc-movers {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-top: 12px;
+}
+.rc-movers-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-faint); margin-right: 2px;
+}
+.rc-chip {
+  font-family: "Archivo", sans-serif; font-size: 0.74rem; font-weight: 700;
+  color: var(--text-dim); background: var(--panel);
+  border: 1px solid var(--panel-edge); border-radius: 999px;
+  padding: 5px 13px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.rc-chip b { color: var(--gold-2); font-style: italic; }
+button.rc-chip { cursor: pointer; }
+button.rc-chip:hover { color: var(--gold-1); border-color: var(--gold-3); }
+button.rc-chip:focus-visible { outline: 2px solid var(--gold-2); outline-offset: 2px; }
+.rc-chip.rc-up { border-color: rgba(232, 196, 106, 0.55); }
+.rc-chip.rc-down { border-color: rgba(255, 107, 107, 0.45); }
+
+/* ---------- empty state ---------- */
+
+.rc-empty {
+  padding: 22px 14px 18px; text-align: center;
+  font-size: 0.92rem; color: var(--text-dim);
+}
+.rc-empty-sub { margin-top: 7px; font-size: 0.74rem; color: var(--text-faint); }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 560px) {
+  .rc-panel { padding: 12px 10px; }
+  .rc-movers-label { width: 100%; }
+}
+
+@media (max-width: 380px) {
+  .rc-head { font-size: 0.76rem; }
+  .rc-chip { padding: 4px 11px; }
+}

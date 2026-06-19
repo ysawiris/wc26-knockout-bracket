@@ -1,0 +1,419 @@
+/* ============================================================
+   Pick Odds tab (.od-*) — strength-driven Monte Carlo forecast.
+   Rendered by js/odds.js into #odds-host. Gold & black theme.
+   ============================================================ */
+
+.od-wrap { display: grid; gap: 30px; }
+.od-wrap > * { min-width: 0; } /* grid items must shrink so .od-matrix scrolls instead of stretching the page */
+
+.od-head {
+  display: flex; align-items: center; gap: 9px;
+  font-family: "Cinzel", serif; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; font-size: 0.82rem; color: var(--gold-2);
+  margin-bottom: 10px;
+}
+.od-head-sub {
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.od-foot {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed rgba(212, 168, 84, 0.18);
+  font-size: 0.72rem; color: var(--text-faint);
+}
+
+.od-empty {
+  font-size: 0.85rem; color: var(--text-faint);
+  padding: 18px 4px;
+}
+
+/* ---------- Pre-tournament banner ---------- */
+
+.od-banner {
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--gold-2);
+  background: var(--panel); border: 1px dashed var(--gold-4);
+  border-radius: 999px; padding: 8px 16px; text-align: center;
+}
+
+/* ---------- Headline cards ---------- */
+
+.od-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.od-cards.two { grid-template-columns: repeat(2, 1fr); } /* no viewer team picked */
+.od-card {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px; min-width: 0;
+}
+.od-card-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 9px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.od-card-value {
+  font-family: "Cinzel", serif; font-weight: 900; font-size: 2rem; line-height: 1;
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.od-card-value.dim {
+  background: none;
+  -webkit-text-fill-color: var(--text-faint); color: var(--text-faint);
+}
+.od-card-detail {
+  margin-top: 9px; font-size: 0.76rem; color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ---------- Projected Advancement (stacked bars, one per round) ---------- */
+
+.od-rd {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 6px 16px 10px;
+}
+/* Row + drilldown pair: the dashed separator moved from the row to the
+   wrapper so an expanded panel sits inside its round's section. */
+.od-rd-grp { border-bottom: 1px dashed rgba(212, 168, 84, 0.14); }
+.od-rd-grp:last-child { border-bottom: none; }
+.od-rd-row {
+  display: grid;
+  grid-template-areas: "caret name letter bar num";
+  grid-template-columns: 12px minmax(0, 1fr) auto minmax(40px, 220px) auto;
+  align-items: center; gap: 6px 10px;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.od-rd-row:focus-visible {
+  outline: 1px dashed var(--gold-2); outline-offset: 2px; border-radius: 8px;
+}
+.od-rd-caret {
+  grid-area: caret; width: 12px;
+  font-size: 0.6rem; line-height: 1; color: var(--text-faint);
+}
+.od-rd-row[aria-expanded="true"] .od-rd-caret { color: var(--gold-2); }
+.od-rd-name {
+  grid-area: name; min-width: 0;
+  font-weight: 700; font-style: italic; text-transform: uppercase;
+  letter-spacing: 0.02em; font-size: 0.8rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* The round's points-per-win, in a gold pill (3 / 5 / 8 / 13 / 21). */
+.od-rd-letter {
+  grid-area: letter;
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: "Cinzel", serif; font-size: 0.62rem; font-weight: 800;
+  color: var(--gold-1);
+  background: radial-gradient(circle at 32% 28%, var(--gold-3), #140d05);
+  border: 1px solid var(--panel-edge);
+}
+.od-rd-bar {
+  grid-area: bar; display: flex; min-width: 0; height: 11px;
+  border-radius: 999px; overflow: hidden;
+  background: rgba(212, 168, 84, 0.1);
+  border: 1px solid rgba(212, 168, 84, 0.22);
+}
+.od-rd-banked {
+  display: block; height: 100%; flex: 0 0 auto;
+  background: var(--gold-grad);
+  box-shadow: 0 0 8px rgba(232, 196, 106, 0.35);
+  transition: width 0.4s ease;
+}
+.od-rd-remain {
+  display: block; height: 100%; flex: 0 0 auto;
+  background: repeating-linear-gradient(45deg,
+    rgba(212, 168, 84, 0.28) 0 5px, rgba(212, 168, 84, 0.12) 5px 10px);
+  transition: width 0.4s ease;
+}
+.od-rd-num {
+  grid-area: num; text-align: right;
+  font-weight: 700; font-size: 0.72rem; color: var(--gold-1); white-space: nowrap;
+}
+
+/* Match-by-match drilldown (the receipts behind each bar). */
+.od-rd-det { padding: 0 0 9px 22px; min-width: 0; }
+.od-rd-det[hidden] { display: none; }
+.od-rd-fx {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  justify-content: space-between; gap: 1px 12px;
+  padding: 5px 0;
+  border-bottom: 1px dashed rgba(212, 168, 84, 0.1);
+  font-size: 0.72rem; color: var(--text-dim);
+  min-width: 0;
+}
+.od-rd-fx-t { min-width: 0; }
+.od-rd-fx-n {
+  margin-left: auto; text-align: right;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.68rem; color: var(--gold-1);
+}
+.od-rd-fx.fin .od-rd-fx-n { color: var(--text-dim); }
+.od-rd-src { color: var(--text-faint); }
+.od-rd-det-foot {
+  padding-top: 7px;
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.66rem; color: var(--text-faint);
+}
+
+/* ---------- The Board (bookmaker list) ---------- */
+
+.od-board {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 6px 16px 10px;
+}
+.od-bd-row {
+  display: grid;
+  grid-template-areas: "dot name bar pct ml move graph";
+  grid-template-columns: 24px minmax(0, 1fr) minmax(40px, 170px) 52px 58px 44px 64px;
+  align-items: center; gap: 6px 10px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(212, 168, 84, 0.14);
+}
+.od-bd-row:last-child { border-bottom: none; }
+.od-bd-dot {
+  grid-area: dot;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 800; color: var(--gold-1);
+  background: radial-gradient(circle at 32% 28%, var(--od-ac, var(--gold-3)), #140d05);
+  border: 1px solid var(--panel-edge);
+}
+.od-bd-name {
+  grid-area: name; min-width: 0;
+  font-weight: 700; font-style: italic; text-transform: uppercase;
+  letter-spacing: 0.02em; font-size: 0.8rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.od-bd-row.mine .od-bd-name { color: var(--you); }
+.od-bd-bar {
+  grid-area: bar; display: block; min-width: 0; height: 9px;
+  border-radius: 999px; overflow: hidden;
+  background: rgba(212, 168, 84, 0.1);
+  border: 1px solid rgba(212, 168, 84, 0.22);
+}
+.od-bd-fill {
+  display: block; height: 100%; min-width: 2px; border-radius: 999px;
+  background: var(--gold-grad);
+  box-shadow: 0 0 8px rgba(232, 196, 106, 0.35);
+  transition: width 0.4s ease;
+}
+.od-bd-pct, .od-bd-ml, .od-rd-num, .od-exp {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.od-bd-pct {
+  grid-area: pct; text-align: right;
+  font-weight: 700; font-size: 0.8rem; color: var(--gold-1); white-space: nowrap;
+}
+.od-bd-ml {
+  grid-area: ml; text-align: right;
+  font-size: 0.72rem; color: var(--text-dim); white-space: nowrap;
+}
+.od-bd-move { grid-area: move; text-align: center; }
+.od-chip {
+  display: inline-block; font-size: 0.6rem; font-weight: 800;
+  letter-spacing: 0.04em; border-radius: 999px; padding: 2px 6px;
+  white-space: nowrap;
+}
+.od-chip.up {
+  color: #66d98c; background: rgba(87, 217, 124, 0.1);
+  border: 1px solid rgba(87, 217, 124, 0.35);
+}
+.od-chip.down {
+  color: var(--tie); background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+}
+.od-bd-graph { grid-area: graph; min-width: 0; }
+.od-spark { display: block; width: 100%; height: 18px; }
+.od-spark polyline {
+  fill: none; stroke: var(--gold-2); stroke-width: 1.5;
+  stroke-linejoin: round; stroke-linecap: round;
+  vector-effect: non-scaling-stroke; /* sane stroke despite preserveAspectRatio="none" */
+}
+
+/* ---------- Market Lines (bookmaker totals chip row) ---------- */
+
+.od-mk-row {
+  display: flex; gap: 8px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  max-width: 100%; min-width: 0; /* scroll inside the grid item, never widen the page */
+  padding-bottom: 4px;
+}
+.od-mk-chip {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: 999px; padding: 6px 12px;
+  white-space: nowrap;
+}
+.od-mk-chip.mine {
+  border-color: var(--you);
+  box-shadow: 0 0 10px rgba(243, 177, 59, 0.22);
+}
+.od-mk-flags { font-size: 0.9rem; line-height: 1; }
+.od-mk-txt {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.68rem; font-weight: 700; color: var(--gold-1);
+}
+.od-mk-chip.mine .od-mk-txt { color: var(--you); }
+
+/* ---------- Path to No. 1 ---------- */
+
+.od-path {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--gold-3);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 18px;
+  font-size: 0.86rem; line-height: 1.6; color: var(--text-dim);
+}
+.od-path b { color: var(--gold-1); font-weight: 800; }
+
+/* ---------- Odds matrix ---------- */
+
+.od-matrix {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 10px 12px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.od-table {
+  border-collapse: separate; border-spacing: 3px;
+  width: 100%; min-width: 700px; /* forces sideways scroll on phones */
+}
+.od-team-h, .od-pick {
+  font-family: "Cinzel", serif; font-weight: 700; font-size: 0.66rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint);
+  padding: 4px 2px; text-align: center;
+}
+.od-team-h { text-align: left; padding-left: 9px; }
+.od-team {
+  font-weight: 700; font-style: italic; text-transform: uppercase; letter-spacing: 0.02em;
+  font-size: 0.74rem; color: var(--text); text-align: left;
+  white-space: nowrap; padding: 0 10px 0 9px;
+  border-left: 3px solid var(--od-ac, var(--gold-3));
+  /* Sticky team column stays readable while the cells scroll under it;
+     needs an opaque fill (the --panel rgba would smear). */
+  position: sticky; left: 0; z-index: 1; background: #1d1409;
+}
+.od-row.mine .od-team { color: var(--you); }
+.od-grp {
+  font-family: "Cinzel", serif; font-style: normal; font-weight: 700;
+  font-size: 0.6rem; color: var(--text-faint); margin-left: 4px;
+}
+.od-cell {
+  width: 46px; min-width: 46px; height: 34px; text-align: center;
+  border-radius: 6px; font-size: 0.7rem; font-weight: 700;
+  color: var(--gold-1);
+  background: rgba(200, 150, 56, var(--od-a, 0)); /* --gold-3 at sim probability */
+  border: 1px solid rgba(212, 168, 84, 0.14);
+}
+.od-cell.hot { color: #1a1206; }
+.od-cell.dot { color: var(--text-faint); font-size: 0.85rem; }
+.od-exp {
+  min-width: 40px; height: 34px; text-align: center;
+  font-size: 0.72rem; font-weight: 700; color: var(--gold-2);
+  white-space: nowrap;
+}
+/* The team column shows the full name on desktop, the abbr on phones —
+   a full-name sticky column would leave a sliver for the pick cells. */
+.od-tn-abbr { display: none; }
+.od-swipe-hint { display: none; }
+
+/* ---------- How this works (plain-English explainer) ---------- */
+
+.od-how {
+  background: var(--panel); border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--gold-3);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 18px;
+  font-size: 0.84rem; line-height: 1.6; color: var(--text-dim);
+}
+.od-how ol { margin: 0; padding-left: 20px; display: grid; gap: 9px; }
+.od-how li { padding-left: 4px; }
+.od-how li::marker { color: var(--gold-2); font-weight: 800; }
+
+/* ---------- Methodology (last line of the explainer panel) ---------- */
+
+.od-method {
+  font-size: 0.7rem; color: var(--text-faint); text-align: center;
+  letter-spacing: 0.04em;
+}
+.od-how .od-method {
+  margin: 12px 0 0; padding-top: 10px;
+  border-top: 1px dashed rgba(212, 168, 84, 0.18);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .od-cards, .od-cards.two { grid-template-columns: 1fr; }
+  .od-card { padding: 11px 14px; }
+  .od-card-value { font-size: 1.4rem; display: inline; margin-right: 8px; }
+  .od-card-detail { white-space: normal; display: inline; margin-top: 0; }
+  .od-card-label { margin-bottom: 5px; }
+}
+
+@media (max-width: 700px) {
+  /* Seventh tab (Odds) joins the bottom nav — widen the grid set up
+     as repeat(6, 1fr) in styles.css. This file loads after it. */
+  .bottomnav { grid-template-columns: repeat(7, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .od-matrix { padding: 8px; }
+  .od-cell { width: 38px; min-width: 38px; height: 30px; font-size: 0.64rem; }
+  .od-exp { height: 30px; font-size: 0.64rem; min-width: 34px; }
+  .od-team { font-size: 0.74rem; padding: 0 8px 0 7px; }
+  .od-table { min-width: 520px; }
+
+  /* Abbr replaces the full name so ~6 pick columns fit beside the
+     sticky column instead of ~1.5. */
+  .od-tn-full { display: none; }
+  .od-tn-abbr { display: inline; }
+  .od-swipe-hint { display: inline; }
+
+  /* Board rows wrap to two lines: name + numbers, then bar + history. */
+  .od-board { padding-left: 12px; padding-right: 12px; }
+  .od-bd-row {
+    grid-template-areas:
+      "dot name pct ml"
+      "dot bar move graph";
+    grid-template-columns: 24px minmax(0, 1fr) auto auto;
+    gap: 5px 8px;
+  }
+  .od-bd-graph { width: 52px; justify-self: end; }
+  .od-bd-move { text-align: right; }
+
+  /* Projected-advancement rows wrap to two lines: caret + name + points
+     pill, then the full-width bar with its numbers. */
+  .od-rd { padding-left: 12px; padding-right: 12px; }
+  .od-rd-row {
+    grid-template-areas:
+      "caret name letter"
+      "bar   bar  num";
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    gap: 5px 8px;
+  }
+  .od-rd-det { padding-left: 12px; }
+  .od-how { padding: 12px 14px; font-size: 0.8rem; }
+}
+
+@media (max-width: 380px) {
+  .od-banner { font-size: 0.66rem; }
+  .od-bd-name { font-size: 0.74rem; }
+  .od-bd-ml { font-size: 0.66rem; }
+  .od-bd-graph { width: 40px; }
+  .od-mk-chip { padding: 5px 10px; gap: 5px; }
+  .od-mk-txt { font-size: 0.62rem; }
+  .od-rd-name { font-size: 0.74rem; }
+  .od-rd-num { font-size: 0.66rem; }
+  .od-rd-det { padding-left: 6px; }
+  .od-rd-fx { font-size: 0.66rem; gap: 1px 8px; }
+  .od-rd-fx-n { font-size: 0.62rem; }
+  .od-rd-det-foot { font-size: 0.6rem; }
+}

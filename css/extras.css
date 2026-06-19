@@ -1,0 +1,48 @@
+/* ============================================================
+   Extras — freshness pill (js/refresh.js),
+   live minute + goal ticker (js/live-direct.js)
+   ============================================================ */
+
+.hero-pill.xr-fresh {
+  color: var(--gold-2);
+  border-color: var(--panel-edge-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Match minute next to a live mini-card score */
+.mini-min {
+  font-family: "Archivo", sans-serif; font-weight: 800; font-size: 0.66rem;
+  color: #ffb3b3; letter-spacing: 0.04em;
+}
+
+/* Goal ticker under the live strip */
+.goal-ticker {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-top: 10px; padding: 9px 13px;
+  background: var(--panel-2); border: 1px solid var(--panel-edge);
+  border-radius: 12px; overflow: hidden;
+}
+.gt-label {
+  flex: 0 0 auto;
+  font-family: "Cinzel", serif; font-weight: 700; font-size: 0.66rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-2);
+}
+.gt-items {
+  display: flex; gap: 18px; overflow-x: auto;
+  scrollbar-width: none; white-space: nowrap;
+}
+.gt-items::-webkit-scrollbar { display: none; }
+.gt-item { font-size: 0.78rem; color: var(--text-dim); flex: 0 0 auto; }
+.gt-item b { color: var(--gold-1); margin-right: 2px; font-variant-numeric: tabular-nums; }
+
+/* Exhibition matches — shown on the schedule, dimmed, but outside the league */
+.match.exh { opacity: 0.78; }
+.match.exh:hover { opacity: 1; }
+
+/* Per-team cards + fouls chips on a schedule match row — compact and muted,
+   sitting between the team name and the score so the row stays uncluttered. */
+.m-cards {
+  flex: 0 0 auto;
+  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--text-dim); white-space: nowrap;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "wc26-draft-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WC26 fantasy-league draft hub (static site). The npm side exists only for CI guards.",
+  "scripts": {
+    "check:css": "node scripts/check-css-prefixes.mjs",
+    "check:mobile": "node scripts/check-mobile-overflow.mjs",
+    "check": "npm run check:css && npm run check:mobile"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

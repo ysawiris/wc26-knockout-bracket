@@ -1,0 +1,12 @@
+{
+  "name": "WC26 Draft Hub · The League",
+  "short_name": "WC26 Draft",
+  "description": "Live draft order for our 2026 World Cup fantasy league",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0b0703",
+  "theme_color": "#0d0905",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

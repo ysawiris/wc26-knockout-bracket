@@ -1,0 +1,9 @@
+{
+  "source": "manual",
+  "competition": "FWC2026-knockout",
+  "fetchedAt": null,
+  "matchCount": 0,
+  "matches": [],
+  "cards": { "byCountry": {}, "byMatch": {} },
+  "fouls": { "byCountry": {} }
+}
