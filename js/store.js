@@ -163,6 +163,63 @@ function exportState() {
   }, null, 2);
 }
 
+/* ---------- Live auto-feed (BB2) ---------- */
+
+/* RESULT PRECEDENCE: manual > committed(shared) > auto-feed > empty.
+   - MANUAL: app.js owns its result writers (onScoreChange / onBracketClick)
+     and stamps results[id].manual = true on every hand entry. The store
+     never sets manual:true; it only reads the presence of an entry.
+   - COMMITTED/SHARED: applyShared() overwrites the whole results map from
+     data/results.json. Those entries (manual flag or not) count as
+     "existing" and are never touched by the auto-feed.
+   - AUTO-FEED: applyAutoResults() below FILLS empty matches only.
+
+   applyAutoResults(derived): `derived` is the output of
+   Live.deriveResults(fixtures) -> { matchId: { winnerId, ga, gb } } for
+   FINISHED fixtures with a clear winner. For each matchId, if STATE.results
+   already has ANY entry (manual or shared/committed), it is left untouched —
+   auto NEVER overrides an existing result. Otherwise the match is filled with
+   the current resolved slot ids (from buildBracket) so the B1 stale-goal
+   guard keeps working. saveState + returns true iff anything changed. */
+function applyAutoResults(derived) {
+  if (!derived || typeof derived !== "object") return false;
+
+  var state = loadState();
+  // Resolve current home/away countryIds per matchId from the live bracket.
+  var rounds = buildBracket(state);
+  var slotsById = {};
+  rounds.forEach(function (round) {
+    round.matches.forEach(function (mt) {
+      slotsById[mt.id] = { aId: mt.home.countryId, bId: mt.away.countryId };
+    });
+  });
+
+  var changed = false;
+  Object.keys(derived).forEach(function (matchId) {
+    // Never overwrite an existing result (manual, shared, or already auto).
+    if (state.results[matchId]) return;
+
+    var d = derived[matchId];
+    if (!d || !d.winnerId) return;
+
+    var slots = slotsById[matchId];
+    if (!slots) return;
+
+    state.results[matchId] = {
+      winner: d.winnerId,
+      ga: typeof d.ga === "number" ? d.ga : null,
+      gb: typeof d.gb === "number" ? d.gb : null,
+      aId: slots.aId,
+      bId: slots.bId,
+      manual: false
+    };
+    changed = true;
+  });
+
+  if (changed) saveState(state);
+  return changed;
+}
+
 /* ---------- Draft selectors ---------- */
 
 /* The full snake-draft order of team abbrs across all rounds (2 picks

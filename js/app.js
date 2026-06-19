@@ -188,8 +188,8 @@
     host.textContent = "";
     var hint = document.getElementById("draft-order-hint");
     if (hint) {
-      hint.textContent = "Seed the snake draft — top of the list picks first. " +
-        "Reorder with the arrows, or flip the whole order.";
+      hint.textContent = "One person runs the draft for the whole league — seed the snake here. " +
+        "Top of the list picks first. Reorder with the arrows, or flip the whole order.";
     }
 
     if (state.pickLog.length) {
@@ -261,8 +261,10 @@
     var done = draftComplete(state);
     var hint = document.getElementById("snake-hint");
     if (hint) {
-      hint.textContent = "2 countries each · snake order gives everyone one earlier (stronger) " +
-        "and one later (weaker) pick. " + state.pickLog.length + " / " + seq.length + " picks made.";
+      hint.textContent = "One person drafts for the whole league — go on the clock and pick. " +
+        "2 countries each · snake order gives everyone one earlier (stronger) and one later (weaker) pick. " +
+        "The hub unlocks once all " + seq.length + " are in. " +
+        state.pickLog.length + " / " + seq.length + " picks made.";
     }
 
     /* On the clock */
@@ -535,6 +537,11 @@
     if (!host) return;
     host.textContent = "";
 
+    /* BB8: while this tab is locked, leave the body empty so the gate banner
+       (injected by applyGate into the active locked panel) is the sole focus —
+       no half-rendered bracket behind it. */
+    if (isLockedTab("bracket")) return;
+
     /* BB1: understated commissioner action — copy the shared bracket JSON to the
        clipboard so it can be committed to data/results.json. */
     var tools = el("div", "bk-tools");
@@ -666,8 +673,9 @@
     /* Internally the winner is a countryId; tap the winner again to clear. */
     var winner = prev.winner === countryId ? null : countryId;
     var results = merge(state.results, {});
-    /* B1: stamp the slots this result was entered for. */
-    results[matchId] = merge(prev, { winner: winner, aId: slots.aId, bId: slots.bId });
+    /* B1: stamp the slots this result was entered for.
+       BB2: mark this as a manual entry so the live auto-feed never overrides it. */
+    results[matchId] = merge(prev, { winner: winner, aId: slots.aId, bId: slots.bId, manual: true });
     commit(merge(state, { results: results }));
   }
 
@@ -705,6 +713,8 @@
     /* B1: stamp the slots this result was entered for. */
     patch.aId = slots.aId;
     patch.bId = slots.bId;
+    /* BB2: hand-entered goals are a manual result — protect it from the auto-feed. */
+    patch.manual = true;
 
     /* B5: reconcile winner with goals. When both goals are entered and differ,
        the winner MUST be the higher-scoring side (auto-correct on edit). An
@@ -733,6 +743,12 @@
     if (!list) return;
     list.textContent = "";
     var hint = document.getElementById("board-hint");
+    /* BB8: while Standings is locked, suppress the body + hint so the gate banner
+       is the focus rather than a provisional table sitting behind it. */
+    if (isLockedTab("board")) {
+      if (hint) hint.textContent = "";
+      return;
+    }
     if (hint) {
       hint.textContent = started
         ? "Live knockout standings — re-ranks automatically as countries advance."
@@ -1072,8 +1088,9 @@
         var banner = el("div", "gate-banner",
           '<div class="gate-lock">🔒</div>' +
           '<h3 class="gate-title">Finish the draft first</h3>' +
-          '<p class="gate-sub">The bracket, standings and forecast unlock once all ' +
-          seq.length + " picks are in — <strong>" + left + " to go</strong>.</p>" +
+          '<p class="gate-sub">One person drafts for the whole league. The bracket, standings and ' +
+          "forecast unlock once all " + seq.length + " picks are in — <strong>" + left +
+          " to go</strong>. (Once it's done, friends pick their team to highlight their picks.)</p>" +
           '<button type="button" class="gate-btn" data-tab="snake">🐍 Go to the snake draft</button>');
         panel.insertBefore(banner, panel.firstChild);
       }
@@ -1094,13 +1111,10 @@
     if (draftComplete(state) && (name === "draft-order" || name === "snake")) {
       name = "recap";
     }
-    if (isLockedTab(name)) {
-      name = "snake";
-      activeTab = "snake";
-      toast("Finish the draft to unlock that");
-    } else {
-      activeTab = name;
-    }
+    /* BB8: a locked tab is allowed to become active. Its renderer shows only the
+       in-context gate banner (the panel body is suppressed while locked), so the
+       gate is the focus instead of force-jumping to snake and toasting on every tap. */
+    activeTab = name;
     document.querySelectorAll(".tab[data-tab]").forEach(function (b) {
       var on = b.dataset.tab === name;
       b.classList.toggle("is-active", on);
@@ -1186,6 +1200,24 @@
     var bracketRounds = buildBracket(state);
     var fixtures = buildKnockoutFixtures(bracketRounds, { byId: COUNTRY_BY_ID, list: FIELD });
     Live.attachToFixtures(fixtures, matches, liveData && liveData.cards && liveData.cards.byMatch);
+
+    /* BB2: auto-advance the bracket from the live feed. Guarded so an empty feed
+       (the common case in v1) is a complete no-op and never touches manual entry.
+       Live.deriveResults finds FINISHED fixtures with a clear winner; applyAutoResults
+       FILLS only empty matches (never overrides manual/shared/auto) and persists.
+       If it changed the store, reload state and re-derive the bracket so the
+       auto-advanced slots feed standings/ctx below. */
+    if (matches.length &&
+        Live && typeof Live.deriveResults === "function" &&
+        typeof applyAutoResults === "function") {
+      var derived = Live.deriveResults(fixtures);
+      if (applyAutoResults(derived)) {
+        state = loadState();
+        bracketRounds = buildBracket(state);
+        fixtures = buildKnockoutFixtures(bracketRounds, { byId: COUNTRY_BY_ID, list: FIELD });
+        Live.attachToFixtures(fixtures, matches, liveData && liveData.cards && liveData.cards.byMatch);
+      }
+    }
 
     var started = seasonStarted(bracketRounds);
     var rows = standings(state);

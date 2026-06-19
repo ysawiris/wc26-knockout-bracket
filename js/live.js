@@ -130,6 +130,34 @@ var Live = (function () {
     return true;
   }
 
+  /* BB2 (feed half): derive auto-results from FINISHED fixtures with a clear
+     winner. Pure read-only — builds { matchId: { winnerId, ga, gb } } for each
+     fixture whose status is in FINISHED and whose homeGoals/awayGoals are both
+     numbers AND not equal. Skips TBD slots, equal scores (manual shootout call),
+     and non-finished matches. Returns {} when nothing qualifies. The caller
+     (store.applyAutoResults) decides precedence; this never writes anywhere. */
+  function deriveResults(fixtures) {
+    var out = {};
+    if (!fixtures || !fixtures.length) return out;
+
+    fixtures.forEach(function (fx) {
+      if (!fx || fx.id == null) return;
+      if (!FINISHED[fx.status]) return;
+
+      var ga = fx.homeGoals;
+      var gb = fx.awayGoals;
+      if (typeof ga !== "number" || typeof gb !== "number") return;
+      if (ga === gb) return; // equal -> leave for manual shootout call
+
+      var winSide = ga > gb ? fx.home : fx.away;
+      if (!winSide || winSide.countryId == null) return; // TBD slot, no clear winner
+
+      out[fx.id] = { winnerId: winSide.countryId, ga: ga, gb: gb };
+    });
+
+    return out;
+  }
+
   /* Canonicalize an API team name to its normalized FIELD form. */
   function canon(apiName) {
     var c = resolveCountry(apiName);
@@ -242,6 +270,7 @@ var Live = (function () {
     applyCards: applyCards,
     applyFouls: applyFouls,
     attachToFixtures: attachToFixtures,
+    deriveResults: deriveResults,
     resolveCountry: resolveCountry,
     isCounted: isCounted,
     FINISHED: FINISHED,
