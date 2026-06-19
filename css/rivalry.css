@@ -1,0 +1,258 @@
+/* ============================================================
+   Rivalry — head-to-head "am I beating them?" panel (js/rivalry.js).
+   Lives on its own Rivals tab. Two team columns, each themed to its
+   own --team-accent, over the gold & black broadcast base. Mirrors
+   the road.css card chrome, clipboard button + empty-state patterns.
+   ============================================================ */
+
+#rivalry-host { margin: 0 0 18px; }
+
+.rivalry-card {
+  position: relative;
+  border-radius: var(--radius);
+  padding: 16px clamp(14px, 3vw, 22px) 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-edge);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.rivalry-card::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+  opacity: 0.9;
+}
+
+/* ---------- head ---------- */
+
+.rivalry-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px;
+}
+.rivalry-eyebrow {
+  font-family: "Cinzel", serif; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 0.82rem; color: var(--gold-2);
+}
+.rivalry-team-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: inherit; font-size: 0.82rem; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--panel-edge);
+  border-radius: 999px; padding: 5px 12px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.rivalry-team-pill:hover { border-color: var(--panel-edge-strong); background: rgba(0, 0, 0, 0.4); }
+.rtp-caret { color: var(--text-faint); font-size: 0.7rem; }
+
+/* ---------- opponent select ---------- */
+
+.rv-select-wrap {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+.rv-select-label {
+  text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 0.66rem; font-weight: 700; color: var(--text-faint);
+}
+.rv-select {
+  flex: 1 1 200px; min-width: 0;
+  font: inherit; font-size: 0.86rem; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid var(--panel-edge);
+  border-radius: 9px; padding: 8px 11px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.rv-select:hover { border-color: var(--panel-edge-strong); }
+.rv-select:focus { outline: none; border-color: var(--gold-3); }
+.rv-select option { color: #f4ede0; background: #16100a; }
+
+/* ---------- versus layout ---------- */
+
+.rivalry-versus {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(8px, 2vw, 16px);
+  align-items: stretch;
+}
+
+.rv-col {
+  display: flex; flex-direction: column;
+  padding: 13px clamp(10px, 2vw, 15px) 14px;
+  border-radius: 12px;
+  background:
+    radial-gradient(120% 130% at 50% 0%, color-mix(in srgb, var(--team-accent, #c89638) 18%, transparent) 0%, transparent 52%),
+    rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-edge);
+}
+.rv-col.rv-me { border-color: color-mix(in srgb, var(--team-accent, #c89638) 40%, var(--panel-edge)); }
+
+.rv-col-head {
+  display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+.rv-rank {
+  font-family: "Cinzel", serif; font-weight: 700;
+  font-size: 0.82rem; color: var(--gold-3);
+}
+.rv-team {
+  font-weight: 700; font-size: 0.98rem; color: var(--text);
+  line-height: 1.2;
+}
+.rv-crown { margin-left: 5px; font-size: 0.9rem; }
+
+.rv-total {
+  display: flex; flex-direction: column; align-items: flex-start;
+  margin-bottom: 11px;
+}
+.rv-total-num {
+  font-family: "Cinzel", serif; font-weight: 900; line-height: 0.9;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  background: var(--gold-grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.rv-total-key {
+  margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-size: 0.6rem; color: var(--text-faint);
+}
+
+/* ---------- per-country rows ---------- */
+
+.rv-countries { display: flex; flex-direction: column; gap: 7px; }
+.rvc {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "flag name pts" "flag status pts";
+  column-gap: 8px; row-gap: 1px; align-items: center;
+  padding: 7px 9px;
+  background: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(212, 168, 84, 0.16);
+  border-left-width: 3px;
+  border-radius: 9px;
+}
+.rvc.is-alive { border-left-color: #57c98a; }
+.rvc.is-out { border-left-color: rgba(160, 160, 160, 0.5); filter: saturate(0.55); }
+.rvc.is-pending { border-left-color: var(--gold-3); }
+.rvc-flag { grid-area: flag; font-size: 1.25rem; line-height: 1; }
+.rvc-name {
+  grid-area: name; font-weight: 600; font-size: 0.86rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rvc-status {
+  grid-area: status;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  font-size: 0.6rem; color: var(--text-faint);
+}
+.rvc.is-alive .rvc-status { color: #7fd8a4; }
+.rvc.is-out .rvc-status { color: var(--text-faint); }
+.rvc-pts {
+  grid-area: pts; align-self: center;
+  font-family: "Cinzel", serif; font-weight: 700;
+  font-size: 0.86rem; color: var(--gold-1); white-space: nowrap;
+}
+.rvc.is-out .rvc-pts { color: var(--text-dim); }
+
+.rv-table {
+  margin-top: 10px; padding-top: 9px;
+  border-top: 1px dashed rgba(212, 168, 84, 0.22);
+  font-family: "Cinzel", serif; font-weight: 700;
+  font-size: 1.05rem; color: var(--gold-2);
+}
+.rv-table span {
+  display: block;
+  font-family: inherit; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 0.58rem; color: var(--text-faint); margin-top: 1px;
+}
+
+/* ---------- center VS column ---------- */
+
+.rv-vs {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 4px 2px;
+}
+.rv-vs-bolt {
+  font-family: "Cinzel", serif; font-weight: 900;
+  font-size: 1.1rem; letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+.rv-gap {
+  display: inline-flex; align-items: center; text-align: center;
+  max-width: 120px;
+  padding: 6px 9px; border-radius: 999px;
+  font-size: 0.66rem; font-weight: 700; line-height: 1.25;
+  text-transform: uppercase; letter-spacing: 0.03em;
+  border: 1px solid var(--panel-edge);
+}
+.rv-gap-me {
+  color: #0b3d1a;
+  background: linear-gradient(180deg, #bff0c8, #7fd89a);
+  border-color: transparent;
+}
+.rv-gap-opp {
+  color: #ffd9d9;
+  background: rgba(200, 70, 70, 0.22);
+  border-color: rgba(220, 100, 100, 0.4);
+}
+.rv-gap-tie {
+  color: var(--gold-1);
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--panel-edge-strong);
+}
+
+/* ---------- verdict ---------- */
+
+.rivalry-verdict {
+  margin-top: 14px;
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 11px 13px;
+  background: linear-gradient(90deg, rgba(212, 168, 84, 0.12), rgba(0, 0, 0, 0.16));
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--gold-3);
+  border-radius: 10px;
+}
+.rvv-icon { font-size: 0.95rem; line-height: 1.45; flex: 0 0 auto; }
+.rvv-text { font-size: 0.92rem; line-height: 1.45; color: var(--text); font-weight: 500; }
+
+/* ---------- actions ---------- */
+
+.rivalry-actions { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
+.rivalry-btn {
+  flex: 1 1 auto; min-width: 140px;
+  font: inherit; font-size: 0.84rem; font-weight: 600; cursor: pointer;
+  padding: 9px 14px; border-radius: 10px;
+  color: var(--text); background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-edge);
+  transition: border-color 0.15s, background 0.15s, transform 0.08s;
+}
+.rivalry-btn:hover { border-color: var(--panel-edge-strong); background: rgba(0, 0, 0, 0.42); }
+.rivalry-btn:active { transform: translateY(1px); }
+.rivalry-btn.primary {
+  color: #1a1206;
+  background: var(--gold-grad);
+  border-color: transparent;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.rivalry-btn.primary:hover { filter: brightness(1.05); }
+.rivalry-btn.is-copied { color: #0b3d1a; background: linear-gradient(180deg, #bff0c8, #7fd89a); }
+
+/* ---------- empty (no team claimed) ---------- */
+
+.rivalry-empty { text-align: center; padding: 22px 18px 20px; }
+.rivalry-empty .rivalry-eyebrow { display: block; margin-bottom: 10px; }
+.rivalry-empty-line {
+  max-width: 60ch; margin: 0 auto 14px;
+  font-size: 0.95rem; color: var(--text-dim);
+}
+.rivalry-empty .rivalry-btn { flex: 0 0 auto; min-width: 0; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 560px) {
+  .rivalry-versus { grid-template-columns: 1fr; }
+  .rv-vs { flex-direction: row; justify-content: center; gap: 12px; padding: 8px 0; }
+  .rv-gap { max-width: none; }
+  .rv-total-num { font-size: 2rem; }
+}

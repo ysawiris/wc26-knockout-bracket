@@ -166,13 +166,21 @@
     stack.className = "ga-stack";
     stack.setAttribute("aria-live", "polite");
     stack.addEventListener("click", function (e) {
+      /* The hype button carries its own payload; fire ShareCard and swallow
+         the click so it doesn't also dismiss the toast. */
+      var hype = e.target.closest(".ga-hype");
+      if (hype) {
+        e.stopPropagation();
+        fireHype(hype);
+        return;
+      }
       var t = e.target.closest(".ga-toast");
       if (t) dismissToast(t);
     });
     document.body.appendChild(stack);
   }
 
-  function showToast(title, sub, kind) {
+  function showToast(title, sub, kind, hype) {
     ensureStack();
     if (!stack) return;
     while (stack.children.length >= MAX_STACKED) {
@@ -183,9 +191,33 @@
     t.setAttribute("role", "status");
     var html = '<div class="ga-title">' + esc(title) + "</div>";
     if (sub) html += '<div class="ga-sub">' + esc(sub) + "</div>";
+    /* Surface a hype-card button on event toasts when ShareCard is loaded.
+       The payload is stashed on the button as JSON so the delegated stack
+       click handler can hand it straight to ShareCard.hype(ev). */
+    if (hype && hasShareCard()) {
+      html += '<button type="button" class="ga-hype" title="Make a share card" ' +
+        'aria-label="Make a share card" data-ga-hype="' +
+        esc(JSON.stringify(hype)) + '">📸</button>';
+    }
     t.innerHTML = html;
     stack.appendChild(t);
     window.setTimeout(function () { dismissToast(t); }, TOAST_MS);
+  }
+
+  /* ShareCard is an optional sibling module — never assume it loaded. */
+  function hasShareCard() {
+    return !!(window.ShareCard && typeof window.ShareCard.hype === "function");
+  }
+
+  function fireHype(btn) {
+    if (!hasShareCard()) return;
+    var raw = btn.getAttribute("data-ga-hype");
+    if (!raw) return;
+    try {
+      window.ShareCard.hype(JSON.parse(raw));
+    } catch (err) {
+      console.error("Knockout alerts hype card failed:", err);
+    }
   }
 
   function dismissToast(t) {
@@ -381,7 +413,12 @@
         events.push({
           kind: "advance", tag: "advance-" + abbr + "-" + nowAdv,
           title: "📈 " + abbr + " advances · +" + (nowAdv - wasAdv) + " pts",
-          sub: name + " — " + row.points + " pts total · reached " + (row.reached || "—")
+          sub: name + " — " + row.points + " pts total · reached " + (row.reached || "—"),
+          hype: {
+            kind: "advance", teamAbbr: abbr, countryId: null,
+            roundLabel: row.reached || null, points: nowAdv - wasAdv,
+            note: name + " — " + row.points + " pts total"
+          }
         });
       }
     });
@@ -390,7 +427,12 @@
       events.push({
         kind: "champion", tag: "leader-" + newLeader.abbr,
         title: "👑 " + newLeader.abbr + " takes #1!",
-        sub: (teamName(ctx, newLeader.abbr) || newLeader.abbr) + " leads with " + newLeader.points + " pts"
+        sub: (teamName(ctx, newLeader.abbr) || newLeader.abbr) + " leads with " + newLeader.points + " pts",
+        hype: {
+          kind: "rank", teamAbbr: newLeader.abbr, countryId: null,
+          roundLabel: "#1", points: newLeader.points,
+          note: (teamName(ctx, newLeader.abbr) || newLeader.abbr) + " takes the lead"
+        }
       });
     } else if (rankChanges.length) {
       rankChanges.sort(function (a, b) { return a.to - b.to; });
@@ -450,7 +492,12 @@
           title: "✅ " + winName + " advance" + (round.label ? " — " + round.label : ""),
           sub: winOwner
             ? (teamName(ctx, winOwner) || winOwner) + " +" + pts + " pts"
-            : "Undrafted — no fantasy points" });
+            : "Undrafted — no fantasy points",
+          hype: {
+            kind: "advance", teamAbbr: winOwner || null, countryId: cur.winnerId,
+            roundLabel: round.label || mt.round || null, points: pts,
+            note: winName + " advance" + (round.label ? " — " + round.label : "")
+          } });
 
         if (loseOwner && loseOwner !== winOwner) {
           var loseName = countryName(ctx, loserId) ||
@@ -458,7 +505,12 @@
           results.push({ kind: "eliminate",
             tag: "out-" + mt.id + "-" + loserId,
             title: "❌ " + loseName + " eliminated",
-            sub: (teamName(ctx, loseOwner) || loseOwner) + "'s drafted country is out" });
+            sub: (teamName(ctx, loseOwner) || loseOwner) + "'s drafted country is out",
+            hype: {
+              kind: "eliminate", teamAbbr: loseOwner || null, countryId: loserId,
+              roundLabel: round.label || mt.round || null, points: 0,
+              note: loseName + " eliminated"
+            } });
         }
       }
     });
@@ -476,7 +528,12 @@
           num(row.advancePoints) > num(prev.advance[abbr])) {
         events.push({ kind: "champion", tag: "champ-" + abbr,
           title: "🏆 " + abbr + " wins the World Cup!",
-          sub: (teamName(ctx, abbr) || abbr) + "'s drafted country lifts the trophy" });
+          sub: (teamName(ctx, abbr) || abbr) + "'s drafted country lifts the trophy",
+          hype: {
+            kind: "champion", teamAbbr: abbr, countryId: null,
+            roundLabel: "Champion", points: num(row.advancePoints) - num(prev.advance[abbr]),
+            note: (teamName(ctx, abbr) || abbr) + " wins the World Cup"
+          } });
       }
     });
 
@@ -494,7 +551,7 @@
       rest = events.slice(MAX_TOASTS - 1);
     }
     shown.forEach(function (ev) {
-      showToast(ev.title, ev.sub, ev.kind);
+      showToast(ev.title, ev.sub, ev.kind, ev.hype);
       notifyBrowser(ev.title, ev.sub, ev.tag);
     });
     if (rest.length) {

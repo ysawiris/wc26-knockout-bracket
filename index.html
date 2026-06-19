@@ -31,6 +31,8 @@
   <link rel="stylesheet" href="css/road.css" />
   <link rel="stylesheet" href="css/recaps.css" />
   <link rel="stylesheet" href="css/matchcenter.css" />
+  <link rel="stylesheet" href="css/rivalry.css" />
+  <link rel="stylesheet" href="css/ceremony.css" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/icon.svg" />
@@ -52,6 +54,7 @@
       <button class="tab" data-tab="board" role="tab">Standings</button>
       <button class="tab" data-tab="odds" role="tab">Forecast</button>
       <button class="tab" data-tab="stats" role="tab">Stats</button>
+      <button class="tab" data-tab="rivalry" role="tab">Rivals</button>
       <button class="tab" data-tab="rules" role="tab">Rules</button>
     </div>
   </nav>
@@ -118,6 +121,12 @@
       <div id="stats-host"></div>
     </section>
 
+    <!-- RIVALRY (head-to-head) -->
+    <section class="tab-panel" id="tab-rivalry" hidden>
+      <h2 class="section-title"><span>Head-to-Head</span></h2>
+      <div id="rivalry-host"></div>
+    </section>
+
     <!-- RULES -->
     <section class="tab-panel" id="tab-rules" hidden>
       <h2 class="section-title"><span>How It Works</span></h2>
@@ -166,6 +175,7 @@
     <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
     <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
     <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>
+    <button class="tab" data-tab="rivalry" role="tab"><span class="bn-ico">⚔️</span><span class="bn-label">Rivals</span></button>
     <button class="tab" data-tab="rules" role="tab"><span class="bn-ico">📜</span><span class="bn-label">Rules</span></button>
   </nav>
 
@@ -191,11 +201,13 @@
   <script src="js/alerts.js"></script>
   <script src="js/share-card.js"></script>
   <script src="js/road.js"></script>
+  <script src="js/rivalry.js"></script>
   <script src="js/recaps.js"></script>
   <script src="js/xg.js"></script>
   <script src="js/matchcenter.js"></script>
   <script src="js/live-direct.js"></script>
   <script src="js/refresh.js"></script>
+  <script src="js/ceremony.js"></script>
   <script src="js/sw-register.js"></script>
 </body>
 </html>

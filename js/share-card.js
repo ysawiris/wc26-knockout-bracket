@@ -12,6 +12,7 @@
 
   var SITE_LABEL = "ysawiris.github.io/wc26-knockout-bracket";
   var FILE_NAME = "wc26-knockout-standings.png";
+  var HYPE_FILE_NAME = "wc26-knockout-moment.png";
   var DEFAULT_LABEL = "📸 Share card";
   var BUSY_LABEL = "📸 …";
   var ERROR_LABEL = "Couldn't share";
@@ -398,11 +399,17 @@
   }
 
   /* ---------------- export + share ---------------- */
+  /* The export/share pipeline is shared by the standings card (driven by
+     the toolbar button) and the single-event hype card (driven by the
+     public API). `job` carries the filename, share title, and the
+     ok/err callbacks so neither path knows about the other's UI state. */
 
-  function triggerDownload(url, revoke) {
+  function noop() {}
+
+  function triggerDownload(url, fileName, revoke) {
     var a = document.createElement("a");
     a.href = url;
-    a.download = FILE_NAME;
+    a.download = fileName;
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
@@ -414,20 +421,20 @@
     }
   }
 
-  function downloadBlob(blob, btn) {
+  function downloadBlob(blob, job) {
     try {
-      triggerDownload(URL.createObjectURL(blob), true);
-      finishOk(btn);
+      triggerDownload(URL.createObjectURL(blob), job.fileName, true);
+      job.ok();
     } catch (err) {
       console.error("Share card download failed:", err);
-      finishError(btn);
+      job.err();
     }
   }
 
-  function deliver(blob, btn) {
+  function deliver(blob, job) {
     var file = null;
     try {
-      file = new File([blob], FILE_NAME, { type: "image/png" });
+      file = new File([blob], job.fileName, { type: "image/png" });
     } catch (err) {
       file = null; /* old browsers without the File constructor */
     }
@@ -436,28 +443,38 @@
       try { canShareFile = navigator.canShare({ files: [file] }); } catch (err) { canShareFile = false; }
     }
     if (!canShareFile) {
-      downloadBlob(blob, btn);
+      downloadBlob(blob, job);
       return;
     }
     try {
-      navigator.share({ title: "WC26 Knockout Standings", files: [file] })
-        .then(function () { finishOk(btn); })
+      navigator.share({ title: job.title, files: [file] })
+        .then(function () { job.ok(); })
         .catch(function (err) {
           /* User closing the sheet is fine; anything else gets the file. */
-          if (err && err.name === "AbortError") finishOk(btn);
-          else downloadBlob(blob, btn);
+          if (err && err.name === "AbortError") job.ok();
+          else downloadBlob(blob, job);
         });
     } catch (err) {
-      downloadBlob(blob, btn);
+      downloadBlob(blob, job);
     }
   }
 
-  function exportPng(canvas, btn) {
+  /* Hand a finished canvas to the share/download path. `opts` may carry
+     { fileName, title, ok, err }; all are optional and default to the
+     standings card's values + no-op callbacks. */
+  function exportPng(canvas, opts) {
+    opts = opts || {};
+    var job = {
+      fileName: opts.fileName || FILE_NAME,
+      title: opts.title || "WC26 Knockout Standings",
+      ok: opts.ok || noop,
+      err: opts.err || noop
+    };
     if (typeof canvas.toBlob === "function") {
       try {
         canvas.toBlob(function (blob) {
-          if (blob) deliver(blob, btn);
-          else finishError(btn);
+          if (blob) deliver(blob, job);
+          else job.err();
         }, "image/png");
         return;
       } catch (err) {
@@ -465,11 +482,11 @@
       }
     }
     try {
-      triggerDownload(canvas.toDataURL("image/png"), false);
-      finishOk(btn);
+      triggerDownload(canvas.toDataURL("image/png"), job.fileName, false);
+      job.ok();
     } catch (err) {
       console.error("Share card export failed:", err);
-      finishError(btn);
+      job.err();
     }
   }
 
@@ -491,7 +508,250 @@
       finishError(btn);
       return;
     }
-    exportPng(canvas, btn);
+    exportPng(canvas, {
+      fileName: FILE_NAME,
+      title: "WC26 Knockout Standings",
+      ok: function () { finishOk(btn); },
+      err: function () { finishError(btn); }
+    });
+  }
+
+  /* ---------------- hype card (single-event) ---------------- */
+  /* A compact 1080x1080 square card for one moment: an advance, an upset,
+     an elimination, or the title. Reuses the same canvas setup, fonts,
+     gold gradients, and primitives as the standings card, then routes
+     through the shared export/share path. Driven by ShareCard.hype(ev). */
+
+  var HYPE_W = 1080;
+  var HYPE_H = 1080;
+  var HYPE_CX = HYPE_W / 2;
+
+  /* Per-kind copy + accent tuning. `eyebrow` is the tracked label up top;
+     `tone` shifts the headline gradient (red for upset/eliminate). */
+  var HYPE_KINDS = {
+    advance: { eyebrow: "ADVANCES", tone: "gold" },
+    upset: { eyebrow: "UPSET", tone: "red" },
+    eliminate: { eyebrow: "ELIMINATED", tone: "red" },
+    champion: { eyebrow: "CHAMPIONS", tone: "gold" }
+  };
+
+  function hypeKind(kind) {
+    return HYPE_KINDS[kind] || HYPE_KINDS.advance;
+  }
+
+  /* Resolve a country (name + flag) from ctx given an id, tolerating a
+     missing field index by falling back to the countryById helper. */
+  function lookupCountry(hub, countryId) {
+    if (!countryId) return null;
+    var byId = (hub.field && hub.field.byId) || {};
+    if (byId[countryId]) return byId[countryId];
+    if (hub.helpers && typeof hub.helpers.countryById === "function") {
+      return hub.helpers.countryById(countryId);
+    }
+    return null;
+  }
+
+  /* Resolve a team (name + accent) from ctx given its abbr. Prefers the
+     live standings row's team (carries isMine), then the teams list. */
+  function lookupTeam(hub, abbr) {
+    if (!abbr) return null;
+    var rows = hub.standings || [];
+    for (var i = 0; i < rows.length; i++) {
+      var t = rows[i] && rows[i].team;
+      if (t && t.abbr === abbr) return t;
+    }
+    var teams = hub.teams || [];
+    for (var j = 0; j < teams.length; j++) {
+      if (teams[j] && teams[j].abbr === abbr) return teams[j];
+    }
+    return null;
+  }
+
+  /* Points banked for a team's whole knockout run, used in the banner.
+     Prefers an explicit ev.points, else the standings row total. */
+  function teamBanked(hub, abbr) {
+    var rows = hub.standings || [];
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i] && rows[i].team && rows[i].team.abbr === abbr) {
+        return rows[i].points;
+      }
+    }
+    return null;
+  }
+
+  function fmtPts(pts) {
+    if (typeof pts !== "number") return null;
+    return pts % 1 !== 0 ? pts.toFixed(1) : String(pts);
+  }
+
+  /* Draw one or two stacked headline lines, centered, auto-shrinking the
+     font until each fits the card width. Returns the y below the block. */
+  function drawHeadline(g, lines, topY) {
+    var maxW = HYPE_W - 140;
+    var size = 92;
+    function widest(px) {
+      g.font = "900 " + px + "px " + SERIF;
+      var w = 0;
+      lines.forEach(function (ln) {
+        var lw = g.measureText(ln).width;
+        if (lw > w) w = lw;
+      });
+      return w;
+    }
+    while (size > 40 && widest(size) > maxW) size -= 4;
+    g.font = "900 " + size + "px " + SERIF;
+    var lineH = size + 14;
+    var grad = g.createLinearGradient(0, topY - size, 0, topY + lines.length * lineH);
+    grad.addColorStop(0, GOLD_1);
+    grad.addColorStop(0.45, "#f3d98a");
+    grad.addColorStop(1, GOLD_3);
+    g.fillStyle = grad;
+    g.textAlign = "center";
+    var y = topY;
+    lines.forEach(function (ln) {
+      g.fillText(ln, HYPE_CX, y);
+      y += lineH;
+    });
+    g.textAlign = "left";
+    return y;
+  }
+
+  /* Build the headline lines for each kind from the event payload. */
+  function hypeHeadline(ev, countryName, roundLabel) {
+    var name = (countryName || "").toUpperCase();
+    if (ev.kind === "champion") {
+      return [name, "CHAMPIONS 🏆"];
+    }
+    if (ev.kind === "eliminate") {
+      return [name, "ELIMINATED"];
+    }
+    if (ev.kind === "upset") {
+      /* ev.note typically carries the loser; render "X KNOCK OUT Y". */
+      if (ev.note) return ["UPSET!", name + " KNOCK OUT", String(ev.note).toUpperCase()];
+      return ["UPSET!", name];
+    }
+    /* advance */
+    var dest = (roundLabel || ev.roundLabel || "ADVANCE");
+    return [name, "→ " + String(dest).toUpperCase()];
+  }
+
+  function drawHypeBackground(g) {
+    var bg = g.createLinearGradient(0, 0, 0, HYPE_H);
+    bg.addColorStop(0, "#140d06");
+    bg.addColorStop(0.5, "#0d0905");
+    bg.addColorStop(1, "#0a0603");
+    g.fillStyle = bg;
+    g.fillRect(0, 0, HYPE_W, HYPE_H);
+
+    var glow = g.createRadialGradient(HYPE_CX, 120, 0, HYPE_CX, 120, 760);
+    glow.addColorStop(0, "rgba(200,150,56,0.12)");
+    glow.addColorStop(1, "rgba(200,150,56,0)");
+    g.fillStyle = glow;
+    g.fillRect(0, 0, HYPE_W, HYPE_H);
+
+    roundedRect(g, 24, 24, HYPE_W - 48, HYPE_H - 48, 28);
+    g.strokeStyle = "rgba(212,168,84,0.35)";
+    g.lineWidth = 2;
+    g.stroke();
+  }
+
+  function drawHypeCard(hub, ev) {
+    var canvas = document.createElement("canvas");
+    canvas.width = HYPE_W;
+    canvas.height = HYPE_H;
+    var g = canvas.getContext("2d");
+    if (!g) throw new Error("2d context unavailable");
+
+    var kind = hypeKind(ev.kind);
+    var country = lookupCountry(hub, ev.countryId);
+    var team = lookupTeam(hub, ev.teamAbbr);
+    var countryName = (country && country.name) || ev.teamAbbr || "—";
+    var flag = (country && country.flag) || "⚽";
+
+    drawHypeBackground(g);
+
+    /* Eyebrow */
+    g.fillStyle = kind.tone === "red" ? "#e0772f" : GOLD_3;
+    g.font = "700 32px " + SERIF;
+    drawTracked(g, "THE LEAGUE  ·  " + kind.eyebrow, HYPE_CX, 150, 10);
+
+    /* Giant flag */
+    g.textAlign = "center";
+    g.font = "150px " + SANS;
+    g.fillText(flag, HYPE_CX, 330);
+
+    /* Headline block */
+    var lines = hypeHeadline(ev, countryName, ev.roundLabel);
+    var afterHead = drawHeadline(g, lines, 470);
+
+    goldLine(g, 140, HYPE_W - 140, afterHead + 26);
+
+    /* Drafting-team + points banner */
+    var teamName = (team && team.name) || ev.teamAbbr || null;
+    var accent = safeAccent(team && team.accent);
+    var pts = (typeof ev.points === "number") ? ev.points : teamBanked(hub, ev.teamAbbr);
+    var ptsText = fmtPts(pts);
+
+    var bannerY = afterHead + 86;
+    if (teamName) {
+      g.fillStyle = DIM;
+      g.font = "500 28px " + SANS;
+      g.fillText("DRAFTED BY", HYPE_CX, bannerY);
+
+      g.fillStyle = accent;
+      g.font = "italic 800 46px " + SANS;
+      g.fillText(fitText(g, teamName.toUpperCase(), HYPE_W - 180), HYPE_CX, bannerY + 58);
+    }
+
+    if (ptsText !== null) {
+      var pillW = 320;
+      var pillX = HYPE_CX - pillW / 2;
+      var pillY = bannerY + (teamName ? 96 : 30);
+      roundedRect(g, pillX, pillY, pillW, 70, 35);
+      g.fillStyle = "rgba(34,24,12,0.9)";
+      g.fill();
+      g.strokeStyle = "rgba(138,100,32,0.9)";
+      g.lineWidth = 1.5;
+      g.stroke();
+      g.fillStyle = GOLD_1;
+      g.font = "900 40px " + SERIF;
+      g.fillText(ptsText, HYPE_CX - 14, pillY + 48);
+      g.fillStyle = DIM;
+      g.font = "600 24px " + SANS;
+      g.textAlign = "left";
+      g.fillText("pts", HYPE_CX + 34, pillY + 47);
+      g.textAlign = "center";
+    }
+
+    /* Footer */
+    g.font = "600 24px " + SANS;
+    g.fillStyle = FAINT;
+    g.fillText(SITE_LABEL + "  ·  ⚽", HYPE_CX, HYPE_H - 70);
+    g.textAlign = "left";
+
+    return canvas;
+  }
+
+  /* Public entry: paint a single-moment card and push it through the same
+     share/download path as the standings card. Read-only; pulls the live
+     ctx at call time. Returns true if it kicked off, false if it bailed. */
+  function hype(ev) {
+    if (!ev || typeof ev !== "object") return false;
+    if (!HYPE_KINDS.hasOwnProperty(ev.kind)) return false;
+    var hub = window.Hub ? window.Hub.ctx() : null;
+    if (!hub) return false;
+    var canvas;
+    try {
+      canvas = drawHypeCard(hub, ev);
+    } catch (err) {
+      console.error("Hype card draw failed:", err);
+      return false;
+    }
+    exportPng(canvas, {
+      fileName: HYPE_FILE_NAME,
+      title: "WC26 Knockout"
+    });
+    return true;
   }
 
   /* ---------------- wiring (one delegated listener, bound once) ---------------- */
@@ -517,4 +777,25 @@
   if (window.Hub && typeof window.Hub.onRender === "function") {
     window.Hub.onRender(render);
   }
+
+  /* ---------------- public API ---------------- */
+  /* Exposes the standings-card generator (so other modules can trigger
+     it) plus the single-event hype card. alerts.js calls ShareCard.hype
+     with { kind, teamAbbr, countryId, roundLabel, points, note }. */
+  window.ShareCard = window.ShareCard || {};
+  window.ShareCard.hype = hype;
+  window.ShareCard.standings = function () {
+    var btn = document.getElementById("sc-share");
+    if (btn) { generate(btn); return true; }
+    /* No button mounted (e.g. pre-render) — draw straight to the share path. */
+    var hub = window.Hub ? window.Hub.ctx() : null;
+    if (!hub || !hub.standings || !hub.standings.length) return false;
+    try {
+      exportPng(drawCard(hub), { fileName: FILE_NAME, title: "WC26 Knockout Standings" });
+    } catch (err) {
+      console.error("Share card standings failed:", err);
+      return false;
+    }
+    return true;
+  };
 })();
