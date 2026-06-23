@@ -93,6 +93,7 @@
     }
     btn.title = title;
     btn.setAttribute("aria-label", title);
+    btn.setAttribute("aria-pressed", mode === "off" ? "false" : "true");
   }
 
   function onBellClick() {

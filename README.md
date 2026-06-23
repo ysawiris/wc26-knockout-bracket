@@ -43,7 +43,7 @@ Config lives in `js/data.js` (`POINTS_CONFIG`, `GOAL_BONUS_PER_GOAL`).
 ```
 index.html        # tabbed hub shell (top + bottom nav)
 js/data.js        # 12 teams, 32 R32 countries (FIELD), bracket seeding, scoring config
-js/store.js       # localStorage state (wc26ko.v3) + derived selectors (draft, bracket, standings)
+js/store.js       # localStorage state (wc26ko.v4) + derived selectors (draft, bracket, standings)
 js/app.js         # orchestrator: ctx + Hub API, draft gate, Draft Order / Snake Draft / Recap / Bracket / Standings
 js/my-team.js     # per-viewer team identity (picker, ?team=, highlight)
 js/schedule.js    # buildKnockoutFixtures — flattens the bracket into fixtures
@@ -53,7 +53,7 @@ js/{road,odds,stats,race,simulator,board-extras,alerts,share-card,matchcenter,re
 sw.js             # PWA service worker (auto-disabled on localhost — see below)
 ```
 
-State is `localStorage` (key `wc26ko.v3`). The draft, bracket results and rules all
+State is `localStorage` (key `wc26ko.v4`). The draft, bracket results and rules all
 persist on the device; the standings/odds/race/road are all derived from them.
 
 ## Run it
@@ -63,6 +63,42 @@ cd wc26-knockout-bracket
 python3 -m http.server 5212
 # open http://localhost:5212
 ```
+
+## Going live — swap-in checklist (when the group stage ends, ~Jun 27)
+
+Everything below is a single-file edit to `js/data.js`; no logic code changes.
+The same list lives as a comment at the top of that file.
+
+1. **FIELD** — replace the 32 placeholder countries with the **real qualifiers**.
+   Keep each `seed` a unique `1..32` (it drives both bracket position and the
+   strong/weak draft split) and each `id` unique. Match the `GROUPS` spellings so
+   recaps/alias matching stays consistent.
+2. **R32_PAIRINGS** — set the 16 **actual drawn** matchups as `[homeId, awayId]`
+   in bracket order `r32-1 … r32-16`. Leave it `null` to use the seed serpentine
+   (1v32, 2v31, …). ⚠️ A malformed array silently falls back to the serpentine —
+   confirm 16 pairs and that every id exists in `FIELD`.
+3. **Draft order** — `TEAMS` is listed in the order the snake starts from. Reorder
+   `TEAMS`, or set it in-app on the Draft Order tab (persists per device).
+4. **`js/xg.js` RATINGS** — confirm every `FIELD` name has an Elo entry (unmatched
+   names fall back to 1700; real ratings sharpen the Forecast).
+5. **`LEAGUE.lastUpdated`** — bump the date; **`LEAGUE.commishAbbr`** — set to the
+   commissioner's team (powers the 👑 badge in the team picker).
+6. **Deploy** — bump `VERSION` in `sw.js` and push (Pages redeploys ~1 min).
+
+## Commissioner workflow (sharing one bracket with the league)
+
+Results are entered by hand for v1, on one device. To publish them so every
+member sees the same bracket:
+
+1. On the **Bracket** tab, tap **⬇ Export for the league** — it copies a full
+   JSON snapshot (draft order + picks + results) to your clipboard.
+2. Open **`data/results.json`** in an editor and **replace the entire file**
+   with the copied JSON (paste over everything — don't merge).
+3. Save, commit, push. Pages redeploys; each member's device loads it on next
+   visit (the newest `updatedAt` always wins) and shows a brief "Updated to the
+   league's latest bracket" toast.
+
+Only one person should commit `data/results.json`. Pull before committing.
 
 ## Notes
 

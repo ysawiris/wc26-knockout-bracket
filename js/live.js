@@ -41,7 +41,7 @@ var Live = (function () {
     "ir iran": "iran",
     "united states of america": "united states",
     "usa": "united states",
-    "czechia": "czech republic",
+    "czech republic": "czechia",
     "bosnia and herzegovina": "bosnia and herzegovina",
     "korea republic": "south korea"
   };

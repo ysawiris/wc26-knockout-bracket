@@ -28,7 +28,10 @@ function defaultState() {
   return {
     config: {
       points: JSON.parse(JSON.stringify(POINTS_CONFIG)),
-      goalBonusPerGoal: GOAL_BONUS_PER_GOAL
+      goalBonusPerGoal: GOAL_BONUS_PER_GOAL,
+      /* "best-first" = the listed order seeds the snake; flipping on the Draft
+         Order tab toggles this to "worst-first" so the Recap label stays honest. */
+      draftDirection: "best-first"
     },
     draftOrder: TEAMS.map(function (t) { return t.abbr; }),
     pickLog: [],
@@ -92,7 +95,8 @@ function loadState() {
         points: Object.assign({}, def.config.points, cfg.points || {}),
         goalBonusPerGoal: typeof cfg.goalBonusPerGoal === "number"
           ? cfg.goalBonusPerGoal
-          : def.config.goalBonusPerGoal
+          : def.config.goalBonusPerGoal,
+        draftDirection: cfg.draftDirection === "worst-first" ? "worst-first" : "best-first"
       },
       draftOrder: draftOrder,
       pickLog: pickLog,
@@ -138,6 +142,11 @@ function applyShared(shared) {
       ? shared.results
       : {};
   }
+  /* draftDirection travels with the shared draft so the Recap label reads the
+     same on every device (it's cosmetic; only this flag is adopted from config). */
+  if (shared.draftDirection === "best-first" || shared.draftDirection === "worst-first") {
+    state.config = Object.assign({}, state.config, { draftDirection: shared.draftDirection });
+  }
 
   state.updatedAt = shared.updatedAt;
   // Persist without re-stamping updatedAt (preserve the shared timestamp).
@@ -158,6 +167,7 @@ function exportState() {
   return JSON.stringify({
     updatedAt: Date.now(),
     draftOrder: state.draftOrder,
+    draftDirection: (state.config && state.config.draftDirection) || "best-first",
     pickLog: state.pickLog,
     results: state.results
   }, null, 2);

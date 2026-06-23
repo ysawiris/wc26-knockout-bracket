@@ -49,6 +49,17 @@
     /* L */ "England": 2080, "Croatia": 1880, "Ghana": 1650, "Panama": 1690
   };
 
+  /* Swap-safety net: if a FIELD country has no exact RATINGS key (e.g. a real
+     qualifier whose name is spelled differently than above), fall back to a
+     mid-tier rating instead of collapsing the whole match to a coinflip. When
+     the real R32 field is wired in, sanity-check that every FIELD[i].name has a
+     RATINGS entry (see the swap checklist in README / js/data.js). */
+  var FALLBACK_RATING = 1700;
+  function ratingFor(name) {
+    var r = RATINGS[name];
+    return (typeof r === "number") ? r : FALLBACK_RATING;
+  }
+
   var bound = false; // delegated listener attached once
 
   /* ---------------- the xG model ---------------- */
@@ -59,20 +70,16 @@
 
   /* Win expectancy for the home side from the Elo gap. */
   function winProb(homeName, awayName) {
-    var rh = RATINGS[homeName];
-    var ra = RATINGS[awayName];
-    if (rh == null || ra == null) return 0.5;
+    var rh = ratingFor(homeName);
+    var ra = ratingFor(awayName);
     return 1 / (1 + Math.pow(10, (ra - rh) / 400));
   }
 
   /* xG for one fixture: win expectancy from the Elo gap sets each side's
      share of the goals; mismatches push the expected total up. */
   function fixtureXg(homeName, awayName) {
-    var rh = RATINGS[homeName];
-    var ra = RATINGS[awayName];
-    if (rh == null || ra == null) {
-      return { home: MATCH_GOALS / 2, away: MATCH_GOALS / 2, total: MATCH_GOALS };
-    }
+    var rh = ratingFor(homeName);
+    var ra = ratingFor(awayName);
     var w = 1 / (1 + Math.pow(10, (ra - rh) / 400));
     var total = MATCH_GOALS + MISMATCH_BOOST * Math.abs(w - 0.5) * 2;
     var h = clampLambda(total * w);

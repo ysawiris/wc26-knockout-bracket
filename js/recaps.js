@@ -1,6 +1,7 @@
 /* ============================================================
-   AI match recaps. Loads data/recaps.json (written by the
-   generate-recaps GitHub Action) and opens a panel with the
+   AI match recaps. Loads data/recaps.json (a future knockout feed;
+   absent in manual-entry v1, so this layer is dormant — fetch falls
+   back to null and nothing renders) and opens a panel with the
    AI-written summary and the goal-by-goal scorer list for any
    FINISHED knockout match.
 

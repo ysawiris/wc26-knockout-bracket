@@ -6,7 +6,7 @@
    window.Hub contract that every feature module reads.
 
    State is the single source of truth in store.js (localStorage
-   "wc26ko.v3"). This file renders it, writes back through small
+   "wc26ko.v4"). This file renders it, writes back through small
    immutable updaters, rebuilds ctx, and fires Hub.onRender. The
    onRender try/catch keeps not-yet-ported feature modules from
    crashing the core.
@@ -242,7 +242,13 @@
       /* Q6: same guard for the whole-order flip. */
       if (state.pickLog.length > 0 &&
           !confirm("Draft has started — flipping reshuffles who picked what. Flip anyway?")) return;
-      commit(merge(state, { draftOrder: state.draftOrder.slice().reverse() }));
+      /* Track the direction so the Recap label reflects the real seed order. */
+      var nextDir = (state.config && state.config.draftDirection === "worst-first")
+        ? "best-first" : "worst-first";
+      commit(merge(state, {
+        draftOrder: state.draftOrder.slice().reverse(),
+        config: merge(state.config, { draftDirection: nextDir })
+      }));
       toast("Draft order flipped");
     });
     actions.appendChild(flip);
@@ -261,9 +267,9 @@
     var done = draftComplete(state);
     var hint = document.getElementById("snake-hint");
     if (hint) {
-      hint.textContent = "One person drafts for the whole league — go on the clock and pick. " +
-        "2 countries each · snake order gives everyone one earlier (stronger) and one later (weaker) pick. " +
-        "The hub unlocks once all " + seq.length + " are in. " +
+      hint.textContent = "One person (the commissioner) drafts for the whole league — if that's not you, " +
+        "you're just watching. 2 countries each · snake order gives everyone one earlier (stronger) and one " +
+        "later (weaker) pick. The hub unlocks once all " + seq.length + " are in. " +
         state.pickLog.length + " / " + seq.length + " picks made.";
     }
 
@@ -723,6 +729,11 @@
     var gb = sideKey === "gb" ? val : prev.gb;
     if (typeof ga === "number" && typeof gb === "number" && ga !== gb) {
       patch.winner = ga > gb ? slots.aId : slots.bId;
+    } else if (val === null && prev.winner &&
+               prev.winner === (sideKey === "ga" ? slots.aId : slots.bId)) {
+      /* Cleared the winning side's goal box — drop the now-inconsistent winner
+         (no blank-goal "winner" left standing). Re-tap or re-enter to set it. */
+      patch.winner = null;
     }
 
     var results = merge(state.results, {});
@@ -825,7 +836,7 @@
           '<span class="live-gate-ico">🐍</span>' +
           '<div class="live-gate-text"><strong>Draft in progress</strong>' +
           "<small>" + state.pickLog.length + " / " + seq.length + " picks · " +
-          left + " to go — the hub unlocks at 24</small></div>" +
+          left + " to go — the hub unlocks once all " + seq.length + " picks are in</small></div>" +
           '<button type="button" class="live-gate-btn" data-tab="snake">Open the draft →</button>' +
         "</div>";
       return;
@@ -1118,6 +1129,9 @@
     document.querySelectorAll(".tab[data-tab]").forEach(function (b) {
       var on = b.dataset.tab === name;
       b.classList.toggle("is-active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+      /* Roving tabindex within the top tablist so arrow keys, not Tab, walk it. */
+      if (b.closest("#tabs")) b.tabIndex = on ? 0 : -1;
       if (on && b.closest("#tabs") && b.scrollIntoView) {
         b.scrollIntoView({ inline: "center", block: "nearest" });
       }
@@ -1145,6 +1159,37 @@
     });
     var hash = (location.hash || "").replace("#", "");
     if (tabNames().indexOf(hash) >= 0 && !isLockedTab(hash)) activeTab = hash;
+
+    /* WCAG tablist keyboard support: arrow keys (and Home/End) walk the top
+       tabs, activating as focus moves. Hidden setup/recap tabs are skipped. */
+    var tabsEl = document.getElementById("tabs");
+    if (tabsEl) {
+      tabsEl.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft" &&
+            e.key !== "Home" && e.key !== "End") return;
+        var btns = Array.prototype.slice
+          .call(tabsEl.querySelectorAll(".tab[data-tab]"))
+          .filter(function (b) {
+            return !b.hidden && tabNames().indexOf(b.dataset.tab) >= 0;
+          });
+        if (!btns.length) return;
+        var cur = btns.indexOf(document.activeElement);
+        if (cur < 0) {
+          for (var i = 0; i < btns.length; i++) {
+            if (btns[i].classList.contains("is-active")) { cur = i; break; }
+          }
+        }
+        if (cur < 0) cur = 0;
+        var ni;
+        if (e.key === "Home") ni = 0;
+        else if (e.key === "End") ni = btns.length - 1;
+        else if (e.key === "ArrowRight") ni = (cur + 1) % btns.length;
+        else ni = (cur - 1 + btns.length) % btns.length;
+        e.preventDefault();
+        setTab(btns[ni].dataset.tab);
+        btns[ni].focus();
+      });
+    }
   }
 
   /* ---------------- Hub (feature-module API) ---------------- */
@@ -1276,6 +1321,7 @@
             if (json && applyShared(json)) {
               renderAll();
               setTab(activeTab, { noScroll: true });
+              toast("Updated to the league's latest bracket");
             }
           })
           .catch(function () {});

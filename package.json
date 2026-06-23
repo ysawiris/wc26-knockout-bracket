@@ -1,8 +1,8 @@
 {
-  "name": "wc26-draft-tracker",
+  "name": "the-longest-yard",
   "version": "1.0.0",
   "private": true,
-  "description": "WC26 fantasy-league draft hub (static site). The npm side exists only for CI guards.",
+  "description": "WC26 knockout-pool hub for The Longest Yard (static site). The npm side exists only for CI guards.",
   "scripts": {
     "check:css": "node scripts/check-css-prefixes.mjs",
     "check:mobile": "node scripts/check-mobile-overflow.mjs",

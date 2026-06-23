@@ -145,7 +145,11 @@
 
     var p = document.createElement("p");
     p.className = "tp-sub";
-    p.textContent = "Pick your team and the hub highlights your drafted countries, knockout matches and points. Saved on this device — change it anytime from the 🏷 pill up top.";
+    var done = (typeof draftComplete === "function") && draftComplete(loadState());
+    p.textContent = (done
+      ? "Pick your team and the hub highlights your drafted countries, knockout matches and points. "
+      : "Pick your team now so the hub can highlight your picks, matches and points once the draft is done. ") +
+      "Saved on this device — change it anytime from the 🏷 pill up top.";
     panel.appendChild(p);
 
     var grid = document.createElement("div");
@@ -166,7 +170,8 @@
 
       var label = document.createElement("span");
       label.className = "tp-name";
-      label.textContent = t.name;
+      var isCommish = (typeof LEAGUE !== "undefined") && LEAGUE.commishAbbr === t.abbr;
+      label.textContent = t.name + (isCommish ? " 👑" : "");
       var grp = document.createElement("span");
       grp.className = "tp-grp";
       grp.textContent = summaryFor(t.abbr);

@@ -47,15 +47,15 @@
       <span class="brand-text">WC26 · <em>Longest Yard</em></span>
     </a>
     <div class="tabs" id="tabs" role="tablist">
-      <button class="tab is-active" data-tab="draft-order" role="tab">Draft&nbsp;Order</button>
-      <button class="tab" data-tab="snake" role="tab">Snake&nbsp;Draft</button>
-      <button class="tab" data-tab="recap" role="tab" hidden>Draft&nbsp;Recap</button>
-      <button class="tab" data-tab="bracket" role="tab">Bracket</button>
-      <button class="tab" data-tab="board" role="tab">Standings</button>
-      <button class="tab" data-tab="odds" role="tab">Forecast</button>
-      <button class="tab" data-tab="stats" role="tab">Stats</button>
-      <button class="tab" data-tab="rivalry" role="tab">Rivals</button>
-      <button class="tab" data-tab="rules" role="tab">Rules</button>
+      <button class="tab is-active" data-tab="draft-order" id="tabbtn-draft-order" role="tab" aria-controls="tab-draft-order" aria-selected="true">Draft&nbsp;Order</button>
+      <button class="tab" data-tab="snake" id="tabbtn-snake" role="tab" aria-controls="tab-snake" aria-selected="false">Snake&nbsp;Draft</button>
+      <button class="tab" data-tab="recap" id="tabbtn-recap" role="tab" aria-controls="tab-recap" aria-selected="false" hidden>Draft&nbsp;Recap</button>
+      <button class="tab" data-tab="bracket" id="tabbtn-bracket" role="tab" aria-controls="tab-bracket" aria-selected="false">Bracket</button>
+      <button class="tab" data-tab="board" id="tabbtn-board" role="tab" aria-controls="tab-board" aria-selected="false">Standings</button>
+      <button class="tab" data-tab="odds" id="tabbtn-odds" role="tab" aria-controls="tab-odds" aria-selected="false">Forecast</button>
+      <button class="tab" data-tab="stats" id="tabbtn-stats" role="tab" aria-controls="tab-stats" aria-selected="false">Stats</button>
+      <button class="tab" data-tab="rivalry" id="tabbtn-rivalry" role="tab" aria-controls="tab-rivalry" aria-selected="false">Rivals</button>
+      <button class="tab" data-tab="rules" id="tabbtn-rules" role="tab" aria-controls="tab-rules" aria-selected="false">Rules</button>
     </div>
   </nav>
 
@@ -72,42 +72,42 @@
     <section class="livewrap" id="livewrap" aria-live="polite"></section>
 
     <!-- DRAFT ORDER (setup tab — always unlocked) -->
-    <section class="tab-panel is-active" id="tab-draft-order">
+    <section class="tab-panel is-active" id="tab-draft-order" role="tabpanel" aria-labelledby="tabbtn-draft-order" tabindex="0">
       <h2 class="section-title"><span>Draft Order</span></h2>
       <p class="panel-hint" id="draft-order-hint"></p>
       <div id="draft-order-host"></div>
     </section>
 
     <!-- SNAKE DRAFT (setup tab — always unlocked) -->
-    <section class="tab-panel" id="tab-snake" hidden>
+    <section class="tab-panel" id="tab-snake" role="tabpanel" aria-labelledby="tabbtn-snake" tabindex="0" hidden>
       <h2 class="section-title"><span>Snake Draft · Round of 32</span></h2>
       <p class="panel-hint" id="snake-hint"></p>
       <div id="snake-host"></div>
     </section>
 
     <!-- DRAFT RECAP (replaces the two setup tabs once the draft is complete) -->
-    <section class="tab-panel" id="tab-recap" hidden>
+    <section class="tab-panel" id="tab-recap" role="tabpanel" aria-labelledby="tabbtn-recap" tabindex="0" hidden>
       <h2 class="section-title"><span>Draft Recap</span></h2>
       <p class="panel-hint" id="recap-hint"></p>
       <div id="recap-host"></div>
     </section>
 
     <!-- BRACKET -->
-    <section class="tab-panel" id="tab-bracket" hidden>
+    <section class="tab-panel" id="tab-bracket" role="tabpanel" aria-labelledby="tabbtn-bracket" tabindex="0" hidden>
       <h2 class="section-title"><span>The Bracket</span></h2>
-      <p class="panel-hint">Tap a side to advance it. Optional goal inputs feed each owner's goal bonus.</p>
+      <p class="panel-hint">Results are entered by hand: <strong>tap a side to set the winner</strong>, type each side's goals to add the bonus. One commissioner runs this — advance every match as the knockout plays out.</p>
       <div id="bracket-host"></div>
     </section>
 
     <!-- STANDINGS (was Draft Board) -->
-    <section class="tab-panel" id="tab-board" hidden>
+    <section class="tab-panel" id="tab-board" role="tabpanel" aria-labelledby="tabbtn-board" tabindex="0" hidden>
       <h2 class="section-title"><span>The Standings</span></h2>
       <p class="panel-hint" id="board-hint"></p>
       <ol class="board" id="board-list"></ol>
     </section>
 
     <!-- FORECAST (hosts Road + Odds, ported later) -->
-    <section class="tab-panel" id="tab-odds" hidden>
+    <section class="tab-panel" id="tab-odds" role="tabpanel" aria-labelledby="tabbtn-odds" tabindex="0" hidden>
       <h2 class="section-title"><span>Forecast</span></h2>
       <!-- Road to your pick — personal race, atop the full forecast (js/road.js) -->
       <div id="road-host"></div>
@@ -115,20 +115,20 @@
     </section>
 
     <!-- STATS -->
-    <section class="tab-panel" id="tab-stats" hidden>
+    <section class="tab-panel" id="tab-stats" role="tabpanel" aria-labelledby="tabbtn-stats" tabindex="0" hidden>
       <h2 class="section-title"><span>Stats &amp; Records</span></h2>
       <div id="race-host"></div>
       <div id="stats-host"></div>
     </section>
 
     <!-- RIVALRY (head-to-head) -->
-    <section class="tab-panel" id="tab-rivalry" hidden>
+    <section class="tab-panel" id="tab-rivalry" role="tabpanel" aria-labelledby="tabbtn-rivalry" tabindex="0" hidden>
       <h2 class="section-title"><span>Head-to-Head</span></h2>
       <div id="rivalry-host"></div>
     </section>
 
     <!-- RULES -->
-    <section class="tab-panel" id="tab-rules" hidden>
+    <section class="tab-panel" id="tab-rules" role="tabpanel" aria-labelledby="tabbtn-rules" tabindex="0" hidden>
       <h2 class="section-title"><span>How It Works</span></h2>
 
       <div class="rules-card">
@@ -185,7 +185,7 @@
   </footer>
 
   <!-- A global toast (draft gate + draft actions) -->
-  <div class="hub-toast" id="toast" hidden></div>
+  <div class="hub-toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>

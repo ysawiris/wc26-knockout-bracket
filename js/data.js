@@ -14,8 +14,35 @@
    locked until all 24 picks are in.
    ============================================================ */
 
+/* ============================================================
+   ⚑ DATA SWAP CHECKLIST — do this once the group stage ends
+   (~Jun 27, 2026) and the real Round of 32 is set. Editing THIS
+   FILE is all it takes; no logic code changes anywhere else.
+
+   1. FIELD (below): replace the 32 placeholder countries with the
+      REAL qualifiers. Keep `seed` a unique 1..32 (drives bracket
+      position + the strong/weak draft split). Keep `id` unique.
+      Names should match GROUPS spellings so recaps/aliases line up.
+   2. R32_PAIRINGS (below): set the 16 ACTUAL drawn matchups as
+      [homeId, awayId] in bracket order r32-1..r32-16. Leave null
+      only if you want the seed serpentine (1v32, 2v31, …) instead.
+      A malformed array silently falls back to the serpentine — so
+      double-check the count is 16 and every id exists in FIELD.
+   3. draftOrder seed: TEAMS below is listed in the order the snake
+      starts from. Reorder TEAMS (or use the in-app Draft Order tab,
+      which persists) so it matches the league's agreed seeding.
+   4. js/xg.js RATINGS: confirm every FIELD name has an Elo entry
+      (unmatched names fall back to 1700 — fine, but real ratings
+      sharpen the Forecast).
+   5. LEAGUE.lastUpdated: bump the date string.
+   6. Deploy: bump VERSION in sw.js (see its header) and push.
+   ============================================================ */
+
 var LEAGUE = {
   name: "The Longest Yard",
+  /* The commissioner's team abbr — drives the 👑 badge in the team
+     picker so members know who runs the draft. Edit to the real one. */
+  commishAbbr: "S&B",
   season: "2026 FIFA World Cup — Knockout Pool",
   lastUpdated: "June 18, 2026",
   drawNote:

@@ -1,5 +1,6 @@
 {
-  "_comment": "Authoritative SHARED bracket for the league. The commissioner enters results in the hub, taps 'Export for the league' on the Bracket tab, and commits the exported JSON here. Every device loads this over its local copy when this file is newer (updatedAt). Empty = no shared state yet; each device uses its own until a commit lands.",
+  "_comment": "Authoritative SHARED bracket for the league. Every device loads this over its local copy when this file is newer (updatedAt). Empty (updatedAt null) = no shared state yet; each device uses its own until a commit lands.",
+  "_commissioner_workflow": "To publish your bracket to the whole league: (1) on the Bracket tab tap 'Export for the league' — it copies a full JSON snapshot to your clipboard; (2) open THIS file in an editor; (3) REPLACE the entire file contents with the copied JSON (paste over everything, do not merge); (4) save, commit, and push. Only one person (the commissioner) should commit this; pull before committing to avoid clobbering. The newest updatedAt always wins.",
   "updatedAt": null,
   "draftOrder": null,
   "pickLog": null,
