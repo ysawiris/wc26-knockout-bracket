@@ -558,19 +558,44 @@
     host.appendChild(tools);
 
     var owners = ownersByCountry(state);
-    var rounds = buildBracket(state);
-    var wrap = el("div", "bk");
+    var rounds = buildBracket(state); // [R32, R16, QF, SF, Final]
+    var wrap = el("div", "bk2");
 
-    rounds.forEach(function (round) {
-      var col = el("div", "bk-col");
+    function colEl(round, matches, posClass) {
+      var col = el("div", "bk-col " + posClass);
       col.appendChild(el("div", "bk-round", esc(round.label)));
-      var matches = el("div", "bk-matches");
-      round.matches.forEach(function (mt) {
-        matches.appendChild(bracketMatchEl(mt, owners));
-      });
-      col.appendChild(matches);
-      wrap.appendChild(col);
+      var mw = el("div", "bk-matches");
+      matches.forEach(function (mt) { mw.appendChild(bracketMatchEl(mt, owners)); });
+      col.appendChild(mw);
+      return col;
+    }
+    function halfOf(arr, side) {
+      var n = arr.length / 2;
+      return side === "L" ? arr.slice(0, n) : arr.slice(n);
+    }
+
+    // Two-sided bracket: left half (R32→SF) and right half (R32→SF) converge
+    // on the centered Final. The first half of each round's matches feeds the
+    // left semifinal; the second half feeds the right semifinal (buildBracket
+    // merges adjacent matches, so this split matches the real tree).
+    var sideRounds = [rounds[0], rounds[1], rounds[2], rounds[3]]; // R32, R16, QF, SF
+
+    var left = el("div", "bk2-side bk2-left");
+    sideRounds.forEach(function (r) {
+      left.appendChild(colEl(r, halfOf(r.matches, "L"), "bk-col-L"));
     });
+    wrap.appendChild(left);
+
+    var center = el("div", "bk2-center");
+    center.appendChild(colEl(rounds[4], rounds[4].matches, "bk-col-final"));
+    wrap.appendChild(center);
+
+    var right = el("div", "bk2-side bk2-right");
+    sideRounds.slice().reverse().forEach(function (r) { // SF, QF, R16, R32 outward
+      right.appendChild(colEl(r, halfOf(r.matches, "R"), "bk-col-R"));
+    });
+    wrap.appendChild(right);
+
     host.appendChild(wrap);
 
     var champ = champion(state);
@@ -593,6 +618,85 @@
       e.preventDefault();
       onBracketClick(e);
     });
+
+    /* Draw the connectors whenever the bracket actually has a size — this fires
+       on first paint, when the tab is shown (display:none → visible), and on any
+       resize. A ResizeObserver is reliable where a one-shot rAF races the tab
+       becoming visible (which collapses every measurement to 0). */
+    _bkWrap = wrap;
+    if (_bkRO) _bkRO.disconnect();
+    if (typeof ResizeObserver === "function") {
+      _bkRO = new ResizeObserver(function () {
+        if (_bkRAF) cancelAnimationFrame(_bkRAF);
+        _bkRAF = requestAnimationFrame(function () { drawBracketLines(wrap); });
+      });
+      _bkRO.observe(wrap);
+    } else {
+      requestAnimationFrame(function () { drawBracketLines(wrap); });
+    }
+  }
+
+  /* SVG elbow connectors over the two-sided bracket. Reads laid-out card
+     positions so it stays exact regardless of card height / spacing. */
+  var _bkWrap = null;
+  var _bkRO = null;
+  var _bkRAF = null;
+  function drawBracketLines(wrap) {
+    if (!wrap || !wrap.isConnected) return;
+    var NS = "http://www.w3.org/2000/svg";
+    var old = wrap.querySelector("svg.bk2-lines");
+    if (old) old.remove();
+    var W = wrap.scrollWidth, H = wrap.scrollHeight;
+    if (!W || !H || !wrap.querySelector(".bk-match")) return; // hidden / not laid out yet
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "bk2-lines");
+    svg.setAttribute("width", W);
+    svg.setAttribute("height", H);
+    var base = wrap.getBoundingClientRect();
+    function R(matchEl) {
+      var r = matchEl.getBoundingClientRect();
+      return {
+        left: r.left - base.left + wrap.scrollLeft,
+        right: r.right - base.left + wrap.scrollLeft,
+        midY: (r.top + r.bottom) / 2 - base.top + wrap.scrollTop
+      };
+    }
+    function elbow(x1, y1, x2, y2) {
+      var mx = (x1 + x2) / 2;
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("d", "M" + x1 + " " + y1 + " H" + mx + " V" + y2 + " H" + x2);
+      p.setAttribute("class", "bk2-line");
+      svg.appendChild(p);
+    }
+    function joinCols(cols, fromInnerToOuter) {
+      // adjacent columns: each match feeds the match at floor(index/2) in the
+      // column nearer the centre. fromInnerToOuter=false → left side (cols run
+      // outer→inner, lines exit right edge); true → right side (exit left edge).
+      for (var i = 0; i < cols.length - 1; i++) {
+        var a = cols[i].querySelectorAll(".bk-match");          // more matches
+        var b = cols[i + 1].querySelectorAll(".bk-match");      // half as many
+        for (var m = 0; m < a.length; m++) {
+          var s = R(a[m]), d = R(b[Math.floor(m / 2)]);
+          if (!fromInnerToOuter) elbow(s.right, s.midY, d.left, d.midY);
+          else elbow(s.left, s.midY, d.right, d.midY);
+        }
+      }
+    }
+    var leftCols = wrap.querySelectorAll(".bk2-left .bk-col");   // [R32,R16,QF,SF]
+    var rightCols = wrap.querySelectorAll(".bk2-right .bk-col"); // [SF,QF,R16,R32]
+    joinCols(Array.prototype.slice.call(leftCols), false);
+    // right side: iterate outer→inner, so reverse the node list
+    joinCols(Array.prototype.slice.call(rightCols).reverse(), true);
+    // semifinals → final
+    var fin = wrap.querySelector(".bk-col-final .bk-match");
+    if (fin) {
+      var f = R(fin);
+      var lsf = leftCols.length ? leftCols[leftCols.length - 1].querySelector(".bk-match") : null;
+      var rsf = rightCols.length ? rightCols[0].querySelector(".bk-match") : null;
+      if (lsf) { var ls = R(lsf); elbow(ls.right, ls.midY, f.left, f.midY); }
+      if (rsf) { var rs = R(rsf); elbow(rs.left, rs.midY, f.right, f.midY); }
+    }
+    wrap.insertBefore(svg, wrap.firstChild);
   }
 
   function ownerBadge(abbr) {

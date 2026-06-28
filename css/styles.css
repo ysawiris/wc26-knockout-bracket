@@ -886,6 +886,42 @@ nav, main, header, footer { position: relative; z-index: 1; }
   border: 1px solid var(--panel-edge-strong); color: var(--gold-1); font-size: 1rem;
 }
 
+/* ---------- TWO-SIDED BRACKET (ESPN-style, converges on the Final) ---------- */
+.bk2 {
+  display: flex; align-items: stretch; justify-content: center;
+  gap: 2px; overflow-x: auto; position: relative;
+  /* break out of the centered content column so 9 columns get room */
+  width: 100vw; max-width: 100vw; margin-left: calc(50% - 50vw);
+  padding: 6px 18px 16px;
+}
+.bk2-side { display: flex; gap: 16px; position: relative; z-index: 1; }
+.bk2-center {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 10px; position: relative; z-index: 1;
+}
+.bk2 .bk-col { display: flex; flex-direction: column; min-width: 134px; max-width: 168px; position: relative; }
+.bk2 .bk-matches {
+  display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 6px;
+}
+.bk-col-final { min-width: 168px; justify-content: center; }
+.bk-col-final .bk-matches { flex: 0 0 auto; }
+.bk-col-final .bk-round { color: var(--gold-1); }
+.bk-col-final .bk-match { box-shadow: 0 0 0 1px rgba(232, 196, 106, 0.3); }
+/* compact cards inside the tree */
+.bk2 .bk-side { padding: 5px 8px; }
+.bk2 .bk-name { font-size: 0.76rem; }
+.bk2 .bk-score { width: 26px; height: 26px; }
+.bk2 .bk-flag { font-size: 0.95rem; }
+.bk2 .bk-owner { font-size: 0.54rem; }
+/* connector lines (SVG overlay sits behind the cards) */
+svg.bk2-lines { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 0; overflow: visible; }
+.bk2-line { fill: none; stroke: rgba(212, 168, 84, 0.42); stroke-width: 1.5; }
+@media (max-width: 760px) {
+  .bk2 { justify-content: flex-start; }
+  .bk2-side { gap: 12px; }
+  .bk2 .bk-col { min-width: 124px; }
+}
+
 /* ---------- DRAFT GATE (locked tabs + banner) ---------- */
 
 .tab.is-locked { opacity: 0.42; }
