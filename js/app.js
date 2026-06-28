@@ -837,7 +837,6 @@
           '<div class="live-gate-text"><strong>Draft in progress</strong>' +
           "<small>" + state.pickLog.length + " / " + seq.length + " picks · " +
           left + " to go — the hub unlocks once all " + seq.length + " picks are in</small></div>" +
-          '<button type="button" class="live-gate-btn" data-tab="snake">Open the draft →</button>' +
         "</div>";
       return;
     }
