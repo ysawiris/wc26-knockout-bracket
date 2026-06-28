@@ -17,8 +17,9 @@
     instantly, refreshed from the network in the background, so even a deploy
     that forgets the VERSION bump self-heals on the member's next visit.
   - Cross-origin requests (FIFA API, Google Fonts, ...) pass through untouched.
-  - Updates wait for the user: the page shows a "tap to refresh" pill and posts
-    SKIP_WAITING when tapped — no unprompted mid-session reloads.
+  - Updates apply automatically: skipWaiting() on install + clients.claim() on
+    activate, and sw-register.js reloads the page once on controllerchange, so a
+    deploy lands on its own — no "tap to refresh".
 
   >>> Bump VERSION on deploys that change js/, css/, index.html, or the
   >>> manifest. Stale-while-revalidate self-heals a forgotten bump on the
@@ -29,7 +30,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "lyko-v12";
+  var VERSION = "lyko-v13";
   var CACHE_NAME = "wc26-cache-" + VERSION;
   var CACHE_PREFIX = "wc26-cache-";
   var DATA_DIR_RE = /\/data\/[^/]+\.json$/;
@@ -113,6 +114,10 @@
   /* ---------------- install: precache + skipWaiting ---------------- */
 
   self.addEventListener("install", function (event) {
+    /* Activate this version as soon as it finishes installing — no waiting for
+       all tabs to close. Paired with clients.claim() + the page's reload-on-
+       controllerchange, a deploy applies automatically (no "tap to refresh"). */
+    self.skipWaiting();
     event.waitUntil(
       caches.open(CACHE_NAME).then(function (cache) {
         return Promise.all(PRECACHE_PATHS.map(function (path) {
@@ -129,8 +134,8 @@
     );
   });
 
-  /* The page posts SKIP_WAITING when the user taps the update pill —
-     activation waits for that tap instead of yanking the page mid-session. */
+  /* Legacy fallback: honor a SKIP_WAITING message if any client still posts one.
+     skipWaiting() already runs on install, so this is normally a no-op. */
   self.addEventListener("message", function (event) {
     if (event.data && event.data.type === "SKIP_WAITING") {
       self.skipWaiting();
