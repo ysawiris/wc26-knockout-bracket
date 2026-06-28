@@ -166,6 +166,21 @@ var Live = (function () {
     return ALIASES[n] ? norm(ALIASES[n]) : n;
   }
 
+  /* Normalize a round label to our canonical key (R32/R16/QF/SF/Final) so a
+     FIFA stage NAME ("Round of 32", "Quarter-finals") lines up with a fixture's
+     round KEY ("R32", "QF"). Returns null when unrecognized. Order matters:
+     "quarterfinal"/"semifinal" both contain "final", so test those first. */
+  function roundKey(r) {
+    if (!r) return null;
+    var s = String(r).toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (s.indexOf("32") >= 0) return "R32";
+    if (s.indexOf("16") >= 0) return "R16";
+    if (s.indexOf("quarter") >= 0 || s === "qf") return "QF";
+    if (s.indexOf("semi") >= 0 || s === "sf") return "SF";
+    if (s.indexOf("final") >= 0 || s === "f") return "Final";
+    return null;
+  }
+
   /* Match an API match to a generated fixture by ROUND + the unordered
      pair of teams, then copy status/score/time (and per-match card
      counts, when cardsByMatch is given) onto the fixture in ITS
@@ -180,7 +195,12 @@ var Live = (function () {
       var fxAway = norm(fx.away.name);
 
       var hit = matches.find(function (m) {
-        if (m.round !== fx.round) return false;
+        // Round is a SOFT filter: a FIFA stage name ("Round of 32") and our
+        // fixture's round key ("R32") normalize to the same key. Only reject
+        // when BOTH resolve to a round and they differ — otherwise rely on the
+        // team pair, which is unique across a single-elimination bracket.
+        var rk = roundKey(m.round), fk = roundKey(fx.round);
+        if (rk && fk && rk !== fk) return false;
         var mh = canon(m.home);
         var ma = canon(m.away);
         return (mh === fxHome && ma === fxAway) || (mh === fxAway && ma === fxHome);
