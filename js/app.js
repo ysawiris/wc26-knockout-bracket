@@ -1434,6 +1434,13 @@
           .then(function (res) { return res.ok ? res.json() : null; })
           .then(function (json) {
             if (json && applyShared(json)) {
+              /* applyShared() persisted the league draft to localStorage but did
+                 NOT touch the in-memory `state`. Refresh it (same pattern as the
+                 live-results path) so this first paint renders the completed draft
+                 — otherwise renderAll/applyGate run against the stale pre-draft
+                 state and a fresh visitor is stuck on the locked setup view until
+                 they manually reload. */
+              state = loadState();
               renderAll();
               setTab(activeTab, { noScroll: true });
               toast("Updated to the league's latest bracket");
