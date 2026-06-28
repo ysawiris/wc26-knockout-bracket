@@ -33,12 +33,18 @@ jobs:
         run: node scripts/fetch-scores.mjs
       - name: Commit data/live.json if it changed
         run: |
-          if [[ -n "$(git status --porcelain data/live.json)" ]]; then
-            git config user.name "wc26-scores-bot"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add data/live.json
-            git commit -m "chore: live knockout scores [skip ci]"
-            git push
-          else
-            echo "No score change — nothing to commit."
+          if [[ -z "$(git status --porcelain data/live.json)" ]]; then
+            echo "No score change — nothing to commit."; exit 0
           fi
+          git config user.name "wc26-scores-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/live.json
+          git commit -m "chore: live knockout scores [skip ci]"
+          # The odds/recaps bots may push concurrently — rebase + retry so a
+          # simultaneous run never loses the race and fails the job.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && { echo "Pushed live scores."; exit 0; }
+            echo "Push race on attempt $i — backing off and retrying…"
+            sleep $((RANDOM % 6 + 2))
+          done
+          echo "Could not push after 5 attempts."; exit 1

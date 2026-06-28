@@ -47,15 +47,18 @@ jobs:
 
       - name: Commit if changed
         run: |
-          if [[ -n "$(git status --porcelain data/recaps.json)" ]]; then
-            git config user.name "wc26-bot"
-            git config user.email "actions@github.com"
-            git add data/recaps.json
-            git commit -m "chore: knockout match recaps update [skip ci]"
-            # The scores bot may have pushed while this job ran — rebase first.
-            git pull --rebase origin main
-            git push
-            echo "Pushed updated recaps."
-          else
-            echo "No changes to commit."
+          if [[ -z "$(git status --porcelain data/recaps.json)" ]]; then
+            echo "No changes to commit."; exit 0
           fi
+          git config user.name "wc26-bot"
+          git config user.email "actions@github.com"
+          git add data/recaps.json
+          git commit -m "chore: knockout match recaps update [skip ci]"
+          # The scores/odds bots may push concurrently — rebase + retry so a
+          # simultaneous run never loses the race and fails the job.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && { echo "Pushed updated recaps."; exit 0; }
+            echo "Push race on attempt $i — backing off and retrying…"
+            sleep $((RANDOM % 6 + 2))
+          done
+          echo "Could not push after 5 attempts."; exit 1
