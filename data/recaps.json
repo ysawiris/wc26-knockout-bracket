@@ -1,6 +1,34 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-28T00:00:00.000Z",
-  "count": 0,
-  "byId": {}
+  "generatedAt": "2026-06-28T22:51:52.227Z",
+  "count": 1,
+  "byId": {
+    "400021518": {
+      "id": "400021518",
+      "round": "R32",
+      "home": "South Africa",
+      "away": "Canada",
+      "homeGoals": 0,
+      "awayGoals": 1,
+      "venue": "Los Angeles Stadium",
+      "utcDate": "2026-06-28T19:00:00Z",
+      "goals": [
+        {
+          "minute": "90'+2'",
+          "order": 90.02,
+          "player": "Stephen Eustaquio",
+          "team": "Canada",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Canada see off South Africa",
+      "summary": "In a thrilling Round of 32 clash, Canada edges out South Africa 1-0 thanks to a dramatic last-minute goal from Stephen Eustaquio in the second minute of stoppage time. With this victory, Canada advances to the next round, keeping their World Cup dream alive.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"South Africa\",\"Canada\",0,1,[[\"90'+2'\",\"Stephen Eustaquio\",\"Canada\",\"away\",false,false]]]"
+    }
+  }
 }
