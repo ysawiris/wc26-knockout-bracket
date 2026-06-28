@@ -176,8 +176,9 @@
     if (wasComplete && next &&
         (next.pickLog !== state.pickLog ||
          next.draftOrder !== state.draftOrder ||
-         (next.config && state.config &&
-          next.config.draftDirection !== state.config.draftDirection))) {
+         (next.config !== state.config &&
+          (!next.config || !state.config ||
+           next.config.draftDirection !== state.config.draftDirection)))) {
       toast("🔒 The draft is final");
       return;
     }
