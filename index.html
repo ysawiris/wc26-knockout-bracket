@@ -31,7 +31,6 @@
   <link rel="stylesheet" href="css/road.css" />
   <link rel="stylesheet" href="css/recaps.css" />
   <link rel="stylesheet" href="css/matchcenter.css" />
-  <link rel="stylesheet" href="css/rivalry.css" />
   <link rel="stylesheet" href="css/ceremony.css" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
@@ -54,7 +53,6 @@
       <button class="tab" data-tab="board" id="tabbtn-board" role="tab" aria-controls="tab-board" aria-selected="false">Standings</button>
       <button class="tab" data-tab="odds" id="tabbtn-odds" role="tab" aria-controls="tab-odds" aria-selected="false">Forecast</button>
       <button class="tab" data-tab="stats" id="tabbtn-stats" role="tab" aria-controls="tab-stats" aria-selected="false">Stats</button>
-      <button class="tab" data-tab="rivalry" id="tabbtn-rivalry" role="tab" aria-controls="tab-rivalry" aria-selected="false">Rivals</button>
       <button class="tab" data-tab="rules" id="tabbtn-rules" role="tab" aria-controls="tab-rules" aria-selected="false">Rules</button>
     </div>
   </nav>
@@ -121,12 +119,6 @@
       <div id="stats-host"></div>
     </section>
 
-    <!-- RIVALRY (head-to-head) -->
-    <section class="tab-panel" id="tab-rivalry" role="tabpanel" aria-labelledby="tabbtn-rivalry" tabindex="0" hidden>
-      <h2 class="section-title"><span>Head-to-Head</span></h2>
-      <div id="rivalry-host"></div>
-    </section>
-
     <!-- RULES -->
     <section class="tab-panel" id="tab-rules" role="tabpanel" aria-labelledby="tabbtn-rules" tabindex="0" hidden>
       <h2 class="section-title"><span>How It Works</span></h2>
@@ -175,7 +167,6 @@
     <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
     <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
     <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>
-    <button class="tab" data-tab="rivalry" role="tab"><span class="bn-ico">⚔️</span><span class="bn-label">Rivals</span></button>
     <button class="tab" data-tab="rules" role="tab"><span class="bn-ico">📜</span><span class="bn-label">Rules</span></button>
   </nav>
 
@@ -201,7 +192,6 @@
   <script src="js/alerts.js"></script>
   <script src="js/share-card.js"></script>
   <script src="js/road.js"></script>
-  <script src="js/rivalry.js"></script>
   <script src="js/recaps.js"></script>
   <script src="js/xg.js"></script>
   <script src="js/matchcenter.js"></script>
