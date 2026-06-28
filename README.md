@@ -102,9 +102,16 @@ Only one person should commit `data/results.json`. Pull before committing.
 
 ## Notes
 
-- **Manual results for v1.** There's no live FIFA knockout feed wired — you enter
-  bracket results by hand (tap winners / type goals). `data/live.json` is intentionally
-  empty so no stale group-stage scores leak in.
+- **Live FIFA results, with manual override.** A cron (`update-scores`) pulls the real
+  knockout scores into `data/live.json` every ~10 min; the app overlays them onto the
+  bracket and auto-advances the winner of any FINISHED match. The commissioner can still
+  enter or override a result by hand on the Bracket tab (tap winners / type goals).
+- **Recaps + odds feeds (tokenless).** `update-recaps` writes `data/recaps.json`
+  (goal-by-goal + an AI summary, or a built-in template when no LLM key is set) and
+  `update-odds` writes `data/odds.json` (ESPN over/under lines that anchor the Match
+  Center win-probability magnitude). Both degrade gracefully if a feed is empty, and
+  both run from free public APIs — no secrets required (add a `NVIDIA_API_KEY` repo
+  secret only if you want richer AI recap prose).
 - **Service worker is disabled on localhost** (`js/sw-register.js`) so edits never get
   masked by a stale cached shell. It still installs on the real domain (bump `VERSION`
   in `sw.js` on each deploy). If assets ever look stale locally: unregister the SW +

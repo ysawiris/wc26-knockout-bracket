@@ -1,0 +1,51 @@
+name: update-odds
+
+on:
+  schedule:
+    # Every 4 hours at :17 UTC — minute offset so it never races the
+    # 10-minute scores cron (which always fires at :00/:10/:20/...).
+    - cron: "17 */4 * * *"
+  workflow_dispatch: {}   # lets you refresh odds by hand from the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - "scripts/fetch-odds.mjs"
+      - ".github/workflows/update-odds.yml"
+
+# Allow the job to commit the refreshed data back to the repo.
+permissions:
+  contents: write
+
+# Don't pile up overlapping runs.
+concurrency:
+  group: update-odds
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      # ESPN's public scoreboard API — no token needed.
+      - name: Fetch latest odds
+        run: node scripts/fetch-odds.mjs
+
+      - name: Commit if changed
+        run: |
+          if [[ -n "$(git status --porcelain data/odds.json)" ]]; then
+            git config user.name "wc26-bot"
+            git config user.email "actions@github.com"
+            git add data/odds.json
+            git commit -m "chore: knockout odds update [skip ci]"
+            # The scores bot may have pushed while this job ran — rebase first.
+            git pull --rebase origin main
+            git push
+            echo "Pushed updated odds."
+          else
+            echo "No changes to commit."
+          fi

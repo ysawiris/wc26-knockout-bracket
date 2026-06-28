@@ -54,6 +54,7 @@
       <button class="tab" data-tab="board" id="tabbtn-board" role="tab" aria-controls="tab-board" aria-selected="false">Standings</button>
       <button class="tab" data-tab="odds" id="tabbtn-odds" role="tab" aria-controls="tab-odds" aria-selected="false">Forecast</button>
       <button class="tab" data-tab="stats" id="tabbtn-stats" role="tab" aria-controls="tab-stats" aria-selected="false">Stats</button>
+      <button class="tab" data-tab="sim" id="tabbtn-sim" role="tab" aria-controls="tab-sim" aria-selected="false">What-If</button>
       <button class="tab" data-tab="rules" id="tabbtn-rules" role="tab" aria-controls="tab-rules" aria-selected="false">Rules</button>
     </div>
   </nav>
@@ -119,7 +120,7 @@
       <ol class="board" id="board-list"></ol>
     </section>
 
-    <!-- FORECAST (hosts Road + Odds, ported later) -->
+    <!-- FORECAST (hosts Road + Odds) -->
     <section class="tab-panel" id="tab-odds" role="tabpanel" aria-labelledby="tabbtn-odds" tabindex="0" hidden>
       <h2 class="section-title"><span>Forecast</span></h2>
       <!-- Road to your pick — personal race, atop the full forecast (js/road.js) -->
@@ -132,6 +133,13 @@
       <h2 class="section-title"><span>Stats &amp; Records</span></h2>
       <div id="race-host"></div>
       <div id="stats-host"></div>
+    </section>
+
+    <!-- WHAT-IF SIMULATOR -->
+    <section class="tab-panel" id="tab-sim" role="tabpanel" aria-labelledby="tabbtn-sim" tabindex="0" hidden>
+      <h2 class="section-title"><span>The What-If Machine</span></h2>
+      <p class="panel-hint">Play out the rest of the bracket — add hypothetical round wins and advancement points to any team and watch the draft order flip. Nothing here touches the real standings.</p>
+      <div id="sim-host"></div>
     </section>
 
     <!-- RULES -->
@@ -193,7 +201,7 @@
           <li>🐍 <b>Snake Draft</b> — go on the clock and draft your two countries. Auto-pick, auto-fill, undo and reset are all there. <b>The hub stays locked until all 24 picks are in.</b></li>
           <li>🗺 <b>Bracket</b> — R32 → Final. Tap a side to advance it, type goals to feed the bonus.</li>
           <li>🏆 <b>Standings</b> — the live order by points, with each team's two country flags and how far they've reached.</li>
-          <li>🔮 <b>Forecast</b> — your personal Road and the advancement odds (ported next).</li>
+          <li>🔮 <b>Forecast</b> — your personal Road to your pick, atop the Monte-Carlo advancement odds.</li>
           <li>📊 <b>Stats</b> — the race chart, the wire report and the record book.</li>
           <li>🏷 <b>Team picker</b> — claim your team once; <code>?team=</code> share links pre-assign it.</li>
           <li>📲 <b>Home screen</b> — add it like an app: loads instantly and works offline.</li>
@@ -214,6 +222,7 @@
     <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
     <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
     <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>
+    <button class="tab" data-tab="sim" role="tab"><span class="bn-ico">🧪</span><span class="bn-label">What-If</span></button>
     <button class="tab" data-tab="rules" role="tab"><span class="bn-ico">📜</span><span class="bn-label">Rules</span></button>
   </nav>
 

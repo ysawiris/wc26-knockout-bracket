@@ -1008,11 +1008,23 @@
 
   if (window.Hub && typeof window.Hub.onRender === "function") Hub.onRender(render);
 
-  /* Debug/console surface — pure helpers plus the forecast probe. */
+  /* Expected total goals in one match — the two side rates summed. */
+  function matchLambda(homeName, awayName) {
+    var s = sideGoals(homeName, awayName);
+    return s.home + s.away;
+  }
+
+  /* Debug/console surface — pure helpers plus the forecast probe.
+     teamLambdas/matchLambda bridge the Elo expected-goals model into the
+     shape js/matchcenter.js expects (PickOdds.teamLambdas → { home, away }),
+     so the Match Center win-probability bar reflects real team strength
+     instead of falling back to a symmetric 1.3/1.3 coin-flip. */
   window.PickOdds = {
     parseMinute: parseMinute,
     moneyline: moneyline,
     baseWinProb: baseWinProb,
+    teamLambdas: sideGoals,
+    matchLambda: matchLambda,
     forecast: getForecast
   };
 })();

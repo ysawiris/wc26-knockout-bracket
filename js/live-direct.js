@@ -28,16 +28,18 @@
     "&idSeason=" + SEASON + "&count=200&language=en";
 
   var FRESH_MS = 5 * 60000;      // how long a direct fetch outranks the baseline
-  var LIVE_POLL = 60000;         // poll cadence while a match is in play
-  var SOON_POLL = 120000;        // cadence around kickoff (or if statuses look stale)
+  var LIVE_POLL = 30000;         // poll cadence while a match is in play
+  var SOON_POLL = 45000;         // cadence around kickoff (or if statuses look stale)
   var SOON_BEFORE = 20 * 60000;  // start polling this long before kickoff
   var SOON_AFTER = 2 * 3600000;  // keep polling this long after a non-finished kickoff
   var MAX_EVENTS = 8;
+  var BEAT_LIVE = 5000;          // heartbeat granularity while a window is active
+  var BEAT_IDLE = 30000;         // heartbeat granularity when nothing is live/near
 
   var state = { matches: null, byMatch: {}, events: [], fetchedAt: 0 };
-  var timer = null;
+  var engineTimer = null;
   var inFlight = false;
-  var bootstrapped = false;
+  var lastPollAt = 0;            // when the most recent poll was issued (anchors cadence)
 
   /* Draft gate: pre-draft the bracket has no pairings, so nothing to poll. */
   function draftDone(ctx) {
@@ -112,6 +114,7 @@
   function poll() {
     if (inFlight) return Promise.resolve();
     inFlight = true;
+    lastPollAt = Date.now(); // anchor the next poll to this one, even if it fails
 
     return getJson(CAL_URL).then(function (data) {
       var raw = (data && data.Results) || [];
@@ -212,23 +215,30 @@
     return nearKickoff ? SOON_POLL : 0;
   }
 
-  function schedule(ctx) {
-    if (timer) { clearTimeout(timer); timer = null; }
-    // Hard gate: no timers at all until the draft completes.
-    if (!draftDone(ctx)) return;
+  /* Self-owned heartbeat. The poll cadence is driven by ITS OWN clock, not by
+     Hub renders — re-rendering (refresh.js every 2 min, a team switch, the goal
+     ticker) used to re-arm the poll timer and stalled the live cadence out to
+     ~2 min. The engine just checks "is a poll due?" every few seconds against
+     lastPollAt, so the in-play cadence holds a steady 30s no matter what renders.
+     The draft gate is preserved: nextDelay() returns 0 until ctx.draft.complete,
+     so the engine idles (never touches the network) until the snake draft ends. */
+  function tick() {
+    engineTimer = null;
+    var ctx = window.Hub && Hub.ctx();
+    var cadence = ctx ? nextDelay(ctx) : 0;
 
-    var delay = nextDelay(ctx);
-    if (!delay) return;
-
-    // Entering a match window with no direct data yet: fetch right away.
-    if (!bootstrapped && !state.fetchedAt) {
-      bootstrapped = true;
-      delay = 1500;
+    // lastPollAt === 0 (never polled) makes the elapsed check overflow true, so
+    // the first poll of any window fires on the next tick.
+    if (cadence && Date.now() - lastPollAt >= cadence - 250) {
+      poll().then(function () { if (window.Hub) Hub.refresh(); });
     }
 
-    timer = setTimeout(function () {
-      poll().then(function () { if (window.Hub) Hub.refresh(); });
-    }, delay);
+    engineTimer = setTimeout(tick, cadence ? BEAT_LIVE : BEAT_IDLE);
+  }
+
+  function startEngine() {
+    if (engineTimer) return;
+    engineTimer = setTimeout(tick, 1500); // let the first render populate Hub.ctx()
   }
 
   /* ---------------- goal ticker ---------------- */
@@ -255,11 +265,12 @@
   /* ---------------- boot ---------------- */
 
   if (window.Hub) {
+    // Redraw the ticker each render; polling runs on its own clock (startEngine).
     Hub.onRender(function (ctx) {
       if (!ctx || !ctx.standings || !ctx.bracket || !ctx.draft) return;
       renderTicker(ctx);
-      schedule(ctx);
     });
+    startEngine();
   }
 
   window.LiveDirect = { overlay: overlay, pollNow: poll };
