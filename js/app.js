@@ -166,6 +166,21 @@
      re-render everything (rebuilding ctx + firing module callbacks). */
   function commit(next) {
     var wasComplete = draftComplete(state);
+    /* The draft is FINAL: once complete, refuse any change to the draft itself
+       (picks / order / direction). The shallow merge keeps refs for untouched
+       fields, so bracket result writes (which only change `results`) still pass
+       through. This keeps the published draft immutable for every member and
+       stops a stray click from clearing it locally — which a newer local
+       updatedAt would otherwise make permanent (applyShared only overwrites a
+       strictly-newer feed, and Hub.refresh never re-applies it). */
+    if (wasComplete && next &&
+        (next.pickLog !== state.pickLog ||
+         next.draftOrder !== state.draftOrder ||
+         (next.config && state.config &&
+          next.config.draftDirection !== state.config.draftDirection))) {
+      toast("🔒 The draft is final");
+      return;
+    }
     state = next;
     saveState(state);
     var nowComplete = draftComplete(state);
@@ -480,14 +495,10 @@
     var actions = el("div", "rc-actions");
     var copyBtn = el("button", "sd-btn", "📋 Copy the draft");
     copyBtn.addEventListener("click", function () { copyRecap(byTeam); });
-    var reopen = el("button", "sd-btn-ghost", "↺ Re-open draft");
-    reopen.addEventListener("click", function () {
-      if (!confirm("Re-open the draft? This clears all picks and re-locks the hub.")) return;
-      commit(merge(state, { pickLog: [] }));
-      toast("Draft re-opened");
-    });
     actions.appendChild(copyBtn);
-    actions.appendChild(reopen);
+    /* No "Re-open draft" control: the draft is final and the Recap is read-only.
+       (Re-opening would clear picks + re-lock the hub for that member, and a
+       newer local timestamp would make it permanent — see the commit() guard.) */
     host.appendChild(actions);
   }
 
