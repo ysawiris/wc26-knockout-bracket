@@ -62,7 +62,7 @@ nav, main, header, footer { position: relative; z-index: 1; }
 
 .topnav {
   position: sticky; top: 0; z-index: 20;
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center;
   gap: 14px;
   padding: 10px clamp(14px, 4vw, 40px);
   background: rgba(11, 7, 3, 0.82);
@@ -80,7 +80,14 @@ nav, main, header, footer { position: relative; z-index: 1; }
 .brand-text em { font-style: normal; }
 
 /* Tabs */
-.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; justify-self: center; min-width: 0; }
+.tabs {
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  /* stretch to fill the nav's middle track (not content-sized), so the row
+     scrolls within it instead of overflowing into the brand on narrow desktops;
+     `safe center` keeps tabs centered when they fit but left-anchors (and stays
+     scroll-reachable) once they don't. */
+  justify-self: stretch; justify-content: safe center; min-width: 0;
+}
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   flex: 0 0 auto;
@@ -560,6 +567,16 @@ nav, main, header, footer { position: relative; z-index: 1; }
 }
 .m-act:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232, 196, 106, 0.3); }
 .m-act.ghost { color: var(--gold-2); background: transparent; border: 1px solid var(--gold-4); }
+
+/* Venue line in the schedule-card foot (left of the actions). */
+.m-venue {
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.72rem; color: var(--text-faint);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Later-round fixtures whose teams aren't decided yet read quieter. */
+.match.is-tbd { opacity: 0.7; }
+.match.is-tbd .m-name { color: var(--text-faint); font-style: italic; }
 
 /* ============================================================
    Live-explain card (Rules tab)

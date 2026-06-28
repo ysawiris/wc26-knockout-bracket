@@ -50,6 +50,7 @@
       <button class="tab" data-tab="snake" id="tabbtn-snake" role="tab" aria-controls="tab-snake" aria-selected="false">Snake&nbsp;Draft</button>
       <button class="tab" data-tab="recap" id="tabbtn-recap" role="tab" aria-controls="tab-recap" aria-selected="false" hidden>Draft&nbsp;Recap</button>
       <button class="tab" data-tab="bracket" id="tabbtn-bracket" role="tab" aria-controls="tab-bracket" aria-selected="false">Bracket</button>
+      <button class="tab" data-tab="schedule" id="tabbtn-schedule" role="tab" aria-controls="tab-schedule" aria-selected="false">Schedule</button>
       <button class="tab" data-tab="board" id="tabbtn-board" role="tab" aria-controls="tab-board" aria-selected="false">Standings</button>
       <button class="tab" data-tab="odds" id="tabbtn-odds" role="tab" aria-controls="tab-odds" aria-selected="false">Forecast</button>
       <button class="tab" data-tab="stats" id="tabbtn-stats" role="tab" aria-controls="tab-stats" aria-selected="false">Stats</button>
@@ -95,6 +96,20 @@
       <h2 class="section-title"><span>The Bracket</span></h2>
       <p class="panel-hint">Results are entered by hand: <strong>tap a side to set the winner</strong>, type each side's goals to add the bonus. One commissioner runs this — advance every match as the knockout plays out.</p>
       <div id="bracket-host"></div>
+    </section>
+
+    <!-- SCHEDULE (knockout fixtures, day by day — like the live hub) -->
+    <section class="tab-panel" id="tab-schedule" role="tabpanel" aria-labelledby="tabbtn-schedule" tabindex="0" hidden>
+      <h2 class="section-title"><span>Schedule &amp; Scores</span></h2>
+      <p class="panel-hint">The knockout fixtures, day by day — Round of 32 through the Final. Tap a match for the Match Center; ＋ adds it to your calendar.</p>
+      <div class="filters" id="schedule-filters">
+        <button type="button" class="chip is-active" data-filter="next">🔴 Now &amp; next</button>
+        <button type="button" class="chip" data-filter="r32">Round of 32</button>
+        <button type="button" class="chip" data-filter="mine">⭐ My picks</button>
+        <button type="button" class="chip" data-filter="results">Results</button>
+        <button type="button" class="chip" data-filter="all">All rounds</button>
+      </div>
+      <div class="schedule" id="schedule-list"></div>
     </section>
 
     <!-- STANDINGS (was Draft Board) -->
@@ -195,6 +210,7 @@
     <button class="tab" data-tab="snake" role="tab"><span class="bn-ico">🐍</span><span class="bn-label">Draft</span></button>
     <button class="tab" data-tab="recap" role="tab" hidden><span class="bn-ico">📋</span><span class="bn-label">Recap</span></button>
     <button class="tab" data-tab="bracket" role="tab"><span class="bn-ico">🗺</span><span class="bn-label">Bracket</span></button>
+    <button class="tab" data-tab="schedule" role="tab"><span class="bn-ico">📅</span><span class="bn-label">Games</span></button>
     <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
     <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
     <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>

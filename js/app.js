@@ -1089,52 +1089,154 @@
       "</div>";
   }
 
-  /* ---------------- schedule (grouped by round; kept for module reuse) ----------------
-     There is no Schedule tab in the knockout shell, but the helper is kept
-     callable so a future schedule panel (or a module) can render the flat
-     fixtures grouped by round. No-ops gracefully if the host is absent. */
+  /* ---------------- schedule (Schedule tab — day-grouped, like the live hub) ----------------
+     Renders the flat knockout fixtures grouped by calendar day (a day header,
+     then that day's matches), with kickoff-time pills, owner chips, calendar
+     links and a Match Center button — mirroring wc26-draft-tracker's schedule.
+     Real R32 per-match dates/times come from js/schedule.js; later rounds carry
+     their round's representative date with TBD teams until results fill them in.
+     No-ops gracefully if the host is absent. */
+  var scheduleFilter = "next";
+  var lastScheduleFixtures = [];
+
+  /* Country ids drafted by the viewer's own team (null if no team is claimed). */
+  function myCountryIds() {
+    var mine = null;
+    for (var i = 0; i < TEAMS.length; i++) { if (TEAMS[i].isMine) { mine = TEAMS[i]; break; } }
+    if (!mine) return null;
+    var owners = ownersByCountry(state);
+    var set = {};
+    Object.keys(owners).forEach(function (cid) { if (owners[cid] === mine.abbr) set[cid] = true; });
+    return set;
+  }
+
+  function passesScheduleFilter(fx, now, mineSet) {
+    var bothKnown = !!(fx.home && fx.away && fx.home.name && fx.away.name);
+    switch (scheduleFilter) {
+      case "r32": return fx.round === "R32";
+      case "results": return !!Live.FINISHED[fx.status];
+      case "mine":
+        if (!mineSet) return false;
+        return (fx.home.countryId && mineSet[fx.home.countryId]) ||
+               (fx.away.countryId && mineSet[fx.away.countryId]);
+      case "all": return true;
+      case "next":
+      default:
+        if (Live.INPLAY[fx.status]) return true;
+        if (Live.FINISHED[fx.status]) return false;
+        return bothKnown; // upcoming, teams decided — hides TBD later rounds from the default view
+    }
+  }
+
   function renderSchedule(fixtures) {
     var host = document.getElementById("schedule-list");
     if (!host) return;
+    if (fixtures && fixtures.length) lastScheduleFixtures = fixtures;
+    wireScheduleFilters();
     host.textContent = "";
     var owners = ownersByCountry(state);
     var now = new Date();
+    var mineSet = scheduleFilter === "mine" ? myCountryIds() : null;
 
-    var byRound = {};
-    var order = [];
-    fixtures.forEach(function (fx) {
-      if (!byRound[fx.round]) { byRound[fx.round] = []; order.push(fx.round); }
-      byRound[fx.round].push(fx);
-    });
-    if (!order.length) {
-      host.appendChild(el("p", "empty-note", "No matches yet."));
+    if (scheduleFilter === "mine" && !mineSet) {
+      host.appendChild(el("p", "empty-note",
+        "Claim your team (🏷 in the hero, or a ?team= link) to filter the schedule to your two countries."));
       return;
     }
-    order.forEach(function (rk) {
-      host.appendChild(el("div", "day-head", esc(roundLabel(rk))));
-      var grid = el("div", "sched-day");
-      byRound[rk].forEach(function (fx) { grid.appendChild(scheduleCard(fx, owners, now)); });
-      host.appendChild(grid);
+
+    var shown = fixtures.filter(function (fx) { return passesScheduleFilter(fx, now, mineSet); })
+      .sort(function (a, b) { return fxDate(a) - fxDate(b) || String(a.id).localeCompare(String(b.id)); });
+
+    if (!shown.length) {
+      host.appendChild(el("p", "empty-note", "No matches for this filter yet."));
+      return;
+    }
+
+    // Group by calendar day: a full-width header, then that day's matches in a
+    // grid. Each day keeps its own grid so an odd count never bleeds a hole.
+    var lastDay = null, dayGrid = null;
+    shown.forEach(function (fx) {
+      var d = fxDate(fx);
+      var key = dayKey(d);
+      if (key !== lastDay) {
+        lastDay = key;
+        var isToday = key === dayKey(now);
+        host.appendChild(el("div", "day-head" + (isToday ? " today" : ""),
+          fmtDay(d) + (isToday ? ' <span class="today-pill">Today</span>' : "")));
+        dayGrid = el("div", "sched-day");
+        host.appendChild(dayGrid);
+      }
+      dayGrid.appendChild(scheduleCard(fx, owners, now));
     });
+  }
+
+  /* One delegated click listener on the filter chips (bound once). */
+  function wireScheduleFilters() {
+    var bar = document.getElementById("schedule-filters");
+    if (!bar || bar.dataset.wired) return;
+    bar.dataset.wired = "1";
+    bar.addEventListener("click", function (e) {
+      var chip = e.target.closest(".chip[data-filter]");
+      if (!chip) return;
+      scheduleFilter = chip.dataset.filter;
+      bar.querySelectorAll(".chip[data-filter]").forEach(function (c) {
+        c.classList.toggle("is-active", c === chip);
+        c.setAttribute("aria-pressed", c === chip ? "true" : "false");
+      });
+      renderSchedule(lastScheduleFixtures);
+    });
+  }
+
+  function scheduleTeamRow(side, goals, hasScore, win, lose, owners) {
+    return '<div class="m-row' + (win ? " win" : "") + (lose ? " lose" : "") + '">' +
+      '<span class="m-flag">' + (side.flag || "·") + "</span>" +
+      '<span class="m-name">' + esc(side.name || "TBD") + "</span>" +
+      ownerTag(side, owners) +
+      (hasScore ? '<span class="m-pts">' + goals + "</span>" : "") +
+      "</div>";
   }
 
   function scheduleCard(fx, owners, now) {
     var st = statusInfo(fx);
-    var card = el("div", "match" + (st.live ? " is-live" : "") + (st.done ? " is-done" : ""));
+    var bothKnown = !!(fx.home.name && fx.away.name);
+    var card = el("div", "match" + (st.live ? " is-live" : "") + (st.done ? " is-done" : "") +
+      (bothKnown ? "" : " is-tbd"));
     if (fx.id) card.id = "sched-" + fx.id;
+
     var hg = fx.homeGoals, ag = fx.awayGoals;
     var hasScore = hg != null && ag != null;
+    var homeWin = !!(st.done && hasScore && hg > ag);
+    var awayWin = !!(st.done && hasScore && ag > hg);
+
+    // Upcoming games show kickoff time in the pill (the date sits in the day header).
+    var pillLabel = st.upcoming ? (fmtTime(fx) || "Upcoming") : st.label;
+    var pill = '<span class="m-pill ' + st.key + (st.upcoming ? " time" : "") + '">' +
+      (st.live ? '<span class="live-dot sm"></span>' : "") + pillLabel + "</span>";
+
     var rows =
-      '<div class="m-row"><span class="m-flag">' + (fx.home.flag || "·") + "</span>" +
-        '<span class="m-name">' + esc(fx.home.name || "TBD") + "</span>" +
-        (hasScore ? '<span class="m-pts">' + hg + "</span>" : "") + "</div>" +
-      '<div class="m-row"><span class="m-flag">' + (fx.away.flag || "·") + "</span>" +
-        '<span class="m-name">' + esc(fx.away.name || "TBD") + "</span>" +
-        (hasScore ? '<span class="m-pts">' + ag + "</span>" : "") + "</div>";
+      scheduleTeamRow(fx.home, hg, hasScore, homeWin, awayWin, owners) +
+      scheduleTeamRow(fx.away, ag, hasScore, awayWin, homeWin, owners);
+
+    var venue = fx.venue ? '<span class="m-venue">📍 ' + esc(fx.venue) + "</span>" : "";
+
+    var actions = "";
+    if (!st.done && !st.live && bothKnown) {
+      var cal = Live.calendarUrl(fx.home.name, fx.away.name, fx.roundLabel || fx.round, fx.utcDate);
+      if (cal) actions += '<a class="m-act ghost" target="_blank" rel="noopener" href="' + cal + '">＋ Calendar</a>';
+    }
+    if (bothKnown) {
+      actions += '<button type="button" class="m-act mc-act" data-mc="' + esc(fx.id) +
+        '" aria-haspopup="dialog">📊 Match Center</button>';
+    }
+
+    var foot = (venue || actions)
+      ? '<div class="m-foot">' + venue + '<span class="m-actions">' + actions + "</span></div>"
+      : "";
+
     card.innerHTML =
-      '<div class="m-meta"><span class="m-grp">' + esc(fx.roundLabel || fx.round) + "</span>" +
-        '<span class="m-pill ' + st.key + '">' + st.label + "</span></div>" +
-      '<div class="m-rows">' + rows + "</div>";
+      '<div class="m-meta"><span class="m-grp">' + esc(fx.roundLabel || roundLabel(fx.round)) + "</span>" +
+        pill + "</div>" +
+      '<div class="m-rows">' + rows + "</div>" + foot;
     return card;
   }
 
