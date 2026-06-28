@@ -36,6 +36,7 @@
      number, commit, and every projection re-derives itself. Keys must
      match the country names in js/data.js exactly. */
   var RATINGS = {
+    /* A */ "Mexico": 1820, "South Africa": 1550, "South Korea": 1790, "Czech Republic": 1740,
     /* B */ "Canada": 1790, "Bosnia & Herzegovina": 1610, "Qatar": 1570, "Switzerland": 1850,
     /* C */ "Brazil": 2030, "Morocco": 1940, "Haiti": 1465, "Scotland": 1740,
     /* D */ "United States": 1790, "Paraguay": 1810, "Australia": 1730, "Türkiye": 1850,
