@@ -1452,6 +1452,31 @@
     };
   }
 
+  /* Mirror live IN-PLAY state (status / minute / partial score) from the live-
+     attached fixtures onto the bracket the forecast reads. attachToFixtures only
+     writes the live feed onto `fixtures`, but the odds / road / simulator modules
+     read it from ctx.bracket.rounds — so without this an in-progress match never
+     reaches the forecast and the odds sit frozen until the match goes final.
+     Fixtures are built 1:1 from the bracket and share match ids, so we key on id.
+     Only in-progress matches are copied: finished results already reach the
+     bracket via the auto-advance path (winnerId), and a resolved match (winnerId
+     set) is left untouched so a manual / auto result is never overwritten. */
+  function overlayLiveOntoBracket(bracketRounds, fixtures) {
+    var fxById = {};
+    fixtures.forEach(function (fx) { fxById[fx.id] = fx; });
+    bracketRounds.forEach(function (round) {
+      round.matches.forEach(function (mt) {
+        if (mt.winnerId) return;                     // resolved — leave it
+        var fx = fxById[mt.id];
+        if (!fx || !Live.INPLAY[fx.status]) return;  // only live, in-progress
+        mt.status = fx.status;
+        mt.minute = fx.minute || null;
+        if (typeof fx.homeGoals === "number") mt.homeGoals = fx.homeGoals;
+        if (typeof fx.awayGoals === "number") mt.awayGoals = fx.awayGoals;
+      });
+    });
+  }
+
   function renderAll(liveData) {
     /* Live mutations are no-ops pre-draft (Live guards internally). */
     var matches = (liveData && liveData.matches) || [];
@@ -1494,6 +1519,10 @@
     renderSchedule(fixtures);
     renderMeta(started, fixtures, { rounds: bracketRounds }, liveData);
     firstRender = false;
+
+    /* Let the forecast see live, in-progress matches (core renders above already
+       read the live feed straight off `fixtures`, so they run un-overlaid). */
+    overlayLiveOntoBracket(bracketRounds, fixtures);
 
     lastCtx = buildCtx(fixtures, bracketRounds, rows, started, liveData);
 
