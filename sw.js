@@ -30,7 +30,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "lyko-v19";
+  var VERSION = "lyko-v20";
   var CACHE_NAME = "wc26-cache-" + VERSION;
   var CACHE_PREFIX = "wc26-cache-";
   var DATA_DIR_RE = /\/data\/[^/]+\.json$/;
@@ -47,7 +47,6 @@
     "css/styles.css",
     "css/board-extras.css",
     "css/stats.css",
-    "css/simulator.css",
     "css/extras.css",
     "css/my-team.css",
     "css/odds.css",
@@ -66,7 +65,6 @@
     "js/app.js",
     "js/board-extras.js",
     "js/stats.js",
-    "js/simulator.js",
     "js/refresh.js",
     "js/live-direct.js",
     "js/odds.js",

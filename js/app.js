@@ -1454,7 +1454,7 @@
 
   /* Mirror live IN-PLAY state (status / minute / partial score) from the live-
      attached fixtures onto the bracket the forecast reads. attachToFixtures only
-     writes the live feed onto `fixtures`, but the odds / road / simulator modules
+     writes the live feed onto `fixtures`, but the odds / road modules
      read it from ctx.bracket.rounds — so without this an in-progress match never
      reaches the forecast and the odds sit frozen until the match goes final.
      Fixtures are built 1:1 from the bracket and share match ids, so we key on id.

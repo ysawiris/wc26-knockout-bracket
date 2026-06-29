@@ -22,7 +22,6 @@
   <link rel="stylesheet" href="css/board-extras.css" />
   <link rel="stylesheet" href="css/stats.css" />
   <link rel="stylesheet" href="css/race.css" />
-  <link rel="stylesheet" href="css/simulator.css" />
   <link rel="stylesheet" href="css/odds.css" />
   <link rel="stylesheet" href="css/extras.css" />
   <link rel="stylesheet" href="css/my-team.css" />
@@ -54,7 +53,6 @@
       <button class="tab" data-tab="board" id="tabbtn-board" role="tab" aria-controls="tab-board" aria-selected="false">Standings</button>
       <button class="tab" data-tab="odds" id="tabbtn-odds" role="tab" aria-controls="tab-odds" aria-selected="false">Forecast</button>
       <button class="tab" data-tab="stats" id="tabbtn-stats" role="tab" aria-controls="tab-stats" aria-selected="false">Stats</button>
-      <button class="tab" data-tab="sim" id="tabbtn-sim" role="tab" aria-controls="tab-sim" aria-selected="false">What-If</button>
       <button class="tab" data-tab="rules" id="tabbtn-rules" role="tab" aria-controls="tab-rules" aria-selected="false">Rules</button>
     </div>
   </nav>
@@ -133,13 +131,6 @@
       <h2 class="section-title"><span>Stats &amp; Records</span></h2>
       <div id="race-host"></div>
       <div id="stats-host"></div>
-    </section>
-
-    <!-- WHAT-IF SIMULATOR -->
-    <section class="tab-panel" id="tab-sim" role="tabpanel" aria-labelledby="tabbtn-sim" tabindex="0" hidden>
-      <h2 class="section-title"><span>The What-If Machine</span></h2>
-      <p class="panel-hint">Play out the rest of the bracket — add hypothetical round wins and advancement points to any team and watch the draft order flip. Nothing here touches the real standings.</p>
-      <div id="sim-host"></div>
     </section>
 
     <!-- RULES -->
@@ -222,7 +213,6 @@
     <button class="tab" data-tab="board" role="tab"><span class="bn-ico">🏆</span><span class="bn-label">Table</span></button>
     <button class="tab" data-tab="odds" role="tab"><span class="bn-ico">🔮</span><span class="bn-label">Forecast</span></button>
     <button class="tab" data-tab="stats" role="tab"><span class="bn-ico">📊</span><span class="bn-label">Stats</span></button>
-    <button class="tab" data-tab="sim" role="tab"><span class="bn-ico">🧪</span><span class="bn-label">What-If</span></button>
     <button class="tab" data-tab="rules" role="tab"><span class="bn-ico">📜</span><span class="bn-label">Rules</span></button>
   </nav>
 
@@ -242,7 +232,6 @@
   <script src="js/app.js"></script>
   <script src="js/board-extras.js"></script>
   <script src="js/stats.js"></script>
-  <script src="js/simulator.js"></script>
   <script src="js/odds.js"></script>
   <script src="js/race.js"></script>
   <script src="js/alerts.js"></script>

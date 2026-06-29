@@ -48,7 +48,7 @@ js/app.js         # orchestrator: ctx + Hub API, draft gate, Draft Order / Snake
 js/my-team.js     # per-viewer team identity (picker, ?team=, highlight)
 js/schedule.js    # buildKnockoutFixtures — flattens the bracket into fixtures
 js/live.js        # dormant live layer (manual entry for v1; INPLAY/FINISHED status + calendar helpers)
-js/{road,odds,stats,race,simulator,board-extras,alerts,share-card,matchcenter,recaps,xg}.js
+js/{road,odds,stats,race,board-extras,alerts,share-card,matchcenter,recaps,xg}.js
                   # feature modules — each registers Hub.onRender(ctx) and renders one tab/widget
 sw.js             # PWA service worker (auto-disabled on localhost — see below)
 ```

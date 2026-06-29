@@ -35,7 +35,6 @@ const FEATURE_PREFIX_OWNER = {
   mc: "matchcenter.css",   // Match Center panel
   st: "stats.css",         // Stats & Records
   od: "odds.css",          // Pick Odds
-  sim: "simulator.css",    // What-If simulator
   road: "road.css",        // Road to No. 1
   bx: "board-extras.css",  // board toolbar / extras
   ga: "alerts.css",        // goal alerts
