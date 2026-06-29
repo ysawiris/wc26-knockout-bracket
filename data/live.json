@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-29T20:47:45.491Z",
+  "fetchedAt": "2026-06-29T21:21:45.556Z",
   "matchCount": 31,
   "matches": [
     {
@@ -35,10 +35,10 @@
       "home": "Germany",
       "away": "Paraguay",
       "homeGoals": 0,
-      "awayGoals": 0,
+      "awayGoals": 1,
       "utcDate": "2026-06-29T20:30:00Z",
       "venue": "Boston Stadium",
-      "minute": "17'"
+      "minute": null
     },
     {
       "id": "400021522",
