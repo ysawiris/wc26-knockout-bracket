@@ -185,6 +185,49 @@
         <p class="rules-key"><b>For the pool, only the knockout counts. You own two countries; you score every round they survive plus a small bonus for the goals they score. The further they go, the more you win.</b></p>
       </div>
 
+      <div class="rules-card rules-prose">
+        <h3 class="rules-h">The two rankings: FIFA &amp; Elo</h3>
+        <p class="rules-note">Every country on the site carries <b>two</b> numbers &mdash; its <b>FIFA seed</b> (the <span class="rk-f">#</span>) and its <b>Elo rank</b> (<span class="rk-e">Elo</span>). Both try to answer the same question, "how good is this team?", but they are built differently and they often disagree. Here is what each one really is.</p>
+
+        <h4 class="rules-subh">&#9312; The FIFA seed &mdash; the <span class="rk-f">#</span></h4>
+        <p class="rules-note">This is the team's place in the official <b>FIFA Men's World Ranking</b>. We line the 32 Round-of-32 countries up by it and number them <b>1&ndash;32</b> &mdash; that number is the seed.</p>
+        <p class="rules-note">Since 2018 FIFA's ranking is itself an Elo-style points system: after each match a team's points move by <code>P + I &times; (result &minus; expected)</code>, where <b>I</b> is how important the game was (a quiet friendly counts for little, a World Cup knockout for a lot). What makes it <i>FIFA's</i> flavour: it counts <b>only official "A" internationals</b>, it <b>ignores the scoreline</b> (a 1&ndash;0 and a 5&ndash;0 move you the same), and it has <b>no home-field adjustment</b>. That makes it steady, and a little slow to react.</p>
+
+        <h4 class="rules-subh">&#9313; The Elo rating &mdash; <span class="rk-e">Elo</span></h4>
+        <p class="rules-note">This is each team's <b>World Football Elo</b> from <b>eloratings.net</b>, an independent rating (Spain tops our field near 2180, the weakest sides sit near 1550). We rank all 32 by it to get the Elo number &mdash; and <b>this is the rating the Forecast and odds actually run on.</b></p>
+        <p class="rules-note">Its engine is the classic Elo expectation: <code>E = 1 / (1 + 10^((opponent &minus; you) / 400))</code>. A <b>400-point gap is roughly 10&times; the odds</b>; equal ratings are a coin flip. After a game the rating shifts by <code>K &times; G &times; (result &minus; E)</code> &mdash; and unlike FIFA it <b>rewards the margin</b> (the multiplier G grows with goal difference) and <b>adjusts for home advantage</b> (about +100 to the home side). So it digests more matches and moves faster.</p>
+
+        <h4 class="rules-subh">Why they disagree</h4>
+        <p class="rules-note">Same logistic maths, different diet. A team racking up big, in-form wins &mdash; even in friendlies or qualifiers &mdash; climbs Elo quickly while its FIFA points lag behind. <b>Norway is the poster child:</b> a FIFA seed of <span class="rk-f">#24</span> in our field, but Elo rates them <span class="rk-e up">Elo #9</span> &mdash; a genuine top-10 side the official ranking is slow to credit.</p>
+      </div>
+
+      <div class="rules-card">
+        <h3 class="rules-h">Reading the rank badges</h3>
+        <p class="rules-note">On the draft board and rosters the two numbers sit together, like <span class="rk-f">#24</span> <span class="rk-e up">Elo 9</span>. The <b>colour of the Elo number</b> gives the verdict at a glance:</p>
+        <table class="score-tbl">
+          <thead>
+            <tr><th>Badge</th><th>What it means</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="rk-e up">Elo</span> green</td><td>Elo rates the team <b>3+ places stronger</b> than its FIFA seed &mdash; underrated, a draft bargain.</td></tr>
+            <tr><td><span class="rk-e down">Elo</span> red</td><td>Elo rates them <b>3+ places weaker</b> &mdash; the FIFA seed is flattering them.</td></tr>
+            <tr><td><span class="rk-e">Elo</span> plain</td><td>The two rankings roughly agree (within 2 places).</td></tr>
+          </tbody>
+        </table>
+        <p class="rules-note"><b>And what each number controls in the pool:</b></p>
+        <table class="score-tbl">
+          <thead>
+            <tr><th>Number</th><th>What it drives</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="rk-f">#</span> FIFA seed</td><td>The <b>strong / weak draft pools</b> (seeds 1&ndash;16 vs 17&ndash;32) and the bracket's seeding reference.</td></tr>
+            <tr><td><span class="rk-e">Elo</span> rank</td><td>The <b>Forecast win probabilities</b> and <b>xG projections</b> &mdash; and the badge colour above.</td></tr>
+          </tbody>
+        </table>
+        <p class="rules-eg"><b>Worked example.</b> Norway (Elo 1950) meets Ivory Coast (Elo 1700) in the Round of 32 &mdash; a 250-point edge. Plug it in: <code>1 / (1 + 10^((1700 &minus; 1950) / 400)) &asymp; 0.81</code>, so the model gives <b>Norway about an 81% chance</b> to advance, despite its modest <span class="rk-f">#24</span> seed. That gap is exactly why a "weak-pool" Norway pick can be a steal.</p>
+        <p class="rules-note rules-key">Bottom line: the <span class="rk-f">#</span> seed decides <b>where a team sits in the draft</b>; the <span class="rk-e">Elo</span> rank is the model's read on <b>how good they actually are</b>. When the two diverge, trust Elo for forecasting &mdash; and watch for green badges on the draft board.</p>
+      </div>
+
       <div class="rules-card">
         <h3 class="rules-h">Around the hub</h3>
         <ul class="rules-list">

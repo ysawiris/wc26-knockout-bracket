@@ -753,6 +753,15 @@ nav, main, header, footer { position: relative; z-index: 1; }
   margin: 12px 0 4px; color: var(--text-dim); line-height: 1.55;
 }
 .rules-eg b { color: var(--gold-2); }
+.rules-subh {
+  color: var(--gold-2); font-weight: 800; font-size: 0.92rem;
+  margin: 16px 0 2px; letter-spacing: 0.02em;
+}
+.rules-card code {
+  font-family: ui-monospace, Menlo, monospace; font-size: 0.82em;
+  background: rgba(212, 168, 84, 0.14); color: var(--gold-1);
+  padding: 1px 6px; border-radius: 5px;
+}
 
 /* ============================================================
    KNOCKOUT CORE DELTAS
@@ -853,9 +862,25 @@ nav, main, header, footer { position: relative; z-index: 1; }
 }
 .sd-country:not(:disabled):hover { background: var(--panel-2); border-color: var(--panel-edge-strong); }
 .sd-country:disabled { opacity: 0.5; cursor: default; }
-.sdc-seed { font-size: 0.62rem; color: var(--text-faint); font-weight: 700; }
+.sdc-seed { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; font-size: 0.6rem; line-height: 1.15; }
 .sdc-flag { font-size: 1.05rem; }
 .sdc-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Dual rank badge: FIFA seed (#) + Elo strength rank, shown together in
+   the draft pool, rosters and recap so the league can see where Elo
+   disagrees with the FIFA-ranking seed. Green = stronger than its seed,
+   red = weaker. */
+.rk-f { color: var(--text-faint); font-weight: 700; font-style: normal; }
+.rk-e { color: var(--text-faint); font-weight: 700; font-style: normal; margin-left: 6px; }
+.sdc-seed .rk-e { margin-left: 0; }
+.rk-e.up { color: #46b66a; }
+.rk-e.down { color: #e0683c; }
+.rk-legend {
+  font-size: 0.74rem; color: var(--text-dim); line-height: 1.55;
+  margin: 2px 0 16px; padding: 9px 12px;
+  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 9px;
+}
+.rk-legend b { font-weight: 800; }
 
 .sd-rosters { display: flex; flex-direction: column; gap: 8px; }
 .sd-roster {

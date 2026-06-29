@@ -51,6 +51,54 @@
     return { 1: "st", 2: "nd", 3: "rd" }[n % 10] || "th";
   }
 
+  /* ---------------- Elo strength rank (educational) ----------------
+     A country's `seed` is its FIFA-ranking order, and that is what sets
+     the strong/weak draft pools. The Elo rank is a SEPARATE lens: every
+     country sorted by the eloratings.net strength number in js/xg.js.
+     When the two disagree, Elo is the truer "how good are they right
+     now" read — e.g. Norway seeds #24 on FIFA points but rates inside
+     the top 10 by Elo. Ties on raw rating break by the better FIFA seed.
+     Computed lazily + memoized because xg.js loads after this file. */
+  var _eloRankById = null;
+  function eloRankById() {
+    if (_eloRankById) return _eloRankById;
+    if (typeof FIELD === "undefined" || !(window.XG && XG.RATINGS)) return null;
+    var r = XG.RATINGS;
+    var ratingOf = function (c) { return (typeof r[c.name] === "number") ? r[c.name] : 1700; };
+    var ranked = FIELD.slice().sort(function (a, b) {
+      return ratingOf(b) - ratingOf(a) || a.seed - b.seed; // higher Elo first; FIFA seed breaks ties
+    });
+    var map = {};
+    ranked.forEach(function (c, i) { map[c.id] = i + 1; });
+    _eloRankById = map;
+    return map;
+  }
+  function eloRankOf(id) {
+    var m = eloRankById();
+    return m ? m[id] : null;
+  }
+
+  /* FIFA seed (#) + Elo rank, shown together. The Elo half turns green
+     when a team rates ≥3 places STRONGER than its seed (underrated by
+     FIFA points), red when ≥3 places weaker. Falls back to seed-only if
+     the Elo model hasn't loaded yet. */
+  function rankHTML(c) {
+    var fifa = '<span class="rk-f">#' + c.seed + "</span>";
+    var er = eloRankOf(c.id);
+    if (!er) return fifa;
+    var dir = (er <= c.seed - 3) ? " up" : (er >= c.seed + 3) ? " down" : "";
+    return fifa + '<span class="rk-e' + dir + '">Elo ' + er + "</span>";
+  }
+
+  /* One-line explainer shown atop the draft pool and the recap. */
+  function rankLegendEl() {
+    return el("p", "rk-legend",
+      '<b class="rk-f">#</b> = FIFA-ranking seed (sets the strong/weak draft pools). ' +
+      '<b class="rk-e up">Elo</b> = our strength rank from eloratings.net. ' +
+      "Green = Elo rates the team STRONGER than its FIFA seed (underrated); red = weaker. " +
+      "Exhibit A: Norway seeds #24 but Elo ranks it inside the top 10.");
+  }
+
   var DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -331,6 +379,8 @@
     actions.appendChild(undo); actions.appendChild(reset);
     host.appendChild(actions);
 
+    host.appendChild(rankLegendEl());
+
     var cols = el("div", "sd-cols");
 
     /* Available pool (left) */
@@ -344,7 +394,7 @@
       b.disabled = done;
       b.style.setProperty("--tc", c.c1 || "#888");
       b.innerHTML =
-        '<span class="sdc-seed">#' + c.seed + "</span>" +
+        '<span class="sdc-seed">' + rankHTML(c) + "</span>" +
         '<span class="sdc-flag">' + c.flag + "</span>" +
         '<span class="sdc-name">' + esc(c.name) + "</span>";
       grid.appendChild(b);
@@ -371,7 +421,7 @@
         if (id) {
           var c = COUNTRY_BY_ID[id];
           body += '<span class="sd-rt" style="--tc:' + (c.c1 || "#888") + '">' +
-            c.flag + " " + esc(c.name) + ' <em>#' + c.seed + "</em></span>";
+            c.flag + " " + esc(c.name) + ' <em>' + rankHTML(c) + "</em></span>";
         } else {
           body += '<span class="sd-rt empty">— slot ' + (k + 1) + "</span>";
         }
@@ -441,6 +491,8 @@
         "). The board is set — here's how it went.";
     }
 
+    host.appendChild(rankLegendEl());
+
     /* --- Each team's two (strong + weak), in draft-slot order --- */
     host.appendChild(el("h3", "rc-subhead", "Each team's two"));
     var grid = el("div", "rc-rosters");
@@ -454,7 +506,7 @@
         if (!c) return "";
         return '<span class="rc-rt" style="--tc:' + (c.c1 || "#888") + '">' +
           '<span class="rc-rt-flag">' + c.flag + "</span>" + esc(c.name) +
-          ' <em>#' + c.seed + "</em></span>";
+          ' <em>' + rankHTML(c) + "</em></span>";
       }).join("");
       card.innerHTML =
         '<span class="rc-slot">' + (i + 1) + "</span>" +
@@ -485,7 +537,7 @@
           '<span class="rc-pno">' + (p + 1) + "</span>" +
           '<span class="rc-pteam">' + esc(pt.name) + "</span>" +
           '<span class="rc-pcountry">' +
-            (c ? c.flag + " " + esc(c.name) + ' <em>#' + c.seed + "</em>" : "—") + "</span>";
+            (c ? c.flag + " " + esc(c.name) + ' <em>' + rankHTML(c) + "</em>" : "—") + "</span>";
         list.appendChild(li);
       }
       col.appendChild(list);
