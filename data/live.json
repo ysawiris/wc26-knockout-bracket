@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-29T18:23:55.331Z",
+  "fetchedAt": "2026-06-29T19:12:40.795Z",
   "matchCount": 31,
   "matches": [
     {
@@ -19,14 +19,14 @@
     {
       "id": "400021516",
       "round": "Round of 32",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Brazil",
       "away": "Japan",
-      "homeGoals": 1,
+      "homeGoals": 2,
       "awayGoals": 1,
       "utcDate": "2026-06-29T17:00:00Z",
       "venue": "Houston Stadium",
-      "minute": "62'"
+      "minute": "101'"
     },
     {
       "id": "400021513",
@@ -224,7 +224,7 @@
       "id": "400021532",
       "round": "Round of 16",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Brazil",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
