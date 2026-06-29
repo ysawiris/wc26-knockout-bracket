@@ -1,8 +1,53 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-28T22:51:52.227Z",
-  "count": 1,
+  "generatedAt": "2026-06-29T19:13:03.784Z",
+  "count": 2,
   "byId": {
+    "400021516": {
+      "id": "400021516",
+      "round": "R32",
+      "home": "Brazil",
+      "away": "Japan",
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "venue": "Houston Stadium",
+      "utcDate": "2026-06-29T17:00:00Z",
+      "goals": [
+        {
+          "minute": "29'",
+          "order": 29,
+          "player": "Kaishu Sano",
+          "team": "Japan",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "56'",
+          "order": 56,
+          "player": "Casemiro",
+          "team": "Brazil",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+5'",
+          "order": 90.05,
+          "player": "Gabriel Martinelli",
+          "team": "Brazil",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Brazil see off Japan",
+      "summary": "In a thrilling Round of 32 clash, Brazil edges Japan 2-1 in Houston. Kaishu Sano puts Japan ahead with a first-half strike, but Casemiro equalizes in the second half. Gabriel Martinelli seals Brazil's comeback with a dramatic stoppage-time winner, sending the five-time champions into the knockout stage.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Brazil\",\"Japan\",2,1,[[\"29'\",\"Kaishu Sano\",\"Japan\",\"away\",false,false],[\"56'\",\"Casemiro\",\"Brazil\",\"home\",false,false],[\"90'+5'\",\"Gabriel Martinelli\",\"Brazil\",\"home\",false,false]]]"
+    },
     "400021518": {
       "id": "400021518",
       "round": "R32",
