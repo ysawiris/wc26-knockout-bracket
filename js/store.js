@@ -151,10 +151,11 @@ function saveState(state) {
        feed has no draftVersion, fall back to the old `updatedAt` gate so a
        pre-draftVersion feed still works.)
 
-     - RESULTS: adopted when the feed's `updatedAt` is strictly newer. The
-       live auto-feed no longer advances `updatedAt` (see persistState), so a
-       member's device keeps the last SHARED timestamp and a newer published
-       results map is adopted as intended.
+     - RESULTS: a NON-EMPTY published map is adopted when the feed's
+       `updatedAt` is strictly newer; an EMPTY map never wipes local results
+       (the live auto-feed owns them). The auto-feed no longer advances
+       `updatedAt` (see persistState), so a member's device keeps the last
+       SHARED timestamp and a newer published map is adopted as intended.
 
    keeps state.config (except the cosmetic draftDirection flag); persists
    without re-stamping. Returns true if anything changed. */
@@ -186,10 +187,17 @@ function applyShared(shared) {
   }
 
   if (typeof shared.updatedAt === "number" && shared.updatedAt > (state.updatedAt || 0)) {
-    if (typeof shared.results !== "undefined") {
-      state.results = shared.results && typeof shared.results === "object"
-        ? shared.results
-        : {};
+    var sharedResults = (shared.results && typeof shared.results === "object") ? shared.results : {};
+    var hasSharedResults = Object.keys(sharedResults).length > 0;
+    var hasLocalResults = state.results && typeof state.results === "object" &&
+      Object.keys(state.results).length > 0;
+    /* An EMPTY published results map must NEVER wipe a device's accumulated
+       results — the live auto-feed derives them locally and a member never
+       publishes results, so the feed is {} by design. Only a NON-EMPTY
+       authoritative map overwrites; a fresh device with nothing local still
+       takes {}. This makes the updatedAt value irrelevant to data safety. */
+    if (hasSharedResults || !hasLocalResults) {
+      state.results = sharedResults;
     }
     state.updatedAt = shared.updatedAt;
     changed = true;
