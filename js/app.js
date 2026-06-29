@@ -171,8 +171,9 @@
        fields, so bracket result writes (which only change `results`) still pass
        through. This keeps the published draft immutable for every member and
        stops a stray click from clearing it locally — which a newer local
-       updatedAt would otherwise make permanent (applyShared only overwrites a
-       strictly-newer feed, and Hub.refresh never re-applies it). */
+       updatedAt would otherwise make permanent. (applyShared adopts the draft
+       only when the feed's draftVersion is higher, re-landing the published
+       draft on the next boot; Hub.refresh never re-applies it.) */
     if (wasComplete && next &&
         (next.pickLog !== state.pickLog ||
          next.draftOrder !== state.draftOrder ||

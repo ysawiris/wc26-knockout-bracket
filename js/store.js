@@ -8,6 +8,13 @@
      pickLog    : [countryId] in the exact order countries were drafted
      results    : { matchId: { ga, gb, winner } } — bracket results,
                   where `winner` is a countryId
+     draftVersion : monotonic int — the OWNER-published draft revision.
+                  GATES draft adoption (draftOrder/pickLog/draftDirection)
+                  INDEPENDENTLY of `updatedAt`. This exists because the live
+                  results auto-feed re-stamps `updatedAt` to Date.now() on
+                  every score, which used to permanently block a re-published
+                  draft (its `updatedAt` is fixed and older). Bump it in
+                  data/results.json whenever the draft itself changes.
 
    Everything else (who owns what, the live bracket, standings) is
    DERIVED via the selectors below, so there is never stale duplicated
@@ -36,7 +43,8 @@ function defaultState() {
     draftOrder: TEAMS.map(function (t) { return t.abbr; }),
     pickLog: [],
     results: {},
-    updatedAt: 0
+    updatedAt: 0,
+    draftVersion: 0
   };
 }
 
@@ -101,16 +109,19 @@ function loadState() {
       draftOrder: draftOrder,
       pickLog: pickLog,
       results: saved.results && typeof saved.results === "object" ? saved.results : {},
-      updatedAt: typeof saved.updatedAt === "number" ? saved.updatedAt : 0
+      updatedAt: typeof saved.updatedAt === "number" ? saved.updatedAt : 0,
+      draftVersion: typeof saved.draftVersion === "number" ? saved.draftVersion : 0
     };
   } catch (e) {
     return defaultState();
   }
 }
 
-function saveState(state) {
+/* Write state to localStorage exactly as given — no timestamp side effects.
+   Used by paths (the live auto-feed) that must NOT advance `updatedAt`, since
+   that field gates whether a newer SHARED feed is adopted. Best-effort. */
+function persistState(state) {
   try {
-    state.updatedAt = Date.now();
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
@@ -119,44 +130,73 @@ function saveState(state) {
   }
 }
 
+function saveState(state) {
+  /* A local AUTHORITATIVE edit (draft setup, manual result entry): stamp the
+     wall clock so the score-keeper's export reflects its newness, then persist. */
+  state.updatedAt = Date.now();
+  persistState(state);
+}
+
 /* ---------- Shared league feed (data/results.json) ---------- */
 
-/* Merge an authoritative shared bracket into the current state when it is
-   strictly newer (by updatedAt). Overwrites only the SHARED fields present
-   in `shared` (draftOrder, pickLog, results), validated the same way
-   loadState validates them; keeps state.config; stamps state.updatedAt to
-   the shared timestamp; persists. Returns true if anything changed. */
+/* Merge an authoritative shared feed into local state. The DRAFT and the
+   RESULTS are gated SEPARATELY, because they change on totally different
+   clocks:
+
+     - DRAFT (draftOrder / pickLog / draftDirection): adopted when the feed's
+       `draftVersion` is greater than the device's. The owner bumps
+       draftVersion only when re-publishing the draft, so a corrected draft
+       ALWAYS lands — even mid-tournament when the live auto-feed has pushed
+       the device's `updatedAt` far past the feed's. (Legacy fallback: if the
+       feed has no draftVersion, fall back to the old `updatedAt` gate so a
+       pre-draftVersion feed still works.)
+
+     - RESULTS: adopted when the feed's `updatedAt` is strictly newer. The
+       live auto-feed no longer advances `updatedAt` (see persistState), so a
+       member's device keeps the last SHARED timestamp and a newer published
+       results map is adopted as intended.
+
+   keeps state.config (except the cosmetic draftDirection flag); persists
+   without re-stamping. Returns true if anything changed. */
 function applyShared(shared) {
-  if (!shared || typeof shared.updatedAt !== "number") return false;
+  if (!shared || typeof shared !== "object") return false;
   var state = loadState();
-  if (shared.updatedAt <= (state.updatedAt || 0)) return false;
+  var changed = false;
 
-  if (typeof shared.draftOrder !== "undefined") {
-    state.draftOrder = repairDraftOrder(shared.draftOrder);
-  }
-  if (typeof shared.pickLog !== "undefined") {
-    state.pickLog = filterPickLog(shared.pickLog);
-  }
-  if (typeof shared.results !== "undefined") {
-    state.results = shared.results && typeof shared.results === "object"
-      ? shared.results
-      : {};
-  }
-  /* draftDirection travels with the shared draft so the Recap label reads the
-     same on every device (it's cosmetic; only this flag is adopted from config). */
-  if (shared.draftDirection === "best-first" || shared.draftDirection === "worst-first") {
-    state.config = Object.assign({}, state.config, { draftDirection: shared.draftDirection });
-  }
+  var hasVersion = typeof shared.draftVersion === "number";
+  var sharedVersion = hasVersion ? shared.draftVersion : 0;
+  var draftIsNewer = hasVersion
+    ? sharedVersion > (state.draftVersion || 0)
+    : (typeof shared.updatedAt === "number" && shared.updatedAt > (state.updatedAt || 0));
 
-  state.updatedAt = shared.updatedAt;
-  // Persist without re-stamping updatedAt (preserve the shared timestamp).
-  try {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  if (draftIsNewer) {
+    if (typeof shared.draftOrder !== "undefined") {
+      state.draftOrder = repairDraftOrder(shared.draftOrder);
     }
-  } catch (e) {
-    /* private mode / quota — keep working in-memory */
+    if (typeof shared.pickLog !== "undefined") {
+      state.pickLog = filterPickLog(shared.pickLog);
+    }
+    /* draftDirection travels with the shared draft so the Recap label reads the
+       same on every device (it's cosmetic; only this flag is adopted from config). */
+    if (shared.draftDirection === "best-first" || shared.draftDirection === "worst-first") {
+      state.config = Object.assign({}, state.config, { draftDirection: shared.draftDirection });
+    }
+    if (hasVersion) state.draftVersion = sharedVersion;
+    changed = true;
   }
+
+  if (typeof shared.updatedAt === "number" && shared.updatedAt > (state.updatedAt || 0)) {
+    if (typeof shared.results !== "undefined") {
+      state.results = shared.results && typeof shared.results === "object"
+        ? shared.results
+        : {};
+    }
+    state.updatedAt = shared.updatedAt;
+    changed = true;
+  }
+
+  if (!changed) return false;
+  persistState(state); // preserve the shared/local timestamps as-is
   return true;
 }
 
@@ -164,8 +204,13 @@ function applyShared(shared) {
    suitable to paste into data/results.json. */
 function exportState() {
   var state = loadState();
+  /* Bump draftVersion on every export so a re-published feed always supersedes
+     the prior one on every member's device, regardless of their live-feed
+     inflated `updatedAt`. Idempotent for results-only commits — devices simply
+     re-adopt the identical draft. */
   return JSON.stringify({
     updatedAt: Date.now(),
+    draftVersion: (state.draftVersion || 0) + 1,
     draftOrder: state.draftOrder,
     draftDirection: (state.config && state.config.draftDirection) || "best-first",
     pickLog: state.pickLog,
@@ -190,7 +235,8 @@ function exportState() {
    already has ANY entry (manual or shared/committed), it is left untouched —
    auto NEVER overrides an existing result. Otherwise the match is filled with
    the current resolved slot ids (from buildBracket) so the B1 stale-goal
-   guard keeps working. saveState + returns true iff anything changed. */
+   guard keeps working. persistState (no timestamp bump) + returns true iff
+   anything changed. */
 function applyAutoResults(derived) {
   if (!derived || typeof derived !== "object") return false;
 
@@ -226,7 +272,10 @@ function applyAutoResults(derived) {
     changed = true;
   });
 
-  if (changed) saveState(state);
+  /* Persist WITHOUT stamping updatedAt: auto-filled live results must not
+     advance the timestamp that gates SHARED-feed adoption, or a member's
+     device would keep rejecting newer published feeds (the original bug). */
+  if (changed) persistState(state);
   return changed;
 }
 
