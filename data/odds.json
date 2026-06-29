@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-28T22:55:05.174Z",
+  "fetchedAt": "2026-06-29T01:25:10.877Z",
   "matchCount": 15,
   "lines": [
     {
@@ -25,8 +25,8 @@
       "awayRaw": "Paraguay",
       "line": 2.5,
       "overUS": "-140",
-      "underUS": "+110",
-      "impliedTotal": 2.89
+      "underUS": "+115",
+      "impliedTotal": 2.91
     },
     {
       "espnId": "760488",
@@ -36,9 +36,9 @@
       "homeRaw": "Netherlands",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+115",
-      "underUS": "-145",
-      "impliedTotal": 2.44
+      "overUS": "+110",
+      "underUS": "-135",
+      "impliedTotal": 2.49
     },
     {
       "espnId": "760492",
@@ -49,8 +49,8 @@
       "awayRaw": "Sweden",
       "line": 3.5,
       "overUS": "+125",
-      "underUS": "-160",
-      "impliedTotal": 3.3
+      "underUS": "-150",
+      "impliedTotal": 3.33
     },
     {
       "espnId": "760490",
@@ -60,9 +60,9 @@
       "homeRaw": "Ivory Coast",
       "awayRaw": "Norway",
       "line": 2.5,
-      "overUS": "-120",
+      "overUS": "-125",
       "underUS": "+100",
-      "impliedTotal": 2.76
+      "impliedTotal": 2.78
     },
     {
       "espnId": "760491",
@@ -96,9 +96,9 @@
       "homeRaw": "England",
       "awayRaw": "Congo DR",
       "line": 2.5,
-      "overUS": "-115",
+      "overUS": "-110",
       "underUS": "-110",
-      "impliedTotal": 2.7
+      "impliedTotal": 2.67
     },
     {
       "espnId": "760494",
@@ -180,9 +180,9 @@
       "homeRaw": "Colombia",
       "awayRaw": "Ghana",
       "line": 2.5,
-      "overUS": "+125",
-      "underUS": "-155",
-      "impliedTotal": 2.37
+      "overUS": "+120",
+      "underUS": "-150",
+      "impliedTotal": 2.4
     }
   ]
 }
