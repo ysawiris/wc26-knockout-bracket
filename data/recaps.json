@@ -1,8 +1,44 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-29T19:13:03.784Z",
-  "count": 2,
+  "generatedAt": "2026-06-29T23:49:38.129Z",
+  "count": 3,
   "byId": {
+    "400021513": {
+      "id": "400021513",
+      "round": "R32",
+      "home": "Germany",
+      "away": "Paraguay",
+      "homeGoals": 1,
+      "awayGoals": 1,
+      "venue": "Boston Stadium",
+      "utcDate": "2026-06-29T20:30:00Z",
+      "goals": [
+        {
+          "minute": "42'",
+          "order": 42,
+          "player": "Julio Enciso",
+          "team": "Paraguay",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "54'",
+          "order": 54,
+          "player": "Kai Havertz",
+          "team": "Germany",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Germany and Paraguay finish level at 1–1",
+      "summary": "In a thrilling Round of 32 clash, Paraguay's Julio Enciso strikes first with a stunning goal in the 42nd minute. Germany responds quickly, with Kai Havertz equalizing just nine minutes into the second half. The match heads to penalties, where Germany advances after a dramatic shootout.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Germany\",\"Paraguay\",1,1,[[\"42'\",\"Julio Enciso\",\"Paraguay\",\"away\",false,false],[\"54'\",\"Kai Havertz\",\"Germany\",\"home\",false,false]]]"
+    },
     "400021516": {
       "id": "400021516",
       "round": "R32",
