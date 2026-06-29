@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-29T19:12:40.795Z",
+  "fetchedAt": "2026-06-29T20:01:32.209Z",
   "matchCount": 31,
   "matches": [
     {
@@ -38,7 +38,7 @@
       "awayGoals": null,
       "utcDate": "2026-06-29T20:30:00Z",
       "venue": "Boston Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021522",
