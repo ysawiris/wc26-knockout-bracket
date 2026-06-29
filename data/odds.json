@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-29T01:25:10.877Z",
+  "fetchedAt": "2026-06-29T05:56:28.686Z",
   "matchCount": 15,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Brazil",
       "awayRaw": "Japan",
       "line": 2.5,
-      "overUS": "+110",
-      "underUS": "-135",
-      "impliedTotal": 2.49
+      "overUS": "+105",
+      "underUS": "-130",
+      "impliedTotal": 2.53
     },
     {
       "espnId": "760489",
@@ -24,9 +24,9 @@
       "homeRaw": "Germany",
       "awayRaw": "Paraguay",
       "line": 2.5,
-      "overUS": "-140",
-      "underUS": "+115",
-      "impliedTotal": 2.91
+      "overUS": "-135",
+      "underUS": "+110",
+      "impliedTotal": 2.87
     },
     {
       "espnId": "760488",
@@ -36,9 +36,9 @@
       "homeRaw": "Netherlands",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+110",
-      "underUS": "-135",
-      "impliedTotal": 2.49
+      "overUS": "+115",
+      "underUS": "-145",
+      "impliedTotal": 2.44
     },
     {
       "espnId": "760492",
@@ -48,9 +48,9 @@
       "homeRaw": "France",
       "awayRaw": "Sweden",
       "line": 3.5,
-      "overUS": "+125",
+      "overUS": "+120",
       "underUS": "-150",
-      "impliedTotal": 3.33
+      "impliedTotal": 3.35
     },
     {
       "espnId": "760490",
@@ -84,9 +84,9 @@
       "homeRaw": "Belgium",
       "awayRaw": "Senegal",
       "line": 2.5,
-      "overUS": "+130",
-      "underUS": "-160",
-      "impliedTotal": 2.34
+      "overUS": "+115",
+      "underUS": "-145",
+      "impliedTotal": 2.44
     },
     {
       "espnId": "760495",
@@ -132,9 +132,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Austria",
       "line": 2.5,
-      "overUS": "-115",
+      "overUS": "-120",
       "underUS": "-105",
-      "impliedTotal": 2.72
+      "impliedTotal": 2.74
     },
     {
       "espnId": "760498",
