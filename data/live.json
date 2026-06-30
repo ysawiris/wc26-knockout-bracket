@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T02:04:39.801Z",
+  "fetchedAt": "2026-06-30T03:22:13.180Z",
   "matchCount": 31,
   "matches": [
     {
@@ -52,8 +52,8 @@
       "status": "IN_PLAY",
       "home": "Netherlands",
       "away": "Morocco",
-      "homeGoals": 0,
-      "awayGoals": 0,
+      "homeGoals": 1,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-06-30T01:00:00Z",
