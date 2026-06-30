@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-30T01:19:41.692Z",
+  "fetchedAt": "2026-06-30T05:43:11.250Z",
   "matchCount": 13,
   "lines": [
-    {
-      "espnId": "760488",
-      "date": "2026-06-29",
-      "home": "Netherlands",
-      "away": "Morocco",
-      "homeRaw": "Netherlands",
-      "awayRaw": "Morocco",
-      "line": 2.5,
-      "overUS": "+120",
-      "underUS": "-150",
-      "impliedTotal": 2.4
-    },
     {
       "espnId": "760492",
       "date": "2026-06-30",
@@ -24,9 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "Sweden",
       "line": 3.5,
-      "overUS": "+115",
-      "underUS": "-140",
-      "impliedTotal": 3.41
+      "overUS": "+105",
+      "underUS": "-135",
+      "impliedTotal": 3.48
     },
     {
       "espnId": "760490",
@@ -36,9 +24,9 @@
       "homeRaw": "Ivory Coast",
       "awayRaw": "Norway",
       "line": 2.5,
-      "overUS": "-110",
+      "overUS": "-105",
       "underUS": "-115",
-      "impliedTotal": 2.65
+      "impliedTotal": 2.63
     },
     {
       "espnId": "760491",
@@ -48,9 +36,9 @@
       "homeRaw": "Mexico",
       "awayRaw": "Ecuador",
       "line": 1.5,
-      "overUS": "-170",
-      "underUS": "+135",
-      "impliedTotal": 2.01
+      "overUS": "-160",
+      "underUS": "+130",
+      "impliedTotal": 1.97
     },
     {
       "espnId": "760493",
@@ -72,9 +60,9 @@
       "homeRaw": "England",
       "awayRaw": "Congo DR",
       "line": 2.5,
-      "overUS": "-105",
+      "overUS": "-110",
       "underUS": "-115",
-      "impliedTotal": 2.63
+      "impliedTotal": 2.65
     },
     {
       "espnId": "760494",
@@ -108,9 +96,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Austria",
       "line": 2.5,
-      "overUS": "-125",
-      "underUS": "+100",
-      "impliedTotal": 2.78
+      "overUS": "-120",
+      "underUS": "-105",
+      "impliedTotal": 2.74
     },
     {
       "espnId": "760498",
@@ -155,6 +143,18 @@
       "away": "Ghana",
       "homeRaw": "Colombia",
       "awayRaw": "Ghana",
+      "line": 2.5,
+      "overUS": "+125",
+      "underUS": "-155",
+      "impliedTotal": 2.37
+    },
+    {
+      "espnId": "760502",
+      "date": "2026-07-04",
+      "home": "Canada",
+      "away": "Morocco",
+      "homeRaw": "Canada",
+      "awayRaw": "Morocco",
       "line": 2.5,
       "overUS": "+125",
       "underUS": "-155",
