@@ -1,6 +1,6 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-30T06:25:06.120Z",
+  "generatedAt": "2026-06-30T06:30:30.090Z",
   "count": 4,
   "byId": {
     "400021513": {
@@ -101,9 +101,9 @@
         ]
       },
       "headline": "Paraguay win 4–3 on penalties",
-      "summary": "Germany and Paraguay finished level at 1–1 in the Round of 32; Paraguay win 4–3 on penalties. Goals: Julio Enciso (42'), Kai Havertz (54').",
-      "ai": false,
-      "aiVia": null,
+      "summary": "In a thrilling Round of 32 clash, Paraguay's Julio Enciso opens the scoring at 42 minutes, but Germany's Kai Havertz equalizes just after halftime. The match goes to penalties, where Paraguay triumphs 4-3, sending them into the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
       "fingerprint": "[\"Germany\",\"Paraguay\",1,1,[[\"42'\",\"Julio Enciso\",\"Paraguay\",\"away\",false,false],[\"54'\",\"Kai Havertz\",\"Germany\",\"home\",false,false]],[3,4,[[\"home\",false],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",true],[\"away\",false],[\"home\",false],[\"away\",true]]]]"
     },
     "400021516": {
@@ -266,9 +266,9 @@
         ]
       },
       "headline": "Morocco win 3–2 on penalties",
-      "summary": "Netherlands and Morocco finished level at 1–1 in the Round of 32; Morocco win 3–2 on penalties. Goals: Cody Gakpo (72'), Issa Diop (90'+1').",
-      "ai": false,
-      "aiVia": null,
+      "summary": "In a thrilling Round of 32 clash, Cody Gakpo puts the Netherlands ahead in the 72nd minute, but Issa Diop equalizes for Morocco in stoppage time. The match heads to penalties, where Morocco triumphs 3-2, advancing to the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
       "fingerprint": "[\"Netherlands\",\"Morocco\",1,1,[[\"72'\",\"Cody Gakpo\",\"Netherlands\",\"home\",false,false],[\"90'+1'\",\"Issa Diop\",\"Morocco\",\"away\",false,false]],[2,3,[[\"home\",true],[\"away\",false],[\"home\",false],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",false],[\"away\",true]]]]"
     }
   }
