@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T01:15:34.069Z",
+  "fetchedAt": "2026-06-30T02:04:39.801Z",
   "matchCount": 31,
   "matches": [
     {
@@ -58,7 +58,7 @@
       "awayPens": null,
       "utcDate": "2026-06-30T01:00:00Z",
       "venue": "Monterrey Stadium",
-      "minute": "15'"
+      "minute": null
     },
     {
       "id": "400021514",
