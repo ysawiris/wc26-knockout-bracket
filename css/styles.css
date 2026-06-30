@@ -471,10 +471,26 @@ nav, main, header, footer { position: relative; z-index: 1; }
   font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--gold-2); margin-bottom: 6px;
 }
-.mini-row { font-weight: 700; font-size: 0.86rem; color: var(--text); }
+.mini-row {
+  display: flex; align-items: center; gap: 5px;
+  font-weight: 700; font-size: 0.86rem; color: var(--text);
+}
+.mini-team { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* Winner / loser of a finished match — gold + ✓ on the winner (same language as
+   the bracket's .bk-side.win), dimmed loser, so who advanced reads at a glance. */
+.mini-row.win .mini-team { color: var(--gold-1); }
+.mini-row.lose { opacity: 0.45; }
+.mini-win { color: var(--gold-1); font-weight: 900; font-size: 0.8rem; flex: 0 0 auto; }
 .mini-score {
   font-family: "Cinzel", serif; font-weight: 900; font-size: 1.05rem; color: var(--gold-1);
   margin: 2px 0; display: flex; align-items: center; gap: 6px;
+}
+/* Penalty-shootout badge by the score (winner's tally first) so a level
+   full-time line like 1–1 isn't misread as a draw. */
+.mini-pk {
+  font-family: "Archivo", sans-serif; font-weight: 800; font-size: 0.52rem;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold-2);
+  border: 1px solid var(--panel-edge); padding: 1px 6px; border-radius: 5px;
 }
 .mini-live { color: #ff5d5d; font-size: 0.7rem; animation: pulse 1.6s infinite; }
 
@@ -670,7 +686,7 @@ nav, main, header, footer { position: relative; z-index: 1; }
   }
   .live-cards::-webkit-scrollbar { display: none; }
   .mini { flex: 0 0 196px; scroll-snap-align: start; padding: 9px 11px; }
-  .mini-row { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini-row { font-size: 0.8rem; }
 
   /* One match per row on phones. minmax(0,1fr) — NOT plain 1fr — so the
      column can shrink to the viewport; bare 1fr is minmax(auto,1fr), which

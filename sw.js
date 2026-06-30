@@ -30,7 +30,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "lyko-v25";
+  var VERSION = "lyko-v26";
   var CACHE_NAME = "wc26-cache-" + VERSION;
   var CACHE_PREFIX = "wc26-cache-";
   var DATA_DIR_RE = /\/data\/[^/]+\.json$/;

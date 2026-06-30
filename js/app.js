@@ -1114,18 +1114,43 @@
     var done = Live.FINISHED[fx.status];
     var isToday = now && dayKey(fxDate(fx)) === dayKey(now);
     var when = (isLive || done || isToday) ? "" : '<div class="mini-when">' + fmtDay(fxDate(fx)) + "</div>";
+
+    /* Mark the winner so a finished game reads at a glance — and a level score
+       settled on penalties (e.g. 1–1, Morocco 3–2 pens) no longer looks like a
+       draw. Gold + ✓ on the winner, dimmed loser, plus a pens badge by the score. */
+    var winSide = done ? fx.winner : null; // "home" | "away" | null
+    var hasPens = typeof fx.homePens === "number" && typeof fx.awayPens === "number";
+    var rowCls = function (side) { return winSide ? (side === winSide ? " win" : " lose") : ""; };
+    var tick = function (side) {
+      return winSide && side === winSide ? '<span class="mini-win" aria-hidden="true">✓</span>' : "";
+    };
+    var pkTag = "";
+    if (done && hasPens) {
+      var wp = winSide === "away" ? fx.awayPens : fx.homePens;
+      var lp = winSide === "away" ? fx.homePens : fx.awayPens;
+      if (winSide == null) { wp = Math.max(fx.homePens, fx.awayPens); lp = Math.min(fx.homePens, fx.awayPens); }
+      pkTag = ' <span class="mini-pk">' + wp + "–" + lp + " pens</span>";
+    }
+    var winName = winSide ? (winSide === "home" ? fx.home.name : fx.away.name) : null;
+    var winLabel = winName ? ". Winner: " + winName + (hasPens ? " on penalties" : "") : "";
+
+    var row = function (team, side) {
+      return '<div class="mini-row' + rowCls(side) + '">' +
+        '<span class="mini-team">' + team.flag + " " + esc(team.name) + "</span>" + tick(side) + "</div>";
+    };
+
     return '<div class="mini mc-mini' + (isLive ? " live" : done ? " done" : "") + '"' +
       ' data-mc="' + esc(fx.id) + '" role="button" tabindex="0" aria-label="Open match center for ' +
-      esc(fx.home.name) + " vs " + esc(fx.away.name) + '">' +
+      esc(fx.home.name) + " vs " + esc(fx.away.name) + esc(winLabel) + '">' +
       '<div class="mini-grp">' + esc(fx.roundLabel || fx.round) + " " +
         ownerTag(fx.home, owners) + ownerTag(fx.away, owners) +
         (done ? '<span class="mini-ft">FT</span>' : "") + "</div>" +
       when +
-      '<div class="mini-row"><span>' + fx.home.flag + " " + esc(fx.home.name) + "</span></div>" +
-      '<div class="mini-score">' + scoreOrTime(fx) +
+      row(fx.home, "home") +
+      '<div class="mini-score">' + scoreOrTime(fx) + pkTag +
         (isLive ? ' <span class="mini-live">●</span>' +
           (fx.minute ? '<span class="mini-min">' + esc(fx.minute) + "</span>" : "") : "") + "</div>" +
-      '<div class="mini-row"><span>' + fx.away.flag + " " + esc(fx.away.name) + "</span></div>" +
+      row(fx.away, "away") +
       "</div>";
   }
 
