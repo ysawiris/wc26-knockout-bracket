@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-30T05:43:11.250Z",
+  "fetchedAt": "2026-06-30T09:28:23.124Z",
   "matchCount": 13,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "Sweden",
       "line": 3.5,
-      "overUS": "+105",
-      "underUS": "-135",
-      "impliedTotal": 3.48
+      "overUS": "+115",
+      "underUS": "-145",
+      "impliedTotal": 3.39
     },
     {
       "espnId": "760490",
@@ -24,9 +24,9 @@
       "homeRaw": "Ivory Coast",
       "awayRaw": "Norway",
       "line": 2.5,
-      "overUS": "-105",
-      "underUS": "-115",
-      "impliedTotal": 2.63
+      "overUS": "-115",
+      "underUS": "-105",
+      "impliedTotal": 2.72
     },
     {
       "espnId": "760491",
@@ -36,9 +36,9 @@
       "homeRaw": "Mexico",
       "awayRaw": "Ecuador",
       "line": 1.5,
-      "overUS": "-160",
-      "underUS": "+130",
-      "impliedTotal": 1.97
+      "overUS": "-175",
+      "underUS": "+140",
+      "impliedTotal": 2.04
     },
     {
       "espnId": "760493",
@@ -120,9 +120,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Cape Verde",
       "line": 2.5,
-      "overUS": "-150",
+      "overUS": "-145",
       "underUS": "+120",
-      "impliedTotal": 2.97
+      "impliedTotal": 2.95
     },
     {
       "espnId": "760499",
