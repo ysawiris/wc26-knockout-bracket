@@ -63,6 +63,13 @@
   }
 
   function mapMatch(m, round) {
+    // A level full-time score in the knockout stage is settled by a shootout —
+    // carry the penalty tally (FIFA fills these only once the match is FINISHED)
+    // so deriveResults can break the tie and advance the winner. Without this the
+    // direct feed overlays a level score with NO pens, deriveResults bails, and a
+    // shootout result (e.g. Netherlands 1-1 Morocco, Morocco 3-2 pens) never
+    // advances while the browser feed is fresh. Mirrors scripts/fetch-scores.mjs.
+    var finished = m.MatchStatus === 0;
     return {
       id: m.IdMatch,
       round: round,
@@ -72,6 +79,8 @@
       away: loc(m.Away && m.Away.TeamName) || "TBD",
       homeGoals: m.HomeTeamScore == null ? null : m.HomeTeamScore,
       awayGoals: m.AwayTeamScore == null ? null : m.AwayTeamScore,
+      homePens: finished && m.HomeTeamPenaltyScore != null ? m.HomeTeamPenaltyScore : null,
+      awayPens: finished && m.AwayTeamPenaltyScore != null ? m.AwayTeamPenaltyScore : null,
       venue: loc(m.Stadium && m.Stadium.Name),
       minute: m.MatchTime || null
     };
