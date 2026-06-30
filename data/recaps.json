@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-30T19:37:50.498Z",
-  "count": 5,
+  "generatedAt": "2026-06-30T22:59:05.874Z",
+  "count": 6,
   "byId": {
     "400021513": {
       "id": "400021513",
@@ -315,6 +315,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Netherlands\",\"Morocco\",1,1,[[\"72'\",\"Cody Gakpo\",\"Netherlands\",\"home\",false,false],[\"90'+1'\",\"Issa Diop\",\"Morocco\",\"away\",false,false]],[2,3,[[\"home\",true],[\"away\",false],[\"home\",false],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",false],[\"away\",true]]]]"
+    },
+    "400021523": {
+      "id": "400021523",
+      "round": "R32",
+      "home": "France",
+      "away": "Sweden",
+      "homeGoals": 3,
+      "awayGoals": 0,
+      "venue": "New York/New Jersey Stadium",
+      "utcDate": "2026-06-30T21:00:00Z",
+      "goals": [
+        {
+          "minute": "45'",
+          "order": 45,
+          "player": "Kylian Mbappe",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "53'",
+          "order": 53,
+          "player": "Bradley Barcola",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "74'",
+          "order": 74,
+          "player": "Kylian Mbappe",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "France see off Sweden",
+      "summary": "France dominates Sweden 3-0 in the Round of 32 at New York/New Jersey Stadium. Kylian Mbappe opens the scoring just before halftime and adds another in the second half, while Bradley Barcola finds the net in between. With this emphatic victory, France advances to the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"France\",\"Sweden\",3,0,[[\"45'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"53'\",\"Bradley Barcola\",\"France\",\"home\",false,false],[\"74'\",\"Kylian Mbappe\",\"France\",\"home\",false,false]]]"
     }
   }
 }
