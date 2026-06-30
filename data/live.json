@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T22:58:12.398Z",
+  "fetchedAt": "2026-06-30T23:35:25.700Z",
   "matchCount": 31,
   "matches": [
     {
@@ -100,7 +100,7 @@
       "awayPens": null,
       "utcDate": "2026-07-01T01:00:00Z",
       "venue": "Mexico City Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021512",
