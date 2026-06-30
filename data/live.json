@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T18:19:34.370Z",
+  "fetchedAt": "2026-06-30T19:04:17.120Z",
   "matchCount": 31,
   "matches": [
     {
@@ -63,16 +63,16 @@
     {
       "id": "400021514",
       "round": "Round of 32",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Côte d'Ivoire",
       "away": "Norway",
-      "homeGoals": 0,
-      "awayGoals": 1,
+      "homeGoals": 1,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-06-30T17:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "59'"
+      "minute": "98'"
     },
     {
       "id": "400021523",
