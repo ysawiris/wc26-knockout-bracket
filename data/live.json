@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-29T23:32:59.301Z",
+  "fetchedAt": "2026-06-30T00:02:08.048Z",
   "matchCount": 31,
   "matches": [
     {
@@ -50,7 +50,7 @@
       "awayGoals": null,
       "utcDate": "2026-06-30T01:00:00Z",
       "venue": "Monterrey Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021514",
@@ -212,7 +212,7 @@
       "id": "400021533",
       "round": "Round of 16",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Paraguay",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
