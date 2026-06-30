@@ -147,9 +147,18 @@ var Live = (function () {
       var ga = fx.homeGoals;
       var gb = fx.awayGoals;
       if (typeof ga !== "number" || typeof gb !== "number") return;
-      if (ga === gb) return; // equal -> leave for manual shootout call
 
-      var winSide = ga > gb ? fx.home : fx.away;
+      var winSide;
+      if (ga !== gb) {
+        winSide = ga > gb ? fx.home : fx.away;
+      } else {
+        // Level full-time -> decided on penalties. Use the shootout tally if the
+        // feed carried one; without it we still can't call the winner.
+        var pa = fx.homePens;
+        var pb = fx.awayPens;
+        if (typeof pa !== "number" || typeof pb !== "number" || pa === pb) return;
+        winSide = pa > pb ? fx.home : fx.away;
+      }
       if (!winSide || winSide.countryId == null) return; // TBD slot, no clear winner
 
       out[fx.id] = { winnerId: winSide.countryId, ga: ga, gb: gb };
@@ -218,6 +227,12 @@ var Live = (function () {
       if (hit.homeGoals != null && hit.awayGoals != null) {
         fx.homeGoals = sameOrientation ? hit.homeGoals : hit.awayGoals;
         fx.awayGoals = sameOrientation ? hit.awayGoals : hit.homeGoals;
+      }
+      // Shootout tally (present only when the match went to penalties) — kept in
+      // the fixture's orientation so deriveResults can break a level full-time score.
+      if (hit.homePens != null && hit.awayPens != null) {
+        fx.homePens = sameOrientation ? hit.homePens : hit.awayPens;
+        fx.awayPens = sameOrientation ? hit.awayPens : hit.homePens;
       }
 
       var perMatch = cardsByMatch && hit.id != null && cardsByMatch[hit.id];

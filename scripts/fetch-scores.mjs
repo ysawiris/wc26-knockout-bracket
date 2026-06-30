@@ -46,6 +46,11 @@ function isKnockout(m) {
 
 function mapMatch(m) {
   const decided = m.MatchStatus === 0 || m.MatchStatus === 3; // only show scores once played
+  const finished = m.MatchStatus === 0;
+  // A level full-time score is settled by a shootout — carry the penalty tally
+  // so the bracket can advance the correct team (FIFA fills these only on pens).
+  const homePens = finished && m.HomeTeamPenaltyScore != null ? m.HomeTeamPenaltyScore : null;
+  const awayPens = finished && m.AwayTeamPenaltyScore != null ? m.AwayTeamPenaltyScore : null;
   return {
     id: m.IdMatch,
     round: loc(m.StageName),
@@ -54,6 +59,8 @@ function mapMatch(m) {
     away: loc(m.Away && m.Away.TeamName) || "TBD",
     homeGoals: decided && m.HomeTeamScore != null ? m.HomeTeamScore : null,
     awayGoals: decided && m.AwayTeamScore != null ? m.AwayTeamScore : null,
+    homePens: homePens,
+    awayPens: awayPens,
     utcDate: m.Date || null,
     venue: loc(m.Stadium && m.Stadium.Name),
     minute: m.MatchTime || null

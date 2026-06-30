@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T00:02:08.048Z",
+  "fetchedAt": "2026-06-30T00:09:44.299Z",
   "matchCount": 31,
   "matches": [
     {
@@ -12,6 +12,8 @@
       "away": "Canada",
       "homeGoals": 0,
       "awayGoals": 1,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-06-28T19:00:00Z",
       "venue": "Los Angeles Stadium",
       "minute": "97'"
@@ -24,6 +26,8 @@
       "away": "Japan",
       "homeGoals": 2,
       "awayGoals": 1,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-06-29T17:00:00Z",
       "venue": "Houston Stadium",
       "minute": "101'"
@@ -36,6 +40,8 @@
       "away": "Paraguay",
       "homeGoals": 1,
       "awayGoals": 1,
+      "homePens": 3,
+      "awayPens": 4,
       "utcDate": "2026-06-29T20:30:00Z",
       "venue": "Boston Stadium",
       "minute": "132'"
@@ -48,6 +54,8 @@
       "away": "Morocco",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-06-30T01:00:00Z",
       "venue": "Monterrey Stadium",
       "minute": "0'"
@@ -60,6 +68,8 @@
       "away": "Norway",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-06-30T17:00:00Z",
       "venue": "Dallas Stadium",
       "minute": null
@@ -72,6 +82,8 @@
       "away": "Sweden",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-06-30T21:00:00Z",
       "venue": "New York/New Jersey Stadium",
       "minute": null
@@ -84,6 +96,8 @@
       "away": "Ecuador",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-01T01:00:00Z",
       "venue": "Mexico City Stadium",
       "minute": null
@@ -96,6 +110,8 @@
       "away": "Congo DR",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-01T16:00:00Z",
       "venue": "Atlanta Stadium",
       "minute": null
@@ -108,6 +124,8 @@
       "away": "Senegal",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-01T20:00:00Z",
       "venue": "Seattle Stadium",
       "minute": null
@@ -120,6 +138,8 @@
       "away": "Bosnia and Herzegovina",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-02T00:00:00Z",
       "venue": "San Francisco Bay Area Stadium",
       "minute": null
@@ -132,6 +152,8 @@
       "away": "Austria",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-02T19:00:00Z",
       "venue": "Los Angeles Stadium",
       "minute": null
@@ -144,6 +166,8 @@
       "away": "Croatia",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-02T23:00:00Z",
       "venue": "Toronto Stadium",
       "minute": null
@@ -156,6 +180,8 @@
       "away": "Algeria",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-03T03:00:00Z",
       "venue": "BC Place Vancouver",
       "minute": null
@@ -168,6 +194,8 @@
       "away": "Egypt",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-03T18:00:00Z",
       "venue": "Dallas Stadium",
       "minute": null
@@ -180,6 +208,8 @@
       "away": "Cabo Verde",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-03T22:00:00Z",
       "venue": "Miami Stadium",
       "minute": null
@@ -192,6 +222,8 @@
       "away": "Ghana",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-04T01:30:00Z",
       "venue": "Kansas City Stadium",
       "minute": null
@@ -204,6 +236,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-04T17:00:00Z",
       "venue": "Houston Stadium",
       "minute": null
@@ -216,6 +250,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-04T21:00:00Z",
       "venue": "Philadelphia Stadium",
       "minute": null
@@ -228,6 +264,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-05T20:00:00Z",
       "venue": "New York/New Jersey Stadium",
       "minute": null
@@ -240,6 +278,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-06T00:00:00Z",
       "venue": "Mexico City Stadium",
       "minute": null
@@ -252,6 +292,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-06T19:00:00Z",
       "venue": "Dallas Stadium",
       "minute": null
@@ -264,6 +306,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-07T00:00:00Z",
       "venue": "Seattle Stadium",
       "minute": null
@@ -276,6 +320,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-07T16:00:00Z",
       "venue": "Atlanta Stadium",
       "minute": null
@@ -288,6 +334,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-07T20:00:00Z",
       "venue": "BC Place Vancouver",
       "minute": null
@@ -300,6 +348,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-09T20:00:00Z",
       "venue": "Boston Stadium",
       "minute": null
@@ -312,6 +362,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-10T19:00:00Z",
       "venue": "Los Angeles Stadium",
       "minute": null
@@ -324,6 +376,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-11T21:00:00Z",
       "venue": "Miami Stadium",
       "minute": null
@@ -336,6 +390,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-12T01:00:00Z",
       "venue": "Kansas City Stadium",
       "minute": null
@@ -348,6 +404,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-14T19:00:00Z",
       "venue": "Dallas Stadium",
       "minute": null
@@ -360,6 +418,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-15T19:00:00Z",
       "venue": "Atlanta Stadium",
       "minute": null
@@ -372,6 +432,8 @@
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
       "utcDate": "2026-07-19T19:00:00Z",
       "venue": "New York/New Jersey Stadium",
       "minute": null
