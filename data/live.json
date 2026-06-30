@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T19:04:17.120Z",
+  "fetchedAt": "2026-06-30T19:47:52.595Z",
   "matchCount": 31,
   "matches": [
     {
@@ -86,7 +86,7 @@
       "awayPens": null,
       "utcDate": "2026-06-30T21:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021520",
@@ -261,7 +261,7 @@
       "round": "Round of 16",
       "status": "TIMED",
       "home": "Brazil",
-      "away": "TBD",
+      "away": "Norway",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
