@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-30T06:30:30.090Z",
-  "count": 4,
+  "generatedAt": "2026-06-30T19:37:50.498Z",
+  "count": 5,
   "byId": {
     "400021513": {
       "id": "400021513",
@@ -105,6 +105,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Germany\",\"Paraguay\",1,1,[[\"42'\",\"Julio Enciso\",\"Paraguay\",\"away\",false,false],[\"54'\",\"Kai Havertz\",\"Germany\",\"home\",false,false]],[3,4,[[\"home\",false],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",true],[\"away\",false],[\"home\",false],[\"away\",true]]]]"
+    },
+    "400021514": {
+      "id": "400021514",
+      "round": "R32",
+      "home": "Ivory Coast",
+      "away": "Norway",
+      "homeGoals": 1,
+      "awayGoals": 2,
+      "venue": "Dallas Stadium",
+      "utcDate": "2026-06-30T17:00:00Z",
+      "goals": [
+        {
+          "minute": "39'",
+          "order": 39,
+          "player": "Antonio Nusa",
+          "team": "Norway",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "74'",
+          "order": 74,
+          "player": "Amad Diallo",
+          "team": "Ivory Coast",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "86'",
+          "order": 86,
+          "player": "Erling Haaland",
+          "team": "Norway",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Norway see off Ivory Coast",
+      "summary": "Norway edges past Ivory Coast 2-1 in a thrilling Round of 32 clash at Dallas Stadium. Antonio Nusa opens the scoring, followed by Amad Diallo's equalizer, but Erling Haaland seals the victory late with a stunning goal. Norway advances to the next round, showcasing their resilience and talent.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Ivory Coast\",\"Norway\",1,2,[[\"39'\",\"Antonio Nusa\",\"Norway\",\"away\",false,false],[\"74'\",\"Amad Diallo\",\"Ivory Coast\",\"home\",false,false],[\"86'\",\"Erling Haaland\",\"Norway\",\"away\",false,false]]]"
     },
     "400021516": {
       "id": "400021516",
