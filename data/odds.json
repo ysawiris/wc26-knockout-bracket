@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-30T17:03:50.816Z",
+  "fetchedAt": "2026-06-30T20:57:24.124Z",
   "matchCount": 13,
   "lines": [
     {
@@ -12,21 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "Sweden",
       "line": 3.5,
-      "overUS": "+100",
-      "underUS": "-125",
-      "impliedTotal": 3.55
-    },
-    {
-      "espnId": "760490",
-      "date": "2026-06-30",
-      "home": "Ivory Coast",
-      "away": "Norway",
-      "homeRaw": "Ivory Coast",
-      "awayRaw": "Norway",
-      "line": 2.5,
-      "overUS": "-115",
-      "underUS": "-110",
-      "impliedTotal": 2.7
+      "overUS": "+110",
+      "underUS": "-135",
+      "impliedTotal": 3.45
     },
     {
       "espnId": "760491",
@@ -48,9 +36,9 @@
       "homeRaw": "Belgium",
       "awayRaw": "Senegal",
       "line": 2.5,
-      "overUS": "+115",
-      "underUS": "-140",
-      "impliedTotal": 2.45
+      "overUS": "+100",
+      "underUS": "-125",
+      "impliedTotal": 2.57
     },
     {
       "espnId": "760495",
@@ -72,9 +60,9 @@
       "homeRaw": "United States",
       "awayRaw": "Bosnia-Herzegovina",
       "line": 2.5,
-      "overUS": "-125",
-      "underUS": "+100",
-      "impliedTotal": 2.78
+      "overUS": "-130",
+      "underUS": "+105",
+      "impliedTotal": 2.83
     },
     {
       "espnId": "760496",
@@ -84,9 +72,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Croatia",
       "line": 2.5,
-      "overUS": "+105",
-      "underUS": "-130",
-      "impliedTotal": 2.53
+      "overUS": "+110",
+      "underUS": "-135",
+      "impliedTotal": 2.49
     },
     {
       "espnId": "760497",
@@ -159,6 +147,18 @@
       "overUS": "+125",
       "underUS": "-155",
       "impliedTotal": 2.37
+    },
+    {
+      "espnId": "760504",
+      "date": "2026-07-05",
+      "home": "Brazil",
+      "away": "Norway",
+      "homeRaw": "Brazil",
+      "awayRaw": "Norway",
+      "line": 2.5,
+      "overUS": "-105",
+      "underUS": "-120",
+      "impliedTotal": 2.61
     }
   ]
 }
