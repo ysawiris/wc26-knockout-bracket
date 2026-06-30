@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-06-30T09:28:23.124Z",
+  "fetchedAt": "2026-06-30T13:00:12.188Z",
   "matchCount": 13,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "Sweden",
       "line": 3.5,
-      "overUS": "+115",
-      "underUS": "-145",
-      "impliedTotal": 3.39
+      "overUS": "+110",
+      "underUS": "-135",
+      "impliedTotal": 3.45
     },
     {
       "espnId": "760490",
@@ -25,8 +25,8 @@
       "awayRaw": "Norway",
       "line": 2.5,
       "overUS": "-115",
-      "underUS": "-105",
-      "impliedTotal": 2.72
+      "underUS": "-110",
+      "impliedTotal": 2.7
     },
     {
       "espnId": "760491",
@@ -36,9 +36,9 @@
       "homeRaw": "Mexico",
       "awayRaw": "Ecuador",
       "line": 1.5,
-      "overUS": "-175",
-      "underUS": "+140",
-      "impliedTotal": 2.04
+      "overUS": "-170",
+      "underUS": "+135",
+      "impliedTotal": 2.01
     },
     {
       "espnId": "760493",
@@ -61,8 +61,8 @@
       "awayRaw": "Congo DR",
       "line": 2.5,
       "overUS": "-110",
-      "underUS": "-115",
-      "impliedTotal": 2.65
+      "underUS": "-110",
+      "impliedTotal": 2.67
     },
     {
       "espnId": "760494",
