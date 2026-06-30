@@ -279,6 +279,59 @@ var MatchCenter = (function () {
       "</div>";
   }
 
+  /* The match's penalty-shootout record from recaps.json (or null). */
+  function shootoutOf(fx) {
+    var r = fx.matchId && recapsById[fx.matchId];
+    return (r && r.shootout && r.shootout.kicks && r.shootout.kicks.length) ? r.shootout : null;
+  }
+
+  /* Compact one-line shootout result for the hero ("Morocco win 3–2 on
+     penalties") so a level scoreline isn't misread as a draw. */
+  function shootoutLine(fx) {
+    var so = shootoutOf(fx);
+    if (!so) return "";
+    var label;
+    if (so.winner) {
+      var name = so.winner === "home" ? fx.home.name : fx.away.name;
+      var w = so.winner === "home" ? so.home : so.away;
+      var l = so.winner === "home" ? so.away : so.home;
+      label = esc(name) + " win " + w + "–" + l + " on penalties";
+    } else {
+      label = "Shootout " + so.home + "–" + so.away;
+    }
+    return '<div class="mc-pk-line">🥅 ' + label + "</div>";
+  }
+
+  /* Full kick-by-kick shootout grid for the timeline: one row per team, each
+     team's kicks in taking order as ✓ (scored) / ✗ (missed), with the tally.
+     Winner row highlighted. Each mark's title names the taker. */
+  function shootoutBlock(fx) {
+    var so = shootoutOf(fx);
+    if (!so) return "";
+    function row(side) {
+      var name = fx[side].name;
+      var marks = so.kicks.filter(function (k) { return k.side === side; })
+        .map(function (k) {
+          var t = k.player ? esc(k.player) + (k.scored ? " — scored" : " — missed") : (k.scored ? "Scored" : "Missed");
+          return '<i class="mc-pk-k ' + (k.scored ? "goal" : "miss") + '" title="' + t + '">' +
+            (k.scored ? "✓" : "✗") + "</i>";
+        }).join("");
+      var tally = side === "home" ? so.home : so.away;
+      return '<div class="mc-pk-row' + (so.winner === side ? " win" : "") + '">' +
+        '<span class="mc-pk-team">' + flagFor(name) + " " + esc(name || "TBD") + "</span>" +
+        '<span class="mc-pk-kicks">' + marks + "</span>" +
+        '<span class="mc-pk-tally">' + tally + "</span>" +
+        "</div>";
+    }
+    var head = so.winner
+      ? esc(so.winner === "home" ? fx.home.name : fx.away.name) + " advance on penalties"
+      : "Penalty shootout";
+    return '<div class="mc-pk">' +
+      '<div class="mc-pk-h">🥅 ' + head + "</div>" +
+      row("home") + row("away") +
+      "</div>";
+  }
+
   function hero(fx) {
     var score = hasScore(fx)
       ? fx.homeGoals + '<span class="mc-dash">–</span>' + fx.awayGoals
@@ -296,6 +349,7 @@ var MatchCenter = (function () {
       "</div>" +
       '<div class="mc-stage">' + stage + "</div>" +
       scorersRow(fx) +
+      shootoutLine(fx) +
       ((isDone(fx) || isLive(fx))
         ? '<a class="mc-watch" target="_blank" rel="noopener" href="' +
             Live.highlightsUrl(fx.home.name, fx.away.name) + '">▶ Watch highlights</a>'
@@ -323,7 +377,13 @@ var MatchCenter = (function () {
     if (r && r.goals && r.goals.length) {
       var sorted = r.goals.slice().sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
       return (r.summary ? '<p class="mc-summary">' + esc(r.summary) + "</p>" : "") +
-        '<ul class="mc-evs">' + sorted.map(goalLi).join("") + "</ul>";
+        '<ul class="mc-evs">' + sorted.map(goalLi).join("") + "</ul>" +
+        shootoutBlock(fx);
+    }
+    // Level game with a shootout but no open-play goals still shows the shootout.
+    if (shootoutOf(fx)) {
+      return (r && r.summary ? '<p class="mc-summary">' + esc(r.summary) + "</p>" : "") +
+        shootoutBlock(fx);
     }
     if (isLive(fx)) {
       return '<div class="mc-note live">' +

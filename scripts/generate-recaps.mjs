@@ -45,6 +45,8 @@ const SEASON = "285023"; // FIFA World Cup 2026
 const EVENT_GOAL = 0;
 const EVENT_RED = 3;
 const EVENT_OWN_GOAL = 34;
+const EVENT_PEN_GOAL = 41; // shootout penalty scored
+const EVENT_PEN_MISS = 60; // shootout penalty missed/saved
 
 /* ---------------- prose providers (optional, all free) ----------------
    Free, OpenAI-compatible LLM endpoints, tried in order — the first that
@@ -97,10 +99,16 @@ function roundPhrase(r) {
   return lbl ? `in the ${lbl}` : "";
 }
 
-async function fetchJson(url) {
-  const res = await fetch(url, { headers: { Accept: "application/json" } });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
-  return res.json();
+async function fetchJson(url, timeoutMs = 15000) {
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { headers: { Accept: "application/json" }, signal: ac.signal });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /* The FIFA feed uses a few names the hub spells differently. Emit the hub's
@@ -216,6 +224,46 @@ function redCardLines(events) {
     .filter(Boolean);
 }
 
+/* The kicker's display name from a shootout event description like
+   "Teun KOOPMEINERS (Netherlands) successfully converts the penalty!" */
+function shootoutPlayer(ev) {
+  const desc = loc(ev.EventDescription) || "";
+  const m = desc.match(/^(.+?)\s*\(/);
+  return m ? tidyName(m[1]) : null;
+}
+
+/* Build the penalty-shootout kick list when a level full-time score was
+   settled from the spot. Returns null for games decided in regulation/ET.
+   FIFA emits Type 41 (penalty scored) / 60 (penalty missed) events; the
+   shootout is the match's FINAL period, so isolating the max period among
+   those events drops any in-match penalty taken earlier in the game. Kicks
+   are returned in taking order; the per-side tally counts the conversions. */
+function buildShootout(events, homeId, awayId, homeGoals, awayGoals) {
+  if (homeGoals == null || awayGoals == null || homeGoals !== awayGoals) return null;
+  const kickEvents = events.filter(
+    (e) => e.Type === EVENT_PEN_GOAL || e.Type === EVENT_PEN_MISS
+  );
+  if (kickEvents.length < 2) return null;
+  const period = Math.max(...kickEvents.map((e) => e.Period || 0));
+  const kicks = kickEvents
+    .filter((e) => (e.Period || 0) === period)
+    .sort((a, b) => new Date(a.Timestamp || 0) - new Date(b.Timestamp || 0))
+    .map((e) => ({
+      side: String(e.IdTeam) === String(homeId) ? "home" : "away",
+      scored: e.Type === EVENT_PEN_GOAL,
+      player: shootoutPlayer(e)
+    }));
+  if (!kicks.length) return null;
+  const home = kicks.filter((k) => k.side === "home" && k.scored).length;
+  const away = kicks.filter((k) => k.side === "away" && k.scored).length;
+  return {
+    home,
+    away,
+    winner: home > away ? "home" : away > home ? "away" : null,
+    kicks
+  };
+}
+
 /* ---------------- prose: built-in writer (no key needed) ---------------- */
 
 function scorerPhrase(g) {
@@ -226,8 +274,19 @@ function scorerPhrase(g) {
   return `${g.player} (${g.minute}${tag})`;
 }
 
+/* The shootout result as "<winner> win <w>–<l> on penalties", or null. */
+function shootoutPhrase(r) {
+  if (!r.shootout || !r.shootout.winner) return null;
+  const w = r.shootout.winner === "home" ? r.home : r.away;
+  const wp = r.shootout.winner === "home" ? r.shootout.home : r.shootout.away;
+  const lp = r.shootout.winner === "home" ? r.shootout.away : r.shootout.home;
+  return `${w} win ${wp}–${lp} on penalties`;
+}
+
 function templateHeadline(r) {
   if (r.homeGoals === r.awayGoals) {
+    const pk = shootoutPhrase(r);
+    if (pk) return pk.charAt(0).toUpperCase() + pk.slice(1);
     return `${r.home} and ${r.away} finish level at ${r.homeGoals}–${r.awayGoals}`;
   }
   const winner = r.homeGoals > r.awayGoals ? r.home : r.away;
@@ -240,7 +299,10 @@ function templateSummary(r) {
   const where = roundPhrase(r);
   let lead;
   if (r.homeGoals === r.awayGoals) {
-    lead = `${r.home} and ${r.away} finished level at ${score} ${where}, settled beyond regulation.`;
+    const pk = shootoutPhrase(r);
+    lead = pk
+      ? `${r.home} and ${r.away} finished level at ${score} ${where}; ${pk}.`
+      : `${r.home} and ${r.away} finished level at ${score} ${where}, settled beyond regulation.`;
   } else {
     const winner = r.homeGoals > r.awayGoals ? r.home : r.away;
     const loser = r.homeGoals > r.awayGoals ? r.away : r.home;
@@ -273,12 +335,17 @@ function buildMessages(r) {
           )
           .join("; ")
       : "none") +
-    (r.reds && r.reds.length ? `\nRed cards: ${r.reds.join("; ")}` : "");
+    (r.reds && r.reds.length ? `\nRed cards: ${r.reds.join("; ")}` : "") +
+    (shootoutPhrase(r)
+      ? `\nPenalty shootout: ${shootoutPhrase(r)} (shootout score ${r.shootout.home}-${r.shootout.away}).`
+      : "");
 
   const prompt =
     `You are writing a punchy recap for a 2026 World Cup KNOCKOUT match on a fantasy-league hub. ` +
     `Use only these facts, present tense, no markdown, 2-3 sentences (max ~60 words). ` +
-    `Name the key scorers and who advances; energetic but factual.\n\n${facts}`;
+    `Name the key scorers and who advances; energetic but factual. ` +
+    `If the match went to a penalty shootout, state who won it and the shootout score, ` +
+    `and never say the other team advances.\n\n${facts}`;
 
   return [
     { role: "system", content: "You write concise, factual football match recaps." },
@@ -364,13 +431,19 @@ async function aiSummary(r) {
 /* A fingerprint of the scoreline + goals; if unchanged we keep the cached
    recap (and never re-call the model). */
 function fingerprint(r) {
-  return JSON.stringify([
+  const parts = [
     r.home,
     r.away,
     r.homeGoals,
     r.awayGoals,
     r.goals.map((g) => [g.minute, g.player, g.team, g.side, g.ownGoal, g.penalty])
-  ]);
+  ];
+  // Only extend the fingerprint for shootout games, so non-penalty recaps keep
+  // their existing fingerprint (and cached AI prose) instead of churning.
+  if (r.shootout) {
+    parts.push([r.shootout.home, r.shootout.away, r.shootout.kicks.map((k) => [k.side, k.scored])]);
+  }
+  return JSON.stringify(parts);
 }
 
 async function main() {
@@ -432,6 +505,14 @@ async function main() {
       goals: buildGoals(events, home, away),
       reds: redCardLines(events)
     };
+    const shootout = buildShootout(
+      events,
+      m.Home && m.Home.IdTeam,
+      m.Away && m.Away.IdTeam,
+      recap.homeGoals,
+      recap.awayGoals
+    );
+    if (shootout) recap.shootout = shootout;
     recap.headline = templateHeadline(recap);
 
     const fp = fingerprint(recap);

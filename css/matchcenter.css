@@ -208,6 +208,80 @@ button.mc-act {
 }
 .mc-watch:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232, 196, 106, 0.3); }
 
+/* ---------------- penalty shootout ---------------- */
+
+/* Compact one-liner under the hero score so a level full-time line isn't
+   misread as a draw. */
+.mc-pk-line {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold-1);
+  letter-spacing: 0.01em;
+}
+
+/* Kick-by-kick grid in the Timeline tab: one row per team, that team's kicks
+   in taking order as ✓ (scored) / ✗ (missed), with the running tally. */
+.mc-pk {
+  margin-top: 14px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.mc-pk-h {
+  font-family: "Archivo", sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 8px;
+}
+.mc-pk-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+.mc-pk-row + .mc-pk-row { border-top: 1px solid rgba(212, 168, 84, 0.12); }
+.mc-pk-team {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--gold-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mc-pk-row.win .mc-pk-team,
+.mc-pk-row.win .mc-pk-tally { color: var(--gold-1); }
+.mc-pk-row:not(.win) .mc-pk-team { color: var(--gold-3); }
+.mc-pk-kicks { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+.mc-pk-k {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 0.82rem;
+  line-height: 1;
+  width: 17px;
+  height: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.mc-pk-k.goal { color: #57c97e; background: rgba(87, 201, 126, 0.14); }
+.mc-pk-k.miss { color: #e8736b; background: rgba(214, 43, 30, 0.16); }
+.mc-pk-tally {
+  font-family: "Cinzel", serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: var(--gold-2);
+  min-width: 14px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------------- tabs ---------------- */
 
 .mc-tabs {
