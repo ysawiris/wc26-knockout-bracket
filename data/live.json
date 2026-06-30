@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T19:47:52.595Z",
+  "fetchedAt": "2026-06-30T21:16:08.323Z",
   "matchCount": 31,
   "matches": [
     {
@@ -77,16 +77,16 @@
     {
       "id": "400021523",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "France",
       "away": "Sweden",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-06-30T21:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": "0'"
+      "minute": "16'"
     },
     {
       "id": "400021520",
