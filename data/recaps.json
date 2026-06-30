@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-29T23:49:38.129Z",
-  "count": 3,
+  "generatedAt": "2026-06-30T04:53:25.554Z",
+  "count": 4,
   "byId": {
     "400021513": {
       "id": "400021513",
@@ -110,6 +110,42 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"South Africa\",\"Canada\",0,1,[[\"90'+2'\",\"Stephen Eustaquio\",\"Canada\",\"away\",false,false]]]"
+    },
+    "400021522": {
+      "id": "400021522",
+      "round": "R32",
+      "home": "Netherlands",
+      "away": "Morocco",
+      "homeGoals": 1,
+      "awayGoals": 1,
+      "venue": "Monterrey Stadium",
+      "utcDate": "2026-06-30T01:00:00Z",
+      "goals": [
+        {
+          "minute": "72'",
+          "order": 72,
+          "player": "Cody Gakpo",
+          "team": "Netherlands",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+1'",
+          "order": 90.01,
+          "player": "Issa Diop",
+          "team": "Morocco",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Netherlands and Morocco finish level at 1–1",
+      "summary": "In a thrilling Round of 32 clash, the Netherlands and Morocco battle to a 1-1 draw, with Cody Gakpo striking first for the Dutch in the 72nd minute. However, Issa Diop's dramatic equalizer in injury time sends Morocco through on penalties, eliminating the Netherlands from the tournament.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Netherlands\",\"Morocco\",1,1,[[\"72'\",\"Cody Gakpo\",\"Netherlands\",\"home\",false,false],[\"90'+1'\",\"Issa Diop\",\"Morocco\",\"away\",false,false]]]"
     }
   }
 }
