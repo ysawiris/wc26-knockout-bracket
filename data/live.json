@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-06-30T00:09:44.299Z",
+  "fetchedAt": "2026-06-30T01:15:34.069Z",
   "matchCount": 31,
   "matches": [
     {
@@ -49,16 +49,16 @@
     {
       "id": "400021522",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Netherlands",
       "away": "Morocco",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-06-30T01:00:00Z",
       "venue": "Monterrey Stadium",
-      "minute": "0'"
+      "minute": "15'"
     },
     {
       "id": "400021514",
