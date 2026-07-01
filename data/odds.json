@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-01T17:02:37.811Z",
+  "fetchedAt": "2026-07-01T20:52:37.888Z",
   "matchCount": 12,
   "lines": [
     {
@@ -15,18 +15,6 @@
       "overUS": "-125",
       "underUS": "+100",
       "impliedTotal": 2.78
-    },
-    {
-      "espnId": "760495",
-      "date": "2026-07-01",
-      "home": "England",
-      "away": "DR Congo",
-      "homeRaw": "England",
-      "awayRaw": "Congo DR",
-      "line": 2.5,
-      "overUS": "+110",
-      "underUS": "-135",
-      "impliedTotal": 2.49
     },
     {
       "espnId": "760494",
@@ -60,9 +48,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Austria",
       "line": 2.5,
-      "overUS": "-120",
-      "underUS": "-105",
-      "impliedTotal": 2.74
+      "overUS": "-125",
+      "underUS": "+100",
+      "impliedTotal": 2.78
     },
     {
       "espnId": "760498",
@@ -120,9 +108,9 @@
       "homeRaw": "Canada",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+125",
-      "underUS": "-155",
-      "impliedTotal": 2.37
+      "overUS": "+130",
+      "underUS": "-160",
+      "impliedTotal": 2.34
     },
     {
       "espnId": "760503",
@@ -132,9 +120,9 @@
       "homeRaw": "Paraguay",
       "awayRaw": "France",
       "line": 2.5,
-      "overUS": "-170",
-      "underUS": "+135",
-      "impliedTotal": 3.09
+      "overUS": "-160",
+      "underUS": "+130",
+      "impliedTotal": 3.04
     },
     {
       "espnId": "760504",
@@ -144,9 +132,21 @@
       "homeRaw": "Brazil",
       "awayRaw": "Norway",
       "line": 2.5,
-      "overUS": "-110",
-      "underUS": "-115",
-      "impliedTotal": 2.65
+      "overUS": "-120",
+      "underUS": "-105",
+      "impliedTotal": 2.74
+    },
+    {
+      "espnId": "760505",
+      "date": "2026-07-05",
+      "home": "Mexico",
+      "away": "England",
+      "homeRaw": "Mexico",
+      "awayRaw": "England",
+      "line": 2.5,
+      "overUS": "+145",
+      "underUS": "-180",
+      "impliedTotal": 2.24
     }
   ]
 }
