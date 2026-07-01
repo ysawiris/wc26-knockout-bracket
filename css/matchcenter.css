@@ -92,8 +92,8 @@ button.mc-act {
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
-.mc-back { width: 30px; height: 30px; font-size: 1.4rem; line-height: 1; }
-.mc-close { width: 28px; height: 28px; font-size: 0.85rem; }
+.mc-back { width: 36px; height: 36px; font-size: 1.4rem; line-height: 1; }
+.mc-close { width: 36px; height: 36px; font-size: 0.85rem; }
 .mc-back:hover, .mc-close:hover { background: rgba(0, 0, 0, 0.5); color: var(--gold-1); }
 
 .mc-scroll { max-height: calc(100vh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; }

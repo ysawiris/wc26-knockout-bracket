@@ -46,11 +46,10 @@ var LEAGUE = {
   season: "2026 FIFA World Cup — Knockout Pool",
   lastUpdated: "June 28, 2026",
   drawNote:
-    "12-team knockout pool. Each team snake-drafts 2 of the 32 Round-of-32 " +
+    "12-team knockout pool. Each team drafted 2 of the 32 Round-of-32 " +
     "countries — one stronger, one weaker. Score by how far your countries " +
     "advance (R32 3 / R16 5 / QF 8 / SF 13 / Final 21) plus 0.1 per goal. " +
-    "Cards and fouls are shown but never count. The hub unlocks once all " +
-    "24 picks are drafted."
+    "Cards and fouls are shown but never count."
 };
 
 /* The 12 teams in "The Longest Yard" league, listed in last-season

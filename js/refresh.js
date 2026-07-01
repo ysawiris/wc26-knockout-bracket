@@ -18,8 +18,11 @@
   var TICK_MS = 30000;     // pill relative-time update cadence
 
   var DRAFT_PENDING = "⏳ Draft in progress — complete to unlock live";
+  var STALE_FEED_MS = 30 * 60000; // warn when the last feed sync is older than this
+  var CONNECT_GRACE_MS = 10000;   // boot window before a missing feed reads as down
 
   var lastRefreshAt = Date.now();
+  var bootAt = Date.now();
 
   /* Draft gate: pre-draft there's no bracket data to poll for. */
   function draftDone() {
@@ -64,13 +67,25 @@
   }
 
   function pillText(ctx) {
-    // Pre-draft: the live layer is dormant — point the user at the draft.
-    if (!ctx.draft || !ctx.draft.complete) return DRAFT_PENDING;
-    if (ctx.liveData && ctx.liveData.fetchedAt) {
-      var rel = relTime(ctx.liveData.fetchedAt);
-      if (rel) return "🛰 Scores as of " + rel;
+    // Pre-draft: a fresh device is usually just waiting on the league sync —
+    // only claim a draft is running when local picks actually exist.
+    if (!ctx.draft || !ctx.draft.complete) {
+      var picks = ctx.draft && ctx.draft.picks;
+      if (!picks || !picks.length) return "⏳ Syncing league draft…";
+      return DRAFT_PENDING;
     }
-    return "✍️ Manual mode · updated " + ctx.league.lastUpdated;
+    if (ctx.liveData && ctx.liveData.fetchedAt) {
+      var then = new Date(ctx.liveData.fetchedAt);
+      var age = isNaN(then) ? null : Date.now() - then;
+      var rel = relTime(ctx.liveData.fetchedAt);
+      if (rel) {
+        if (age != null && age >= STALE_FEED_MS) return "⚠️ Scores may lag · last synced " + rel;
+        return "🛰 Scores as of " + rel;
+      }
+    }
+    // No live payload yet: still connecting right after boot, down after that.
+    if (Date.now() - bootAt < CONNECT_GRACE_MS) return "🛰 Connecting to live scores…";
+    return "⚠️ Live feed unreachable — showing last saved results";
   }
 
   /* Idempotent: #hero-meta is rebuilt each render, but guard anyway so a

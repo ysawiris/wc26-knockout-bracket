@@ -39,6 +39,8 @@
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .st-line b { color: var(--gold-1); font-style: italic; }
+/* The copy button itself rides the global .bx-btn ghost-gold pill. */
+.st-wire-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
 
 /* ---------- Record book ---------- */
 
@@ -113,8 +115,11 @@
   border-color: rgba(232, 196, 106, 0.6);
   animation: st-pulse 1.5s ease-in-out infinite;
 }
-/* out = eliminated here, or never reached this round (default dim) */
-.st-seg.out { opacity: 1; }
+/* lost = knocked out in this round (red); out = never reached (base dim) */
+.st-seg.lost {
+  background: rgba(255, 107, 107, 0.12);
+  border-color: rgba(255, 107, 107, 0.45);
+}
 @keyframes st-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
@@ -163,6 +168,7 @@
   color: var(--gold-2); border: 1px solid rgba(212, 168, 84, 0.3);
   padding: 1px 6px; border-radius: 5px; white-space: nowrap;
 }
+.st-lead-chip.out { color: var(--text-faint); border-color: rgba(212, 168, 84, 0.18); }
 .st-lead-owner {
   flex: none;
   font-family: "Cinzel", serif; font-weight: 700; font-size: 0.6rem; letter-spacing: 0.03em;
@@ -216,10 +222,13 @@
   box-shadow: 0 0 8px rgba(232, 196, 106, 0.35);
   transition: width 0.4s ease;
 }
+/* zero = a goalless round: no glowing nub, just the empty track. */
+.st-md-fill.zero { min-width: 0; box-shadow: none; }
 .st-md-count {
   font-family: "Cinzel", serif; font-weight: 900; font-size: 0.95rem;
   color: var(--gold-1); text-align: right;
 }
+.st-md-count.dim { color: var(--text-faint); }
 
 /* ---------- Responsive ---------- */
 

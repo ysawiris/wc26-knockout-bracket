@@ -47,6 +47,7 @@
 
 .ga-toast {
   pointer-events: auto;
+  position: relative; /* anchors the .ga-hype button */
   width: 100%;
   background: var(--panel-2);
   border: 1px solid var(--panel-edge-strong);
@@ -74,6 +75,25 @@
   margin-top: 3px;
 }
 
+/* 📸 hype-card button on event toasts — same ghost-pill language as
+   .ga-bell. Toasts carrying one get extra right padding for clearance. */
+.ga-toast.ga-has-hype { padding-right: 46px; }
+.ga-hype {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; line-height: 1;
+  color: var(--gold-2); background: transparent; cursor: pointer;
+  border: 1px solid var(--gold-4); border-radius: 999px;
+  transition: border-color .15s, transform .12s, box-shadow .12s;
+}
+.ga-hype:hover {
+  border-color: var(--gold-3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 196, 106, 0.18);
+}
+
 /* Flavor borders per alert kind */
 .ga-goal {
   border-color: var(--gold-2);
@@ -91,6 +111,8 @@
   background: linear-gradient(180deg, rgba(120, 40, 40, 0.18), rgba(30, 14, 12, 0.92));
 }
 .ga-eliminate .ga-title { color: #ff9b9b; }
+/* A red card in a live match. */
+.ga-red { border-color: rgba(255, 99, 99, 0.5); }
 /* New league #1 or World Cup champion — full gold treatment. */
 .ga-champion {
   border-color: var(--gold-1);

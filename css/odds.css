@@ -150,6 +150,26 @@
   font-size: 0.68rem; color: var(--gold-1);
 }
 .od-rd-fx.fin .od-rd-fx-n { color: var(--text-dim); }
+/* A league team banked this finished tie — tint the "+N pts ✓" green. */
+.od-rd-fx.fin.own .od-rd-fx-n { color: rgba(102, 217, 140, 0.8); }
+/* In-play receipts: red edge + a pulsing dot (mirrors road.css rl-pulse). */
+.od-rd-fx.live {
+  border-left: 2px solid rgba(255, 107, 107, 0.5);
+  padding-left: 6px;
+}
+.od-rd-fx.live .od-rd-fx-n { color: #ff9a9a; }
+.od-rd-fx.live .od-rd-fx-t::before {
+  content: ""; display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%; margin-right: 5px;
+  background: #ff5a5a; box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.6);
+  animation: od-live-pulse 1.4s infinite;
+}
+@keyframes od-live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.55); }
+  70% { box-shadow: 0 0 0 5px rgba(255, 90, 90, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0); }
+}
+.od-rd-min { color: #ff9a9a; font-size: 0.66rem; }
 .od-rd-src { color: var(--text-faint); }
 .od-rd-det-foot {
   padding-top: 7px;
@@ -313,6 +333,8 @@
   border: 1px solid rgba(212, 168, 84, 0.14);
 }
 .od-cell.hot { color: #1a1206; }
+/* Single-digit percents print dim so the field reads at a glance. */
+.od-cell.lo { color: var(--text-faint); font-weight: 600; }
 .od-cell.dot { color: var(--text-faint); font-size: 0.85rem; }
 .od-exp {
   min-width: 40px; height: 34px; text-align: center;

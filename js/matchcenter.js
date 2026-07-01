@@ -163,14 +163,18 @@ var MatchCenter = (function () {
   /* Win probability from the strength model + the live score and time left.
      Team-aware (the favourite shows through) and live (recomputes from the
      minute): remaining goals for each side ~ independent Poisson on its
-     expected rate, scaled by the share of the match still to play. Finished
-     games collapse onto the final score; upcoming games use the full pre-match
-     rate. Returns home/draw/away plus a `pre` flag for labelling. */
+     expected rate, scaled by the share of the match still to play. The horizon
+     stretches to 130' once a live game runs past 90' (extra time), so a level
+     ET game never reads as already settled while penalties still loom.
+     Finished games collapse onto the final score; upcoming games use the full
+     pre-match rate. Returns home/draw/away plus a `pre` flag for labelling. */
   function winProb(fx) {
     var pre = !isLive(fx) && !isDone(fx);
     var hg = fx.homeGoals || 0, ag = fx.awayGoals || 0;
-    var elapsed = isDone(fx) ? 95 : (isLive(fx) ? (minuteNum(fx) || 1) : 0);
-    var remaining = Math.max(0, 95 - elapsed) / 95;
+    var mn = isLive(fx) ? (minuteNum(fx) || 1) : 0;
+    var horizon = (isLive(fx) && mn > 90) ? 130 : 95;
+    var elapsed = isDone(fx) ? horizon : mn;
+    var remaining = Math.max(0, horizon - elapsed) / horizon;
     var lam = teamLambdas(fx);
     var lh = lam.home * remaining, la = lam.away * remaining;
     var pH = 0, pD = 0, pA = 0;
@@ -241,10 +245,20 @@ var MatchCenter = (function () {
     if (isNaN(d)) return null;
     return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }
+  /* Readable day for a fixture that only carries a calendar date (no kickoff
+     instant yet) — parsed to local noon like app.js fxDate so the day never
+     shifts across timezones, instead of echoing the raw ISO string. */
+  function kickoffDay(fx) {
+    if (!fx.dateISO) return "";
+    var p = String(fx.dateISO).split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]), 12, 0, 0);
+    if (isNaN(d)) return fx.dateISO;
+    return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+  }
   function kickoffFull(fx) {
-    if (!fx.utcDate) return fx.dateISO || "";
+    if (!fx.utcDate) return kickoffDay(fx);
     var d = new Date(fx.utcDate);
-    if (isNaN(d)) return fx.dateISO || "";
+    if (isNaN(d)) return kickoffDay(fx);
     return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) +
       " · " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }
@@ -285,10 +299,33 @@ var MatchCenter = (function () {
     return (r && r.shootout && r.shootout.kicks && r.shootout.kicks.length) ? r.shootout : null;
   }
 
+  /* Which side won the shootout — the recap first, then the pens tally the
+     live feed attaches to the fixture (live.js), then the bracket's recorded
+     winner. Only meaningful for a level finished game; "home"|"away"|null. */
+  function shootoutWinnerSide(fx) {
+    var so = shootoutOf(fx);
+    if (so && so.winner) return so.winner;
+    if (fx.homePens != null && fx.awayPens != null && fx.homePens !== fx.awayPens) {
+      return fx.homePens > fx.awayPens ? "home" : "away";
+    }
+    return (fx.winner === "home" || fx.winner === "away") ? fx.winner : null;
+  }
+
   /* Compact one-line shootout result for the hero ("Morocco win 3–2 on
-     penalties") so a level scoreline isn't misread as a draw. */
+     penalties") so a level scoreline isn't misread as a draw. Reads the recap
+     first; until that lands it falls back to the pens tally the live feed
+     attached to the fixture (or the bracket's recorded winner), so the hero
+     names the shootout winner the moment the match ends. */
   function shootoutLine(fx) {
     var so = shootoutOf(fx);
+    if (!so && isDone(fx) && hasScore(fx) && fx.homeGoals === fx.awayGoals) {
+      if (fx.homePens != null && fx.awayPens != null) {
+        so = { home: fx.homePens, away: fx.awayPens, winner: shootoutWinnerSide(fx) };
+      } else if (fx.winner === "home" || fx.winner === "away") {
+        var wname = fx.winner === "home" ? fx.home.name : fx.away.name;
+        return '<div class="mc-pk-line">🥅 ' + esc(wname) + " win on penalties</div>";
+      }
+    }
     if (!so) return "";
     var label;
     if (so.winner) {
@@ -410,13 +447,25 @@ var MatchCenter = (function () {
     var foot = isDone(fx) ? "Final result"
       : wp.pre ? "Pre-match estimate · team-strength model"
       : "Live estimate · team strength + score &amp; time left";
+    // A finished level game was decided on penalties — collapse the "draw"
+    // mass onto the shootout winner so the card never reads "Draw 100%".
+    // Null goals coerce to 0 exactly as winProb treats them.
+    if (isDone(fx) && (fx.homeGoals || 0) === (fx.awayGoals || 0)) {
+      var pkSide = shootoutWinnerSide(fx);
+      if (pkSide) {
+        wp = { h: pkSide === "home" ? 1 : 0, d: 0, a: pkSide === "away" ? 1 : 0, pre: false };
+        foot = "Level at full time — decided on penalties";
+      }
+    }
+    // Live knockout games can't end in a draw — a level game goes to pens.
+    var midLabel = isLive(fx) ? "Pens" : "Draw";
     var hc = teamColor(fx.home.name), ac = teamColor(fx.away.name);
     var pc = function (x) { return Math.round(x * 100); };
     return '<div class="mc-card mc-wp">' +
       '<div class="mc-card-h">Win probability</div>' +
       '<div class="mc-wp-legend">' +
         '<span class="l"><b style="color:' + hc + '">' + esc(fx.home.name) + "</b>" + pc(wp.h) + "%</span>" +
-        '<span class="c">Draw ' + pc(wp.d) + "%</span>" +
+        '<span class="c">' + midLabel + " " + pc(wp.d) + "%</span>" +
         '<span class="r"><b style="color:' + ac + '">' + esc(fx.away.name) + "</b>" + pc(wp.a) + "%</span>" +
       "</div>" +
       '<div class="mc-wp-bar">' +

@@ -1,17 +1,20 @@
 /* Knockout alerts — watches consecutive Hub renders and announces what
    changed in the bracket: goals (with the fantasy team(s) that drafted the
-   scoring nation), round advancements (+points), eliminations, a new league
-   #1, and the eventual champion. Toasts stack bottom-right; an optional
-   "notify" mode adds browser notifications plus a short synthesized goal horn
-   when the tab is hidden. A bell button in the top nav cycles on → notify →
-   off (persisted in localStorage "wc26.alerts"). The first render after page
-   load only seeds the baseline snapshot, so opening the page never causes a
-   toast storm. Everything fails soft: a broken alert never breaks the hub. */
+   scoring nation), red cards, round advancements (+points), eliminations, a
+   new league #1, and the eventual champion. Toasts stack bottom-right; an
+   optional "notify" mode adds browser notifications plus a short synthesized
+   goal horn when the tab is hidden. A bell button in the top nav cycles
+   on → notify → off (persisted in localStorage "wc26ko.alerts"). The first
+   render after page load only seeds the baseline snapshot, so opening the
+   page never causes a toast storm. Everything fails soft: a broken alert
+   never breaks the hub. */
 
 (function () {
   "use strict";
 
-  var STORE_KEY = "wc26.alerts";
+  var STORE_KEY = "wc26ko.alerts";
+  var LEGACY_STORE_KEY = "wc26.alerts"; /* pre-namespace key — collides with
+    the draft tracker on the same origin; read once to migrate, never write */
   var BOOT_QUIET_MS = 15000; /* silence diffs this long after load — the
     direct-FIFA layer bootstraps a few seconds in and would otherwise present
     every result since the last cron commit (up to ~10 min old) as breaking
@@ -48,6 +51,13 @@
     try {
       var raw = window.localStorage.getItem(STORE_KEY);
       if (raw === "on" || raw === "notify" || raw === "off") return raw;
+      /* One-time seed from the legacy shared key: copy a valid value onto
+         the namespaced key, but never write the old key back. */
+      var old = window.localStorage.getItem(LEGACY_STORE_KEY);
+      if (old === "on" || old === "notify" || old === "off") {
+        window.localStorage.setItem(STORE_KEY, old);
+        return old;
+      }
     } catch (err) { /* private mode — default below */ }
     return "on";
   }
@@ -196,6 +206,7 @@
        The payload is stashed on the button as JSON so the delegated stack
        click handler can hand it straight to ShareCard.hype(ev). */
     if (hype && hasShareCard()) {
+      t.classList.add("ga-has-hype"); /* reserves right padding for the button */
       html += '<button type="button" class="ga-hype" title="Make a share card" ' +
         'aria-label="Make a share card" data-ga-hype="' +
         esc(JSON.stringify(hype)) + '">📸</button>';
@@ -323,13 +334,28 @@
     };
   }
 
+  /* Per-side red-card totals live on the FIXTURE (live.js attaches
+     fx.cards), not the bracket match — snapshot them under the shared
+     match id so diffRenders can pair them with the bracket pass. */
+  function snapCards(fx) {
+    return {
+      rh: fx.cards && fx.cards.home ? num(fx.cards.home.r) : 0,
+      ra: fx.cards && fx.cards.away ? num(fx.cards.away.r) : 0
+    };
+  }
+
   /* Keyed by match id (NOT group — there are no groups in the knockout).
+     cards are per-fixture red totals under the same ids.
      ranks/advance/alive are per-team, used by diffRanks. */
   function buildSnapshot(ctx) {
-    var snap = { matches: {}, ranks: {}, advance: {}, alive: {} };
+    var snap = { matches: {}, cards: {}, ranks: {}, advance: {}, alive: {} };
     eachMatch(ctx, function (mt) {
       if (!mt.id) return;
       snap.matches[mt.id] = snapMatch(mt);
+    });
+    (ctx.fixtures || []).forEach(function (fx) {
+      if (!fx.id) return;
+      snap.cards[fx.id] = snapCards(fx);
     });
     ctx.standings.forEach(function (row) {
       var abbr = row.team && row.team.abbr;
@@ -346,7 +372,7 @@
      score must not re-fire the same goal once the better source returns.
      ranks/advance/alive always take the latest values (they are re-derived). */
   function mergeHighWater(prev, snap) {
-    var merged = { matches: {}, ranks: snap.ranks, advance: snap.advance, alive: snap.alive };
+    var merged = { matches: {}, cards: {}, ranks: snap.ranks, advance: snap.advance, alive: snap.alive };
     Object.keys(snap.matches).forEach(function (key) {
       var cur = snap.matches[key];
       var old = prev.matches[key];
@@ -356,6 +382,14 @@
         /* Keep a winner once one has been seen — results don't un-happen. */
         winnerId: cur.winnerId || old.winnerId,
         counted: cur.counted || old.counted
+      };
+    });
+    Object.keys(snap.cards).forEach(function (key) {
+      var cur = snap.cards[key];
+      var old = prev.cards && prev.cards[key];
+      merged.cards[key] = !old ? cur : {
+        rh: Math.max(cur.rh, old.rh),
+        ra: Math.max(cur.ra, old.ra)
       };
     });
     return merged;
@@ -389,9 +423,22 @@
     return null;
   }
 
+  /* Human label for a standings row's `reached` round key ("R32" →
+     "Round of 32"); "Champion" passes through untouched, "—" becomes null. */
+  function reachedLabel(ctx, reached) {
+    if (!reached || reached === "—") return null;
+    var h = ctx.helpers;
+    if (h && typeof h.roundLabel === "function") return h.roundLabel(reached);
+    return reached;
+  }
+
   /* Standings rank / advancement diffs. Fires on advancePoints climbs
-     ("advances / +points") and crowns a brand-new #1 with 👑. */
-  function diffRanks(prev, ctx) {
+     ("advances / +points") and crowns a brand-new #1 with 👑.
+     `advancedOwners` is the set of team abbrs the match-level results loop
+     already toasted this render — skipped here so one decided match never
+     fires two advancement toasts (kept for shared/manual results that
+     arrive without a live match diff). */
+  function diffRanks(prev, ctx, advancedOwners) {
     var events = [];
     var rankChanges = [];
     var newLeader = null;
@@ -409,7 +456,8 @@
       }
       /* Advancement gained points since last render → a drafted country won a
          round. Announce once per team, with the new running total. */
-      if (typeof wasAdv === "number" && nowAdv > wasAdv) {
+      if (typeof wasAdv === "number" && nowAdv > wasAdv &&
+          !(advancedOwners && advancedOwners[abbr])) {
         var name = teamName(ctx, abbr) || abbr;
         events.push({
           kind: "advance", tag: "advance-" + abbr + "-" + nowAdv,
@@ -417,7 +465,7 @@
           sub: name + " — " + row.points + " pts total · reached " + (row.reached || "—"),
           hype: {
             kind: "advance", teamAbbr: abbr, countryId: null,
-            roundLabel: row.reached || null, points: nowAdv - wasAdv,
+            roundLabel: reachedLabel(ctx, row.reached), points: nowAdv - wasAdv,
             note: name + " — " + row.points + " pts total"
           }
         });
@@ -447,7 +495,15 @@
 
   function diffRenders(prev, ctx) {
     var goals = [];
+    var reds = [];
     var results = [];
+    var advancedOwners = {}; /* winOwner abbrs toasted by the results below —
+      diffRanks skips these so one result never fires two advance toasts */
+
+    /* Fixtures are built 1:1 from the bracket and share match ids — index
+       them once so the pens tally and card counts resolve per match. */
+    var fxById = {};
+    (ctx.fixtures || []).forEach(function (fx) { if (fx.id) fxById[fx.id] = fx; });
 
     eachMatch(ctx, function (mt, round) {
       if (!mt.id) return;
@@ -458,6 +514,7 @@
          we were away the whole match, that's not breaking news. */
       if (!p.counted && FINISHED[mt.status]) return;
 
+      var fx = fxById[mt.id];
       var homeName = mt.home.name || countryName(ctx, mt.home.countryId) || "TBD";
       var awayName = mt.away.name || countryName(ctx, mt.away.countryId) || "TBD";
       var homeOwner = ownerAbbr(ctx, mt.home.countryId);
@@ -479,6 +536,23 @@
         if (awayOwner) flashUntil[awayOwner] = Date.now() + FLASH_MS;
       }
 
+      /* --- red cards (per-side totals from the live feed's fx.cards) ---
+         The counts are per side, not per player — attribute the red to
+         that side's country. */
+      var pc = prev.cards && prev.cards[mt.id];
+      if (fx && pc) {
+        var curCards = snapCards(fx);
+        [["rh", homeName, homeOwner], ["ra", awayName, awayOwner]].forEach(function (side) {
+          if (curCards[side[0]] <= pc[side[0]]) return;
+          var redOwner = side[2];
+          reds.push({ kind: "red",
+            tag: "red-" + mt.id + "-" + side[0] + "-" + curCards[side[0]],
+            title: "🟥 Red card — " + homeName + " vs " + awayName,
+            sub: (round.label || mt.round) + " · " + side[1] +
+              (redOwner ? " (drafted by " + (teamName(ctx, redOwner) || redOwner) + ")" : "") });
+        });
+      }
+
       /* --- a winner was newly decided (round advancement / elimination) --- */
       if (cur.winnerId && cur.winnerId !== p.winnerId) {
         var winName = countryName(ctx, cur.winnerId) ||
@@ -488,16 +562,37 @@
         var loseOwner = ownerAbbr(ctx, loserId);
         var pts = round.points || 0;
 
+        /* A decided knockout match with a LEVEL score is by definition a
+           shootout. Raw goals (not the num()-coerced snapshot) so a manual
+           result entered without a score never reads as pens; the tally is
+           winner-first, omitted when the feed didn't carry one. */
+        var onPens = typeof mt.homeGoals === "number" &&
+          typeof mt.awayGoals === "number" && mt.homeGoals === mt.awayGoals;
+        var pensText = "";
+        if (onPens) {
+          pensText = " on pens";
+          if (fx && typeof fx.homePens === "number" && typeof fx.awayPens === "number") {
+            var homeWon = cur.winnerId === mt.home.countryId;
+            pensText = " on pens (" + (homeWon ? fx.homePens : fx.awayPens) +
+              "–" + (homeWon ? fx.awayPens : fx.homePens) + ")";
+          }
+        }
+
+        if (winOwner) advancedOwners[winOwner] = true;
+
         results.push({ kind: "advance",
           tag: "result-" + mt.id + "-" + cur.winnerId,
-          title: "✅ " + winName + " advance" + (round.label ? " — " + round.label : ""),
+          title: "✅ " + winName + " advance" + (round.label ? " — " + round.label : "") + pensText,
           sub: winOwner
             ? (teamName(ctx, winOwner) || winOwner) + " +" + pts + " pts"
             : "Undrafted — no fantasy points",
           hype: {
             kind: "advance", teamAbbr: winOwner || null, countryId: cur.winnerId,
-            roundLabel: round.label || mt.round || null, points: pts,
-            note: winName + " advance" + (round.label ? " — " + round.label : "")
+            roundLabel: round.label || mt.round || null,
+            /* null for undrafted countries — nobody earned the points, so
+               the hype card must not draw the "+N pts" pill. */
+            points: winOwner ? pts : null,
+            note: winName + " advance" + (round.label ? " — " + round.label : "") + pensText
           } });
 
         if (loseOwner && loseOwner !== winOwner) {
@@ -505,7 +600,7 @@
             (loserId === mt.home.countryId ? homeName : awayName);
           results.push({ kind: "eliminate",
             tag: "out-" + mt.id + "-" + loserId,
-            title: "❌ " + loseName + " eliminated",
+            title: "❌ " + loseName + " eliminated" + pensText,
             sub: (teamName(ctx, loseOwner) || loseOwner) + "'s drafted country is out",
             hype: {
               kind: "eliminate", teamAbbr: loseOwner || null, countryId: loserId,
@@ -516,10 +611,10 @@
       }
     });
 
-    var events = goals.concat(results);
+    var events = goals.concat(reds, results);
 
     /* Standings-driven events (rank shuffles, advancement totals, new #1). */
-    events = events.concat(diffRanks(prev, ctx));
+    events = events.concat(diffRanks(prev, ctx, advancedOwners));
 
     /* Champion: a team whose drafted country just reached "Champion" wins it. */
     ctx.standings.forEach(function (row) {

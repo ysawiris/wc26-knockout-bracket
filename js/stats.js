@@ -21,6 +21,14 @@
 
   function plural(n, one, many) { return n === 1 ? one : many; }
 
+  /* Trim trailing ".0" off the goal-bonus decimal for display (mirrors
+     app.js) — row.points is advancement + goals*0.1, so the raw float can
+     render as "6.300000000000001 pts" without this. */
+  function fmtPts(n) {
+    var r = Math.round(n * 10) / 10;
+    return (r % 1 === 0) ? String(r) : r.toFixed(1);
+  }
+
   /* Strip HTML tags and decode the few entities our headlines emit, for the
      plain-text digest. */
   function stripTags(html) {
@@ -95,25 +103,26 @@
     var second = ctx.standings[1];
     if (!top) return null;
     var topName = "<b>" + esc(top.team.name) + "</b>";
-    var pts = top.points;
+    var ptsNum = Math.round(top.points * 10) / 10;
+    var pts = fmtPts(top.points);
 
     if (second && second.points === top.points && second.advancePoints === top.advancePoints) {
       return topName + " and <b>" + esc(second.team.name) + "</b> are deadlocked atop the table on " +
-        pts + " " + plural(pts, "point", "points") +
+        pts + " " + plural(ptsNum, "point", "points") +
         " — somebody's drafted countries need to win one.";
     }
     if (second && second.points === top.points) {
       return topName + " edges the lead on advancement alone — level with <b>" +
-        esc(second.team.name) + "</b> at " + pts + " " + plural(pts, "point", "points") + ".";
+        esc(second.team.name) + "</b> at " + pts + " " + plural(ptsNum, "point", "points") + ".";
     }
     if (second) {
       var gap = +(top.points - second.points).toFixed(1);
-      return topName + " tops the advancement standings with " + pts + " " + plural(pts, "point", "points") +
+      return topName + " tops the advancement standings with " + pts + " " + plural(ptsNum, "point", "points") +
         " — " + (gap >= 8
           ? "daylight to 2nd."
           : "just " + gap + " " + plural(gap, "point", "points") + " clear of <b>" + esc(second.team.name) + "</b>.");
     }
-    return topName + " tops the advancement standings with " + pts + " " + plural(pts, "point", "points") + ".";
+    return topName + " tops the advancement standings with " + pts + " " + plural(ptsNum, "point", "points") + ".";
   }
 
   function tightestGapLine(ctx) {
@@ -127,7 +136,7 @@
     if (!best) return null;
     if (best.gap === 0) {
       return "<b>" + esc(best.hi.team.name) + "</b> and <b>" + esc(best.lo.team.name) +
-        "</b> are dead level at " + best.hi.points + " — one knockout result splits them.";
+        "</b> are dead level at " + fmtPts(best.hi.points) + " — one knockout result splits them.";
     }
     return "Tightest squeeze in the top half: " + best.gap + " " + plural(best.gap, "point", "points") +
       " between <b>" + esc(best.hi.team.name) + "</b> (" + best.hi.rank + ctx.helpers.ordinal(best.hi.rank) +
@@ -173,9 +182,11 @@
     if (!row) return null;
     var name = "<b>" + esc(row.team.name) + "</b>";
     var alive = row.aliveCount;
+    var ptsNum = Math.round(row.points * 10) / 10;
+    var pts = fmtPts(row.points);
     if (alive === 0) {
       return "⭐ " + name + " sits " + row.rank + ctx.helpers.ordinal(row.rank) +
-        " on " + row.points + " " + plural(row.points, "point", "points") +
+        " on " + pts + " " + plural(ptsNum, "point", "points") +
         " — both drafted countries are out. The board is set.";
     }
     if (row.rank === 1) {
@@ -183,7 +194,7 @@
         plural(alive, "country", "countries") + " still alive to protect it.";
     }
     return "⭐ " + name + " sits " + row.rank + ctx.helpers.ordinal(row.rank) + " with " +
-      row.points + " " + plural(row.points, "point", "points") + " — " + alive + " " +
+      pts + " " + plural(ptsNum, "point", "points") + " — " + alive + " " +
       plural(alive, "country", "countries") + " still in the bracket to climb.";
   }
 
@@ -247,7 +258,7 @@
       '<div class="st-head">📡 Wire Report</div>' +
       '<div class="st-headlines"><ul class="st-lines">' + items + "</ul></div>" +
       '<div class="st-wire-actions">' +
-        '<button type="button" class="st-wire-copy" data-st-action="copy-wire" ' +
+        '<button type="button" class="st-wire-copy bx-btn" data-st-action="copy-wire" ' +
           'aria-label="Copy today\'s wire report to your clipboard">📋 Copy today\'s wire</button>' +
       "</div>" +
       "</section>";
@@ -337,8 +348,13 @@
   function mostTeamsAdvancedCard(ctx) {
     var alive = 0;
     ctx.standings.forEach(function (row) { if (row.aliveCount > 0) alive += 1; });
-    if (!ctx.started) return cardHtml("Teams advancing", "&mdash;", WAIT, true);
-    return cardHtml("Teams advancing", alive,
+    if (!ctx.started) return cardHtml("Teams still alive", "&mdash;", WAIT, true);
+    // A full house isn't a record — dim it until somebody actually drops.
+    if (alive === ctx.teams.length) {
+      return cardHtml("Teams still alive", alive,
+        "all " + ctx.teams.length + " — nobody eliminated yet", true);
+    }
+    return cardHtml("Teams still alive", alive,
       "of " + ctx.teams.length + " still have a country alive", alive === 0);
   }
 
@@ -364,8 +380,11 @@
       return sum + fx.homeGoals + fx.awayGoals;
     }, 0);
     var played = ms.filter(isFinished).length;
+    // Disclose in-play matches feeding the total — those goals can still move.
+    var live = ms.filter(function (fx) { return isInPlay(fx) && hasScore(fx); }).length;
     return cardHtml("Total goals", total,
-      played + " of " + ms.length + " matches played", total === 0);
+      played + " of " + ms.length + " matches played" +
+      (live > 0 ? " · " + live + " live" : ""), total === 0);
   }
 
   function goalsPerMatchCard(ctx) {
@@ -405,11 +424,13 @@
     allMatches(ctx).forEach(function (fx) {
       if (!isFinished(fx) || !hasScore(fx)) return;
       played += 1;
-      if (fx.homeGoals === 0 || fx.awayGoals === 0) shutouts += 1;
+      // One clean sheet per side that kept a zero — a 0–0 counts twice.
+      if (fx.homeGoals === 0) shutouts += 1;
+      if (fx.awayGoals === 0) shutouts += 1;
     });
     if (played === 0) return cardHtml("Clean sheets", "&mdash;", WAIT, true);
     return cardHtml("Clean sheets", shutouts,
-      "in " + played + " finished " + plural(played, "match", "matches"), shutouts === 0);
+      "across " + played + " finished " + plural(played, "match", "matches"), shutouts === 0);
   }
 
   function recordsHtml(ctx) {
@@ -465,7 +486,8 @@
   /* Per-country, per-round segment state for the roster bars:
      "won"   — country advanced out of this round (won its match)
      "alive" — country is in this round and not yet eliminated (playing / TBD)
-     "out"   — country lost here, or never reached this round. */
+     "lost"  — country was knocked out in this round (decided match, lost)
+     "out"   — country never reached this round. */
   function countrySegments(ctx, countryId) {
     var ROUNDS = ctx.bracket.rounds || [];
     return ROUNDS.map(function (round) {
@@ -476,7 +498,7 @@
       });
       if (!mt) return "out"; // never reached this round
       if (mt.winnerId === countryId) return "won";
-      if (mt.winnerId) return "out"; // a decided match this country did not win
+      if (mt.winnerId) return "lost"; // a decided match this country did not win
       return "alive"; // present, undecided (scheduled or in play)
     });
   }
@@ -508,7 +530,7 @@
       '<span class="st-run-name">' + esc(row.team.name) + (row.team.isMine ? " ⭐" : "") + "</span>" +
       '<span class="st-chip">' + deep + "</span>" +
       '<span class="st-roster-bars">' + bars + "</span>" +
-      '<span class="st-run-goals">' + row.points + " " + plural(row.points, "pt", "pts") + "</span>" +
+      '<span class="st-run-goals">' + fmtPts(row.points) + " " + plural(Math.round(row.points * 10) / 10, "pt", "pts") + "</span>" +
       "</div>";
   }
 
@@ -518,7 +540,7 @@
       '<div class="st-head">🏆 Draft Roster</div>' +
       '<div class="st-runway">' + rows +
         '<p class="st-foot">Each team’s 2 drafted countries through R32 → Final — ' +
-        'gold = advanced, pulsing = still alive, dim = out.</p>' +
+        'gold = advanced, pulsing = still alive, red = knocked out, dim = not reached.</p>' +
       "</div></section>";
   }
 
@@ -539,7 +561,7 @@
 
   var BOOT_MAX = 8; // keep the board glanceable; the long tail lives in the Bracket
 
-  function bootRow(ctx, entry, rank, max) {
+  function bootRow(ctx, entry, rank, max, reached) {
     var esc = ctx.helpers.esc;
     var c = entry.country;
     var owner = entry.draftedBy ? teamByAbbr(ctx, entry.draftedBy) : null;
@@ -548,11 +570,21 @@
       ? '<span class="st-lead-owner' + (owner.isMine ? " mine" : "") +
         '" style="--st-ac:' + (owner.accent || "#c89638") + '">' + esc(owner.abbr) + (owner.isMine ? " ⭐" : "") + "</span>"
       : '<span class="st-lead-owner empty">undrafted</span>';
+    /* Bracket-status chip: alive nations show their furthest round, knocked-out
+       nations show a dimmed "Out" (a "lost" segment = a decided match they lost). */
+    var chip = "";
+    if (reached && reached[c.id]) {
+      var gone = countrySegments(ctx, c.id).indexOf("lost") !== -1;
+      chip = gone
+        ? '<span class="st-lead-chip out">Out</span>'
+        : '<span class="st-lead-chip">' + esc(reached[c.id]) + "</span>";
+    }
     return '<div class="st-lead' + (owner && owner.isMine ? " mine" : "") + (rank === 1 ? " lead" : "") + '">' +
       '<div class="st-lead-main">' +
         '<span class="st-lead-rank">' + rank + "</span>" +
         '<span class="st-lead-flag">' + c.flag + "</span>" +
         '<span class="st-lead-name">' + esc(c.name) + "</span>" +
+        chip +
         ownerTag +
       "</div>" +
       '<div class="st-lead-track"><div class="st-lead-fill" style="width:' + pct + '%"></div></div>' +
@@ -571,7 +603,8 @@
     } else {
       var max = nations[0].country.goals;
       var top = nations.slice(0, BOOT_MAX);
-      body = top.map(function (entry, i) { return bootRow(ctx, entry, i + 1, max); }).join("");
+      var reached = countryReached(ctx);
+      body = top.map(function (entry, i) { return bootRow(ctx, entry, i + 1, max, reached); }).join("");
       foot = '<p class="st-foot">' + (nations.length > top.length
         ? "Top " + top.length + " of " + nations.length + " nations on the scoresheet — and the team that drafted each one."
         : "Every nation that's found the net — and the team that drafted each one.") + "</p>";
@@ -595,11 +628,12 @@
     var max = totals.reduce(function (m, t) { return t > m ? t : m; }, 0);
     var rows = rounds.map(function (round, i) {
       var t = totals[i];
-      var pct = max > 0 ? Math.max(Math.round((t / max) * 100), 3) : 3;
+      /* A goalless round gets a truly empty bar — no 3% floor, no lit nub. */
+      var pct = t > 0 ? Math.max(Math.round((t / max) * 100), 3) : 0;
       return '<div class="st-md-row">' +
         '<span class="st-md-label">' + ctx.helpers.esc(round.name) + "</span>" +
-        '<div class="st-md-track"><div class="st-md-fill" style="width:' + pct + '%"></div></div>' +
-        '<span class="st-md-count">' + t + "</span>" +
+        '<div class="st-md-track"><div class="st-md-fill' + (t === 0 ? " zero" : "") + '" style="width:' + pct + '%"></div></div>' +
+        '<span class="st-md-count' + (t === 0 ? " dim" : "") + '">' + t + "</span>" +
         "</div>";
     }).join("");
     return '<section class="st-block">' +

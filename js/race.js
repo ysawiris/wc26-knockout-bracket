@@ -1,31 +1,39 @@
 /* The Race — standings-rank history bump chart at the top of the Stats tab.
-   Replays every FINISHED bracket match (ctx.bracket.rounds, R32 → Final) in
-   round order, awarding each round's advancement points to the team that
-   drafted the winning country, snapshots the standings after each round
-   resolves, and draws the rank paths as an inline SVG bump chart. Pure
-   overlay: never mutates the bracket/teams. The round-by-round replay is
-   cached by a fingerprint of the finished bracket matches so the ~2-minute
-   auto re-renders stay cheap; the pinned-team highlight lives in module
-   scope (+ localStorage) so it survives them. */
+   Replays every decided bracket match (ctx.bracket.rounds, R32 → Final) in
+   kickoff order, awarding each round's advancement points to the team that
+   drafted the winning country, buckets the wins by calendar day (dates come
+   from ctx.fixtures — built 1:1 from the bracket, sharing match ids),
+   snapshots the standings after each day resolves, and draws the rank paths
+   as an inline SVG bump chart. Pure overlay: never mutates the bracket/teams.
+   The day-by-day replay is cached by a fingerprint of the decided bracket
+   matches so the ~2-minute auto re-renders stay cheap; the pinned-team
+   highlight lives in module scope (+ localStorage) so it survives them. */
 
 (function () {
   "use strict";
 
   var STORE_KEY = "wc26ko.raceHighlight";
   var FALLBACK_ACCENT = "#c89638";
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   /* Chart geometry, in viewBox units (1 unit = 1px at native scale). */
   var LEFT = 46;    /* gutter for the rank numbers */
-  var STEP = 90;    /* horizontal gap between snapshots */
+  var STEP = 90;    /* minimum horizontal gap between snapshots */
   var RIGHT = 78;   /* gutter for the abbr tags at the line ends */
   var TOP = 28;
-  var BOTTOM = 46;  /* room for the x-axis round labels */
+  var BOTTOM = 46;  /* room for the x-axis day labels */
   var HEIGHT = 380;
+  /* Horizontal chrome between #race-host and the chart: .rc-panel's
+     16px + 16px padding and 1px + 1px border (see css/race.css). */
+  var PANEL_CHROME = 34;
 
   var wired = false;        /* delegated click listener bound once */
   var lastFinger = null;    /* cache key for the replay below */
   var snapshots = [];       /* [{ label, ranks: { abbr: rank } }] */
   var highlightAbbr = null; /* pinned team — survives re-renders */
+  var stepX = STEP;         /* actual step — stretched to fill the panel */
+  var lastCtx = null;       /* latest ctx, for the first-reveal re-render */
 
   try {
     highlightAbbr = localStorage.getItem(STORE_KEY) || null;
@@ -45,18 +53,52 @@
     });
   }
 
+  function dayLabel(d) { return MONTHS[d.getMonth()] + " " + d.getDate(); }
+
+  /* Decided bracket matches bucketed by calendar day, in kickoff order.
+     Fixtures are built 1:1 from the bracket and share match ids, so the
+     fixture list is the date source for each decided match. */
+  function decidedDays(ctx) {
+    var fxById = {};
+    (ctx.fixtures || []).forEach(function (fx) { fxById[fx.id] = fx; });
+    var wins = [];
+    roundsInOrder(ctx).forEach(function (round) {
+      (round.matches || []).forEach(function (mt) {
+        if (!isDone(mt)) return;
+        var fx = fxById[mt.id];
+        wins.push({
+          winnerId: mt.winnerId,
+          points: round.points || 0,
+          date: fx ? ctx.helpers.fxDate(fx) : new Date()
+        });
+      });
+    });
+    wins.sort(function (a, b) { return a.date - b.date; });
+    var days = [];
+    var byKey = {};
+    wins.forEach(function (win) {
+      var key = ctx.helpers.dayKey(win.date);
+      if (!byKey[key]) {
+        byKey[key] = { label: dayLabel(win.date), wins: [] };
+        days.push(byKey[key]);
+      }
+      byKey[key].wins.push(win);
+    });
+    return days;
+  }
+
   /* Cheap change detector: rebuild the replay only when results moved. */
   function fingerprint(ctx) {
     var n = 0;
     var pts = 0;
-    roundsInOrder(ctx).forEach(function (round) {
-      (round.matches || []).forEach(function (mt) {
-        if (!isDone(mt)) return;
+    var days = decidedDays(ctx);
+    days.forEach(function (day) {
+      day.wins.forEach(function (win) {
         n += 1;
-        pts += round.points || 0;
+        pts += win.points;
       });
     });
-    return n + "|" + pts + "|" + ctx.teams.length;
+    return n + "|" + pts + "|" + days.length + "|" + ctx.teams.length;
   }
 
   /* Same ordering as the live standings: advancement points desc, then the
@@ -75,27 +117,18 @@
     return ranks;
   }
 
-  /* Replay finished bracket matches round by round — O(rounds × teams). */
+  /* Replay decided bracket matches day by day — O(days × teams). */
   function buildSnapshots(ctx) {
     var owners = (ctx.draft && ctx.draft.ownersByCountry) || {};
     var pointsBy = {}; /* team abbr -> cumulative advancement points */
     var snaps = [{ label: "Draft", ranks: rankMap(ctx, pointsBy) }];
 
-    roundsInOrder(ctx).forEach(function (round) {
-      var resolved = 0;
-      (round.matches || []).forEach(function (mt) {
-        if (!isDone(mt)) return;
-        resolved += 1;
-        var abbr = owners[mt.winnerId];
-        if (abbr) pointsBy[abbr] = (pointsBy[abbr] || 0) + (round.points || 0);
+    decidedDays(ctx).forEach(function (day) {
+      day.wins.forEach(function (win) {
+        var abbr = owners[win.winnerId];
+        if (abbr) pointsBy[abbr] = (pointsBy[abbr] || 0) + win.points;
       });
-      /* Only snapshot a round once at least one of its matches has resolved,
-         so the chart adds a column per completed round, not per scheduled one. */
-      if (resolved > 0) {
-        var label = round.name || (ctx.helpers.roundLabel
-          ? ctx.helpers.roundLabel(round.name) : "Round");
-        snaps.push({ label: label, ranks: rankMap(ctx, pointsBy) });
-      }
+      snaps.push({ label: day.label, ranks: rankMap(ctx, pointsBy) });
     });
 
     return snaps;
@@ -108,7 +141,7 @@
     return Math.round((TOP + (rank - 1) * (plotH / Math.max(teamCount - 1, 1))) * 10) / 10;
   }
 
-  function xFor(i) { return LEFT + i * STEP; }
+  function xFor(i) { return LEFT + i * stepX; }
 
   function gridHtml(ctx) {
     var esc = ctx.helpers.esc;
@@ -168,7 +201,14 @@
     return w;
   }
 
-  function chartHtml(ctx) {
+  function chartHtml(ctx, hostEl) {
+    /* Stretch the step so a young chart (few day columns) fills the panel,
+       converging back to the base STEP as the days pile up. A hidden host
+       measures 0 wide, so the max() falls back to the base step — the
+       first-reveal re-render (below) redraws it at the real width. */
+    stepX = Math.max(STEP, Math.floor(
+      (hostEl.clientWidth - PANEL_CHROME - LEFT - RIGHT) /
+      Math.max(snapshots.length - 1, 1)));
     var width = xFor(snapshots.length - 1) + RIGHT;
     var hot = false;
     ctx.teams.forEach(function (t) { if (t.abbr === highlightAbbr) hot = true; });
@@ -181,7 +221,7 @@
     return '<div class="rc-scroll">' +
       '<svg class="rc-svg' + (hot ? " rc-has-hot" : "") + '" viewBox="0 0 ' + width + " " + HEIGHT +
       '" style="min-width:' + width + 'px" preserveAspectRatio="xMinYMid meet" role="img"' +
-      ' aria-label="Bump chart of the knockout standings after each bracket round">' +
+      ' aria-label="Bump chart of the knockout standings after each day of finished matches">' +
       gridHtml(ctx) + layers + "</svg></div>";
   }
 
@@ -211,7 +251,7 @@
     var chips = "";
     if (riser) chips += chipHtml(esc, "rc-up", "📈", riser.team, "+" + riser.d);
     if (faller) chips += chipHtml(esc, "rc-down", "📉", faller.team, String(faller.d));
-    if (!chips) chips = '<span class="rc-chip rc-flat">↔ No places changed after ' + esc(curr.label) + "</span>";
+    if (!chips) chips = '<span class="rc-chip rc-flat">↔ No places changed on ' + esc(curr.label) + "</span>";
     return '<div class="rc-movers">' +
       '<span class="rc-movers-label">Movers · ' + esc(curr.label) + "</span>" + chips +
       "</div>";
@@ -262,15 +302,15 @@
   function emptyHtml() {
     return '<div class="rc-panel"><div class="rc-empty">' +
       "The race starts with the first knockout match result." +
-      '<div class="rc-empty-sub">As bracket rounds finish, every team’s rise (and fall) in points charts here, round by round.</div>' +
+      '<div class="rc-empty-sub">As knockout matches finish, every team’s rise (and fall) in points charts here, day by day.</div>' +
       "</div></div>";
   }
 
-  function bodyHtml(ctx) {
+  function bodyHtml(ctx, host) {
     return '<div class="rc-panel">' +
-      chartHtml(ctx) +
+      chartHtml(ctx, host) +
       moversHtml(ctx) +
-      '<p class="rc-foot">Standings rank after each bracket round — points from your drafted countries’ wins, draft order as the tiebreak. ' +
+      '<p class="rc-foot">Standings rank after each day of finished knockout matches — points from your drafted countries’ wins, draft order as the tiebreak. ' +
       "Tap a line or chip to pin a team.</p>" +
       "</div>";
   }
@@ -296,7 +336,13 @@
       if (!tab) return;
       window.requestAnimationFrame(function () {
         var host = document.getElementById("race-host");
-        if (host) snapToLatest(host);
+        if (!host) return;
+        /* The chart was built while the panel was hidden (clientWidth 0),
+           so its step is still the base STEP — re-render now that the panel
+           is visible so the day columns stretch to the real width. render()
+           finishes with the pending right-edge snap. */
+        if (lastCtx) render(lastCtx);
+        else snapToLatest(host);
       });
     });
   }
@@ -312,6 +358,7 @@
         host.innerHTML = "";
         return;
       }
+      lastCtx = ctx;
       var finger = fingerprint(ctx);
       if (finger !== lastFinger) {
         lastFinger = finger;
@@ -324,9 +371,9 @@
       var oldScroll = host.querySelector(".rc-scroll");
       var savedLeft = visible && oldScroll ? oldScroll.scrollLeft : null;
 
-      var hasRounds = snapshots.length >= 2;
+      var hasDays = snapshots.length >= 2;
       host.innerHTML = '<section class="rc-block">' + headHtml() +
-        (hasRounds ? bodyHtml(ctx) : emptyHtml()) + "</section>";
+        (hasDays ? bodyHtml(ctx, host) : emptyHtml()) + "</section>";
 
       var scroll = host.querySelector(".rc-scroll");
       if (scroll) {

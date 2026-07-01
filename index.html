@@ -28,7 +28,6 @@
   <link rel="stylesheet" href="css/alerts.css" />
   <link rel="stylesheet" href="css/share-card.css" />
   <link rel="stylesheet" href="css/road.css" />
-  <link rel="stylesheet" href="css/recaps.css" />
   <link rel="stylesheet" href="css/matchcenter.css" />
   <link rel="stylesheet" href="css/ceremony.css" />
   <link rel="manifest" href="manifest.webmanifest" />
@@ -60,7 +59,7 @@
   <header class="hero">
     <p class="hero-kicker">2026 FIFA World Cup · Knockout Pool</p>
     <h1 class="hero-title">The Longest Yard</h1>
-    <p class="hero-sub">Snake-draft <em>two</em> of the 32 Round-of-32 countries. Score by how far they go.</p>
+    <p class="hero-sub">Twelve teams, <em>two</em> countries each. Score by how far they go.</p>
     <div class="hero-trophy" aria-hidden="true">🏆</div>
     <div class="hero-meta" id="hero-meta"></div>
   </header>
@@ -93,7 +92,7 @@
     <!-- BRACKET -->
     <section class="tab-panel" id="tab-bracket" role="tabpanel" aria-labelledby="tabbtn-bracket" tabindex="0" hidden>
       <h2 class="section-title"><span>The Bracket</span></h2>
-      <p class="panel-hint">Results are entered by hand: <strong>tap a side to set the winner</strong>, type each side's goals to add the bonus. One commissioner runs this — advance every match as the knockout plays out.</p>
+      <p class="panel-hint" id="bracket-hint"></p>
       <div id="bracket-host"></div>
     </section>
 
@@ -103,10 +102,12 @@
       <p class="panel-hint">The knockout fixtures, day by day — Round of 32 through the Final. Tap a match for the Match Center; ＋ adds it to your calendar.</p>
       <div class="filters" id="schedule-filters">
         <button type="button" class="chip is-active" data-filter="next">🔴 Now &amp; next</button>
-        <button type="button" class="chip" data-filter="r32">Round of 32</button>
+        <button type="button" class="chip" data-filter="today">Today</button>
+        <button type="button" class="chip" data-filter="round" id="chip-round">Round of 32</button>
         <button type="button" class="chip" data-filter="mine">⭐ My picks</button>
         <button type="button" class="chip" data-filter="results">Results</button>
         <button type="button" class="chip" data-filter="all">All rounds</button>
+        <button type="button" class="chip chip-jump" data-jump-today hidden>⤓ Jump to today</button>
       </div>
       <div class="schedule" id="schedule-list"></div>
     </section>
@@ -140,8 +141,8 @@
       <div class="rules-card">
         <h3 class="rules-h">The pool, in four steps</h3>
         <ol class="rules-steps">
-          <li><span class="step-n">1</span><div><b>Set the order.</b> The 12 teams snake-draft in last-season finish order. Flip best-first / worst-first on the Draft Order tab.</div></li>
-          <li><span class="step-n">2</span><div><b>Draft your two.</b> Snake draft means each team grabs one stronger and one weaker of the 32 Round-of-32 countries — 24 picks total.</div></li>
+          <li><span class="step-n">1</span><div><b>The order was set.</b> The 12 teams entered the snake in last-season finish order — see how it fell on the Draft Recap tab.</div></li>
+          <li><span class="step-n">2</span><div><b>Everyone drafted two.</b> The snake gave each team one stronger and one weaker of the 32 Round-of-32 countries — 24 picks in all.</div></li>
           <li><span class="step-n">3</span><div><b>Advance to score.</b> Every round your country wins is worth points — R32&nbsp;3, R16&nbsp;5, QF&nbsp;8, SF&nbsp;13, Final&nbsp;21 — plus 0.1 per goal.</div></li>
           <li><span class="step-n">4</span><div><b>Most points wins.</b> Ties break on advancement points, then draft slot. Cards and fouls are shown but never count.</div></li>
         </ol>
@@ -231,9 +232,9 @@
       <div class="rules-card">
         <h3 class="rules-h">Around the hub</h3>
         <ul class="rules-list">
-          <li>🧮 <b>Draft Order</b> — reorder the 12 teams and flip best-first / worst-first before the draft.</li>
-          <li>🐍 <b>Snake Draft</b> — go on the clock and draft your two countries. Auto-pick, auto-fill, undo and reset are all there. <b>The hub stays locked until all 24 picks are in.</b></li>
-          <li>🗺 <b>Bracket</b> — R32 → Final. Tap a side to advance it, type goals to feed the bonus.</li>
+          <li>📋 <b>Draft Recap</b> — how the snake fell, pick by pick, and each team's two countries.</li>
+          <li>🗺 <b>Bracket</b> — R32 → Final, advancing itself off the live FIFA feed.</li>
+          <li>📅 <b>Schedule</b> — every knockout kickoff, day by day; tap a match for the Match Center.</li>
           <li>🏆 <b>Standings</b> — the live order by points, with each team's two country flags and how far they've reached.</li>
           <li>🔮 <b>Forecast</b> — your personal Road to your pick, atop the Monte-Carlo advancement odds.</li>
           <li>📊 <b>Stats</b> — the race chart, the wire report and the record book.</li>
@@ -261,7 +262,7 @@
 
   <footer class="footer">
     <p class="footer-draw" id="draw-note"></p>
-    <p class="footer-fine">Bracket results are entered by hand for v1. Disputes go to the commissioner.</p>
+    <p class="footer-fine">Scores flow in live from FIFA — the commissioner has the final word on any dispute.</p>
   </footer>
 
   <!-- A global toast (draft gate + draft actions) -->
@@ -280,7 +281,6 @@
   <script src="js/alerts.js"></script>
   <script src="js/share-card.js"></script>
   <script src="js/road.js"></script>
-  <script src="js/recaps.js"></script>
   <script src="js/xg.js"></script>
   <script src="js/matchcenter.js"></script>
   <script src="js/live-direct.js"></script>

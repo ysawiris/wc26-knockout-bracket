@@ -136,22 +136,25 @@
   }
 
   /* Walk the bracket and find the deepest round that has any decided
-     match — that's how far the tournament has progressed. */
+     match — that's how far the tournament has progressed. decided/total
+     count that round's matches so the subtitle can say "3 of 16 decided"
+     while the round is still in progress. */
   function bracketProgress(hub) {
     var rounds = (hub.bracket && hub.bracket.rounds) || [];
     var deepest = null;
+    var decided = 0;
+    var total = 0;
     var champion = false;
     rounds.forEach(function (rnd) {
       var matches = rnd.matches || [];
-      var anyWinner = matches.some(function (m) { return m && m.winnerId; });
-      if (!anyWinner) return;
+      var done = matches.filter(function (m) { return m && m.winnerId; }).length;
+      if (!done) return;
       deepest = rnd;
-      if (rnd.name === "Final") {
-        var done = matches.every(function (m) { return m && m.winnerId; });
-        if (done) champion = true;
-      }
+      decided = done;
+      total = matches.length;
+      if (rnd.name === "Final" && done === matches.length) champion = true;
     });
-    return { round: deepest, champion: champion };
+    return { round: deepest, champion: champion, decided: decided, total: total };
   }
 
   function subtitleText(hub) {
@@ -168,7 +171,13 @@
     var prog = bracketProgress(hub);
     var phase;
     if (prog.champion) phase = "Champion crowned";
-    else if (prog.round) phase = "Through the " + (prog.round.label || prog.round.name);
+    else if (prog.round) {
+      /* Only claim "Through the X" once every match in X is decided. */
+      var label = prog.round.label || prog.round.name;
+      phase = (prog.decided === prog.total)
+        ? "Through the " + label
+        : label + " · " + prog.decided + " of " + prog.total + " decided";
+    }
     else phase = "Bracket underway";
     return (stamp ? stamp + "  ·  " : "") + phase;
   }
@@ -518,9 +527,10 @@
 
   /* ---------------- hype card (single-event) ---------------- */
   /* A compact 1080x1080 square card for one moment: an advance, an upset,
-     an elimination, or the title. Reuses the same canvas setup, fonts,
-     gold gradients, and primitives as the standings card, then routes
-     through the shared export/share path. Driven by ShareCard.hype(ev). */
+     an elimination, a new league leader, or the title. Reuses the same
+     canvas setup, fonts, gold gradients, and primitives as the standings
+     card, then routes through the shared export/share path. Driven by
+     ShareCard.hype(ev). */
 
   var HYPE_W = 1080;
   var HYPE_H = 1080;
@@ -532,7 +542,8 @@
     advance: { eyebrow: "ADVANCES", tone: "gold" },
     upset: { eyebrow: "UPSET", tone: "red" },
     eliminate: { eyebrow: "ELIMINATED", tone: "red" },
-    champion: { eyebrow: "CHAMPIONS", tone: "gold" }
+    champion: { eyebrow: "CHAMPIONS", tone: "gold" },
+    rank: { eyebrow: "NEW LEADER", tone: "gold" }
   };
 
   function hypeKind(kind) {
@@ -625,6 +636,10 @@
     if (ev.kind === "eliminate") {
       return [name, "ELIMINATED"];
     }
+    if (ev.kind === "rank") {
+      /* New league #1 — `name` here is the fantasy team, not a country. */
+      return [name, "TAKES #1 👑"];
+    }
     if (ev.kind === "upset") {
       /* ev.note typically carries the loser; render "X KNOCK OUT Y". */
       if (ev.note) return ["UPSET!", name + " KNOCK OUT", String(ev.note).toUpperCase()];
@@ -665,7 +680,9 @@
     var kind = hypeKind(ev.kind);
     var country = lookupCountry(hub, ev.countryId);
     var team = lookupTeam(hub, ev.teamAbbr);
-    var countryName = (country && country.name) || ev.teamAbbr || "—";
+    /* Country-less payloads (rank, standings-driven advance) carry only a
+       team abbr — headline the full team name rather than the raw abbr. */
+    var countryName = (country && country.name) || (team && team.name) || ev.teamAbbr || "—";
     var flag = (country && country.flag) || "⚽";
 
     drawHypeBackground(g);

@@ -603,24 +603,55 @@
 
   /* ---------------- TAB: Bracket ---------------- */
 
+  /* Only the commissioner's claimed device gets result entry — everyone else
+     watches the live feed do the work. One stray tap used to write a manual
+     result the auto-feed could never overwrite. */
+  function isCommish() {
+    var abbr = null;
+    try {
+      if (window.MyTeam && typeof MyTeam.current === "function") {
+        var mine = MyTeam.current();
+        abbr = mine && mine.abbr;
+      }
+      if (!abbr) abbr = localStorage.getItem("wc26ko.myteam");
+    } catch (_) {}
+    return !!abbr && abbr === LEAGUE.commishAbbr;
+  }
+
   function renderBracket() {
     var host = document.getElementById("bracket-host");
     if (!host) return;
     host.textContent = "";
 
+    var hintEl = document.getElementById("bracket-hint");
+
     /* BB8: while this tab is locked, leave the body empty so the gate banner
        (injected by applyGate into the active locked panel) is the sole focus —
        no half-rendered bracket behind it. */
-    if (isLockedTab("bracket")) return;
+    if (isLockedTab("bracket")) {
+      if (hintEl) hintEl.textContent = "";
+      return;
+    }
+
+    var commish = isCommish();
+    if (hintEl) {
+      hintEl.innerHTML = commish
+        ? 'Commissioner mode — <strong>tap a side to set the winner</strong>, type goals to add the bonus. ' +
+          "The live feed fills results in on its own; anything you enter by hand always wins."
+        : "This bracket runs itself — winners and goals land straight from the live FIFA feed, " +
+          "and every win banks points for the country's owner.";
+    }
 
     /* BB1: understated commissioner action — copy the shared bracket JSON to the
-       clipboard so it can be committed to data/results.json. */
-    var tools = el("div", "bk-tools");
-    var exportBtn = el("button", "sd-btn-ghost", "⬇ Export for the league");
-    exportBtn.setAttribute("type", "button");
-    exportBtn.addEventListener("click", copyExport);
-    tools.appendChild(exportBtn);
-    host.appendChild(tools);
+       clipboard so it can be committed to data/results.json. Commissioner-only. */
+    if (commish) {
+      var tools = el("div", "bk-tools");
+      var exportBtn = el("button", "sd-btn-ghost", "⬇ Export for the league");
+      exportBtn.setAttribute("type", "button");
+      exportBtn.addEventListener("click", copyExport);
+      tools.appendChild(exportBtn);
+      host.appendChild(tools);
+    }
 
     var owners = ownersByCountry(state);
     var rounds = buildBracket(state); // [R32, R16, QF, SF, Final]
@@ -651,7 +682,20 @@
     });
     wrap.appendChild(left);
 
+    /* The marquee center: a champion plinth crowning the Final. TBD until the
+       trophy is lifted, then the winner + its owner take the podium. */
+    var champ = champion(state);
+    var champC = champ ? COUNTRY_BY_ID[champ] : null;
     var center = el("div", "bk2-center");
+    var plinth = el("div", "bk-champ-slot" + (champC ? " has-champ" : ""));
+    plinth.innerHTML =
+      '<span class="bk-champ-mark" aria-hidden="true">🏆</span>' +
+      '<span class="bk-champ-label">Champion</span>' +
+      (champC
+        ? '<span class="bk-champ-name">' + champC.flag + " " + esc(champC.name) + "</span>" +
+          (owners[champ] ? ownerBadge(owners[champ]) : "")
+        : '<span class="bk-champ-name tbd">TBD · July 19</span>');
+    center.appendChild(plinth);
     center.appendChild(colEl(rounds[4], rounds[4].matches, "bk-col-final"));
     wrap.appendChild(center);
 
@@ -663,7 +707,6 @@
 
     host.appendChild(wrap);
 
-    var champ = champion(state);
     if (champ && COUNTRY_BY_ID[champ]) {
       var c = COUNTRY_BY_ID[champ];
       var owner = owners[champ];
@@ -774,6 +817,7 @@
   function bracketMatchEl(mt, owners) {
     var node = el("div", "bk-match");
     node.setAttribute("data-match", mt.id);
+    var commish = isCommish();
 
     /* BB5: both goals entered and EQUAL → the winner is a shootout result.
        Scoring is unchanged (winner advances, both goals still count); we only
@@ -785,10 +829,12 @@
     [["home", "ga", "homeGoals"], ["away", "gb", "awayGoals"]].forEach(function (side) {
       var slot = mt[side[0]];
       var cid = slot.countryId;
-      var row = el("div", "bk-side");
+      var row = el("div", "bk-side" + (commish ? "" : " ro"));
       var isWinner = mt.winnerId && mt.winnerId === cid;
       var wonOnPens = tied && isWinner;
-      if (cid) {
+      /* Result entry is the commissioner's alone — viewer rows carry no
+         tap-target, so a stray tap can never write a manual result. */
+      if (cid && commish) {
         row.setAttribute("data-pick", cid);
         row.setAttribute("role", "button");
         row.setAttribute("tabindex", "0");
@@ -809,18 +855,35 @@
         '<span class="bk-name">' + (slot.name ? esc(slot.name) : "TBD") +
           (wonOnPens ? ' <span class="bk-pens">(pens)</span>' : "") + "</span>" +
         (cid && owners[cid] ? ownerBadge(owners[cid]) : "") +
-        '<input class="bk-score" type="number" min="0" inputmode="numeric" ' +
-        'data-side="' + side[1] + '" value="' + (goalVal == null ? "" : goalVal) + '" ' +
-        (cid ? "" : "disabled") + ' aria-label="' + esc(goalLabel) + '" />';
+        (commish
+          ? '<input class="bk-score" type="number" min="0" inputmode="numeric" ' +
+            'data-side="' + side[1] + '" value="' + (goalVal == null ? "" : goalVal) + '" ' +
+            (cid ? "" : "disabled") + ' aria-label="' + esc(goalLabel) + '" />'
+          : '<span class="bk-sc" aria-label="' + esc(goalLabel) + '">' +
+            (goalVal == null ? "" : goalVal) + "</span>");
       node.appendChild(row);
     });
 
-    /* BB5: PK hint sits under the two sides whenever the score is level — it
-       tells the commissioner the winner tap is a shootout call. Once a winner
-       is set, surface it as "decided on penalties". */
+    /* BB5: the PK hint under a level score. Viewers get the story (who won the
+       shootout, with the tally when the feed carried it); the commissioner gets
+       the instruction that the winner tap is a shootout call. */
     if (tied) {
-      var pkLabel = mt.winnerId ? "PK · decided on penalties" : "PK · decide on penalties";
-      node.appendChild(el("div", "bk-pk-hint", '<span class="bk-pk-tag">PK</span>' + esc(pkLabel.slice(5))));
+      var pkText;
+      var hasTally = typeof mt.homePens === "number" && typeof mt.awayPens === "number";
+      if (mt.winnerId) {
+        var wc = COUNTRY_BY_ID[mt.winnerId];
+        if (hasTally && wc) {
+          var wonHome = mt.home && mt.winnerId === mt.home.countryId;
+          var wp = wonHome ? mt.homePens : mt.awayPens;
+          var lp = wonHome ? mt.awayPens : mt.homePens;
+          pkText = esc(wc.name) + " win " + wp + "–" + lp + " on pens";
+        } else {
+          pkText = "decided on penalties";
+        }
+      } else {
+        pkText = commish ? "decide on penalties (tap the shootout winner)" : "level — going to penalties";
+      }
+      node.appendChild(el("div", "bk-pk-hint", '<span class="bk-pk-tag">PK</span>' + pkText));
     }
     return node;
   }
@@ -937,19 +1000,39 @@
             : "Provisional draft order. Finish the snake draft to start scoring.");
     }
 
+    /* Per-country fate (alive vs out) for the sub-line under each team name —
+       one derivation shared by all 12 rows. */
+    var tScores = started ? teamScores(state) : null;
+
     rows.forEach(function (row, i) {
       var t = row.team;
-      var li = el("li", "row" + (started && row.rank === 1 ? " is-first" : "") + (t.isMine ? " is-mine" : ""));
+      var dead = started && row.drafted.length > 0 && row.aliveCount === 0;
+      var li = el("li", "row" + (started && row.rank === 1 ? " is-first" : "") +
+        (t.isMine ? " is-mine" : "") + (dead ? " is-out" : ""));
       li.dataset.abbr = t.abbr;
       if (animate) li.style.animationDelay = (i * 40) + "ms";
       else li.style.animation = "none";
       if (t.accent) li.style.setProperty("--row-accent", t.accent);
 
       var rankNum = row.rank || (i + 1);
-      var rankInner = rankNum + "<small>" + ordinal(rankNum) + "</small>";
-      var managers = (t.managers && t.managers.length) ? t.managers.join(" &amp; ")
-        : (t.record ? "last season " + esc(t.record) : "");
-      var crown = started && row.rank === 1 ? '<span class="st-crown">👑</span>' : "";
+      var rankInner = (started && row.tied ? '<small class="t">T</small>' : "") +
+        rankNum + "<small>" + ordinal(rankNum) + "</small>";
+
+      /* Sub-line: owners when we know them; mid-tournament, the two countries
+         and their fate tell the row's story better than last season's record. */
+      var managers;
+      if (t.managers && t.managers.length) {
+        managers = t.managers.join(" &amp; ");
+      } else if (started && row.drafted.length && tScores) {
+        managers = row.drafted.map(function (c) {
+          var s = tScores[c.id];
+          var out = s ? s.out : false;
+          return '<span class="st-fate' + (out ? " is-dead" : "") + '">' +
+            c.flag + " " + esc(c.name) + " · " + (out ? "out" : "alive") + "</span>";
+        }).join('<span class="st-fate-sep"> </span>');
+      } else {
+        managers = t.record ? "last season " + esc(t.record) : "";
+      }
       var tie = row.tied && started ? '<span class="tie-flag">Tied</span>' : "";
 
       var flags = row.drafted.length
@@ -960,8 +1043,20 @@
 
       var pointsStr = started ? fmtPts(row.points) : "—";
 
+      /* Cards/fouls are display-only color (never score) — show them like the
+         tracker's board did, but only once there's something to show. */
+      var cardsLine = "";
+      if (started && row.drafted.length) {
+        var ys = 0, rs = 0, fs = 0;
+        row.drafted.forEach(function (c) {
+          ys += c.yellows || 0; rs += c.reds || 0; fs += c.fouls || 0;
+        });
+        if (ys || rs) cardsLine += '<div class="tb">🟨 ' + ys + " · 🟥 " + rs + "</div>";
+        if (fs) cardsLine += '<div class="fouls-row">⚠ ' + fs + " fouls</div>";
+      }
+
       li.innerHTML =
-        '<div class="rank' + (started ? "" : " prov") + '">' + crown + rankInner + "</div>" +
+        '<div class="rank' + (started ? "" : " prov") + '">' + rankInner + "</div>" +
         crestHtml(t) +
         '<div class="team">' +
           '<div class="team-top">' +
@@ -977,8 +1072,8 @@
           '<span class="goals">' + pointsStr + "</span>" +
           '<span class="goals-label">Points</span>' +
           (started
-            ? '<div class="st-sub">' + row.advancePoints + " adv · " + row.goals + " ⚽ · " +
-              row.aliveCount + " alive</div>"
+            ? '<div class="st-sub">' + row.advancePoints + " adv + " + fmtPts(row.goalBonus) +
+              " ⚽ · " + row.aliveCount + " alive</div>" + cardsLine
             : '<div class="st-sub">awaiting draft</div>') +
         "</div>";
       list.appendChild(li);
@@ -1015,16 +1110,20 @@
     var todayK = dayKey(now);
     var tomorrowK = dayKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
 
-    var live = fixtures.filter(function (fx) { return Live.INPLAY[fx.status]; });
+    var live = fixtures.filter(function (fx) { return Live.INPLAY[fx.status]; })
+      .sort(function (a, b) { return fxDate(a) - fxDate(b); });
     var withTeams = fixtures.filter(function (fx) {
       return fx.home && fx.away && fx.home.name && fx.away.name;
     });
 
+    /* In-play games live in their own leading section — never buried mid-day,
+       and immune to the past-midnight bucket gap (an ET match after 00:00
+       local belongs to no day). */
     var todayGames = withTeams
-      .filter(function (fx) { return dayKey(fxDate(fx)) === todayK; })
+      .filter(function (fx) { return !Live.INPLAY[fx.status] && dayKey(fxDate(fx)) === todayK; })
       .sort(function (a, b) { return fxDate(a) - fxDate(b); });
     var tomorrowGames = withTeams
-      .filter(function (fx) { return dayKey(fxDate(fx)) === tomorrowK; })
+      .filter(function (fx) { return !Live.INPLAY[fx.status] && dayKey(fxDate(fx)) === tomorrowK; })
       .sort(function (a, b) { return fxDate(a) - fxDate(b); });
 
     var weekOut = new Date(now.getTime() + RAIL_WINDOW_MS);
@@ -1043,7 +1142,7 @@
       var champ = champion(state);
       wrap.innerHTML = '<div class="live-head">' +
         (champ ? "🏆 We have a champion — the bracket is complete."
-               : "Bracket awaiting results — tap winners on the Bracket tab.") +
+               : "Bracket awaiting results — scores land here automatically as the knockout plays out.") +
         "</div>";
       return;
     }
@@ -1058,25 +1157,32 @@
     }
 
     var sections = [];
+    if (live.length) sections.push({ key: "live", label: "Live now", games: live, live: true });
     if (todayGames.length || tomorrowGames.length) {
       if (todayGames.length) sections.push({ key: "today", label: "Today", games: todayGames });
       if (tomorrowGames.length) sections.push({ key: "tomorrow", label: "Tomorrow", games: tomorrowGames });
       if (later.length) sections.push({ key: "later", label: "Next up", games: later });
-    } else {
+    } else if (later.length) {
       sections.push({ key: "later", label: "Next up", games: later });
     }
 
     var rail = nextKick ? nextKickCard(nextKick, owners, now) : "";
+    var lastShown = null;
     sections.forEach(function (sec) {
-      var liveHere = anyLive && sec.key === "today";
-      var meta = liveHere ? ' · <span class="rail-sec-cd">live</span>' : "";
-      rail += '<div class="rail-sec"><span class="rail-sec-inner">' +
-        (liveHere ? '<span class="live-dot sm"></span> ' : "") +
+      var meta = sec.live ? ' · <span class="rail-sec-cd">now</span>' : "";
+      rail += '<div class="rail-sec' + (sec.live ? " rail-sec-live" : "") + '">' +
+        '<span class="rail-sec-inner">' +
+        (sec.live ? '<span class="live-dot sm"></span> ' : "") +
         sec.label + meta + "</span></div>";
       rail += sec.games.map(function (fx) {
         return matchMini(fx, owners, Live.INPLAY[fx.status], now);
       }).join("");
+      if (sec.games.length) lastShown = sec.games[sec.games.length - 1];
     });
+
+    /* Trailing card: hop to the full Schedule tab, landing where the rail
+       left off. (The rail otherwise dead-ends mid-tournament.) */
+    rail += moreCard(lastShown, laterAll.length > later.length);
 
     wrap.innerHTML = '<div class="live-cards">' + rail + "</div>";
 
@@ -1094,6 +1200,17 @@
       tick();
       countdownTimer = setInterval(tick, 1000);
     }
+  }
+
+  /* Trailing rail card: jumps to the full Schedule tab, landing on the last
+     game the rail showed so the user continues right where they left off. */
+  function moreCard(lastFx, hasMore) {
+    var anchor = lastFx ? lastFx.id : "";
+    return '<button type="button" class="mini mini-more" data-goto-schedule="' + esc(anchor) + '">' +
+      '<span class="mini-more-ico">📅</span>' +
+      '<span class="mini-more-label">' + (hasMore ? "Full schedule" : "Open schedule") + "</span>" +
+      '<span class="mini-more-sub">' + (hasMore ? "See the rest →" : "Open schedule →") + "</span>" +
+      "</button>";
   }
 
   function scoreOrTime(fx) {
@@ -1188,10 +1305,24 @@
     return set;
   }
 
+  /* The earliest round with an unresolved match — what "this round" means
+     right now. Falls back to the last round once the bracket is done. */
+  function currentRoundKey(fixtures) {
+    var order = ["R32", "R16", "QF", "SF", "F"];
+    for (var i = 0; i < order.length; i++) {
+      var any = fixtures.some(function (fx) {
+        return fx.round === order[i] && !Live.FINISHED[fx.status];
+      });
+      if (any) return order[i];
+    }
+    return order[order.length - 1];
+  }
+
   function passesScheduleFilter(fx, now, mineSet) {
     var bothKnown = !!(fx.home && fx.away && fx.home.name && fx.away.name);
     switch (scheduleFilter) {
-      case "r32": return fx.round === "R32";
+      case "round": return fx.round === currentRoundKey(lastScheduleFixtures);
+      case "today": return dayKey(fxDate(fx)) === dayKey(now);
       case "results": return !!Live.FINISHED[fx.status];
       case "mine":
         if (!mineSet) return false;
@@ -1222,18 +1353,56 @@
       return;
     }
 
+    /* Keep the current-round chip honest as the knockout advances
+       ("Round of 32" → "Round of 16" → …). */
+    var roundChip = document.getElementById("chip-round");
+    if (roundChip && fixtures.length) {
+      roundChip.textContent = roundLabel(currentRoundKey(fixtures));
+    }
+
     var shown = fixtures.filter(function (fx) { return passesScheduleFilter(fx, now, mineSet); })
       .sort(function (a, b) { return fxDate(a) - fxDate(b) || String(a.id).localeCompare(String(b.id)); });
 
-    if (!shown.length) {
+    /* The "Live now" band is sourced from ALL fixtures so an in-play game is
+       unmissable regardless of the active filter (e.g. a match that kicked off
+       before midnight while Today is on). Scoped to the viewer's countries
+       under "My picks"; omitted in the finished-only Results view. */
+    var liveGames = scheduleFilter === "results" ? [] :
+      fixtures.filter(function (fx) {
+        if (!Live.INPLAY[fx.status]) return false;
+        if (scheduleFilter === "mine") {
+          if (!mineSet) return false;
+          return (fx.home.countryId && mineSet[fx.home.countryId]) ||
+                 (fx.away.countryId && mineSet[fx.away.countryId]);
+        }
+        return true;
+      }).sort(function (a, b) { return fxDate(a) - fxDate(b); });
+
+    if (!shown.length && !liveGames.length) {
       host.appendChild(el("p", "empty-note", "No matches for this filter yet."));
+      toggleJumpToday(fixtures, now);
       return;
     }
+
+    if (liveGames.length) {
+      host.appendChild(el("div", "sched-live-head",
+        '<span class="live-dot sm"></span> Live now ' +
+        '<span class="sched-live-count">' + liveGames.length +
+        (liveGames.length === 1 ? " match" : " matches") + "</span>"));
+      var liveGrid = el("div", "sched-day sched-live");
+      liveGames.forEach(function (fx) { liveGrid.appendChild(scheduleCard(fx, owners, now)); });
+      host.appendChild(liveGrid);
+    }
+
+    // The day grid excludes whatever the Live now band already shows.
+    var liveIds = {};
+    liveGames.forEach(function (fx) { if (fx.id != null) liveIds[fx.id] = true; });
+    var dayList = shown.filter(function (fx) { return !liveIds[fx.id]; });
 
     // Group by calendar day: a full-width header, then that day's matches in a
     // grid. Each day keeps its own grid so an odd count never bleeds a hole.
     var lastDay = null, dayGrid = null;
-    shown.forEach(function (fx) {
+    dayList.forEach(function (fx) {
       var d = fxDate(fx);
       var key = dayKey(d);
       if (key !== lastDay) {
@@ -1246,6 +1415,39 @@
       }
       dayGrid.appendChild(scheduleCard(fx, owners, now));
     });
+
+    toggleJumpToday(fixtures, now);
+  }
+
+  /* Show the "Jump to today" shortcut only when there are matches today and
+     the Today filter isn't already the active view. */
+  function toggleJumpToday(fixtures, now) {
+    var btn = document.querySelector("#schedule-filters [data-jump-today]");
+    if (!btn) return;
+    var hasToday = fixtures.some(function (fx) { return dayKey(fxDate(fx)) === dayKey(now); });
+    btn.hidden = !hasToday || scheduleFilter === "today";
+  }
+
+  /* Scroll the Schedule to today's section, switching to the full list first
+     if today's matches aren't in the current filter. */
+  function jumpToToday() {
+    var head = document.querySelector("#schedule-list .day-head.today");
+    if (!head) {
+      scheduleFilter = "all";
+      document.querySelectorAll("#schedule-filters .chip[data-filter]").forEach(function (c) {
+        var on = c.dataset.filter === "all";
+        c.classList.toggle("is-active", on);
+        c.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      renderSchedule(lastScheduleFixtures);
+      head = document.querySelector("#schedule-list .day-head.today");
+    }
+    // If today's only matches are in play they sit in the "Live now" band (no
+    // today day-header), so fall back to that band rather than no-op.
+    var target = head || document.querySelector("#schedule-list .sched-live-head");
+    if (!target) return;
+    var y = target.getBoundingClientRect().top + window.pageYOffset - 64;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
   }
 
   /* One delegated click listener on the filter chips (bound once). */
@@ -1254,6 +1456,8 @@
     if (!bar || bar.dataset.wired) return;
     bar.dataset.wired = "1";
     bar.addEventListener("click", function (e) {
+      var jump = e.target.closest("[data-jump-today]");
+      if (jump) { jumpToToday(); return; }
       var chip = e.target.closest(".chip[data-filter]");
       if (!chip) return;
       scheduleFilter = chip.dataset.filter;
@@ -1283,13 +1487,25 @@
 
     var hg = fx.homeGoals, ag = fx.awayGoals;
     var hasScore = hg != null && ag != null;
-    var homeWin = !!(st.done && hasScore && hg > ag);
-    var awayWin = !!(st.done && hasScore && ag > hg);
+    /* Winner first from fx.winner (covers shootouts, where goals are level),
+       else from the scoreline — so a pens result reads as a win, not a draw. */
+    var winSide = st.done
+      ? (fx.winner || (hasScore && hg !== ag ? (hg > ag ? "home" : "away") : null))
+      : null;
+    var homeWin = winSide === "home";
+    var awayWin = winSide === "away";
+
+    var pensTag = "";
+    if (st.done && typeof fx.homePens === "number" && typeof fx.awayPens === "number") {
+      var wp = winSide === "away" ? fx.awayPens : fx.homePens;
+      var lp = winSide === "away" ? fx.homePens : fx.awayPens;
+      pensTag = ' <span class="m-pk">' + wp + "–" + lp + " pens</span>";
+    }
 
     // Upcoming games show kickoff time in the pill (the date sits in the day header).
     var pillLabel = st.upcoming ? (fmtTime(fx) || "Upcoming") : st.label;
     var pill = '<span class="m-pill ' + st.key + (st.upcoming ? " time" : "") + '">' +
-      (st.live ? '<span class="live-dot sm"></span>' : "") + pillLabel + "</span>";
+      (st.live ? '<span class="live-dot sm"></span>' : "") + pillLabel + "</span>" + pensTag;
 
     var rows =
       scheduleTeamRow(fx.home, hg, hasScore, homeWin, awayWin, owners) +
@@ -1324,25 +1540,41 @@
     var meta = document.getElementById("hero-meta");
     if (meta) {
       if (!draftComplete(state)) {
-        var seq = pickSequence(state);
-        meta.innerHTML =
-          '<span class="hero-pill"><b>12</b> teams</span>' +
-          '<span class="hero-pill"><b>' + state.pickLog.length + "/" + seq.length + "</b> drafted</span>" +
-          '<span class="hero-pill">🔒 hub locked</span>';
+        if (!state.pickLog.length) {
+          /* Fresh device, league sync still in flight — don't flash a locked
+             0/24 hub at someone whose draft finished days ago. */
+          meta.innerHTML =
+            '<span class="hero-pill"><b>12</b> teams</span>' +
+            '<span class="hero-pill">⏳ syncing league draft…</span>';
+        } else {
+          var seq = pickSequence(state);
+          meta.innerHTML =
+            '<span class="hero-pill"><b>12</b> teams</span>' +
+            '<span class="hero-pill"><b>' + state.pickLog.length + "/" + seq.length + "</b> drafted</span>" +
+            '<span class="hero-pill">🔒 hub locked</span>';
+        }
       } else {
-        var done = fixtures.filter(function (fx) { return Live.FINISHED[fx.status]; }).length;
-        var goals = 0;
-        bracket.rounds.forEach(function (round) {
-          round.matches.forEach(function (mt) {
-            if (typeof mt.homeGoals === "number") goals += mt.homeGoals;
-            if (typeof mt.awayGoals === "number") goals += mt.awayGoals;
-          });
+        var done = 0, goals = 0, inPlay = 0;
+        fixtures.forEach(function (fx) {
+          if (Live.FINISHED[fx.status]) done += 1;
+          if (Live.INPLAY[fx.status]) inPlay += 1;
+          /* Fixtures carry the live overlay, so in-play goals tick here too. */
+          if (fx.homeGoals != null) goals += fx.homeGoals;
+          if (fx.awayGoals != null) goals += fx.awayGoals;
         });
+        /* Only claim Live with feed data in hand; a live match beats a bare
+           feed-on note. */
+        var livePill = inPlay
+          ? '<span class="hero-pill"><span class="live-dot sm"></span> LIVE · ' + inPlay +
+            (inPlay === 1 ? " match" : " matches") + "</span>"
+          : (liveData
+              ? '<span class="hero-pill">🟢 Live feed on</span>'
+              : '<span class="hero-pill">🛰 Syncing…</span>');
         meta.innerHTML =
           '<span class="hero-pill"><b>24</b> drafted</span>' +
           '<span class="hero-pill"><b>' + goals + "</b> goals</span>" +
           '<span class="hero-pill"><b>' + done + "/" + fixtures.length + "</b> matches</span>" +
-          '<span class="hero-pill">' + (started ? "🟢 Live" : "Awaiting kickoff") + "</span>";
+          (started ? livePill : '<span class="hero-pill">Awaiting kickoff</span>');
       }
     }
 
@@ -1353,8 +1585,12 @@
     if (le) {
       le.innerHTML =
         "<h3>Live updates</h3>" +
-        "<p>Bracket results are entered by hand for v1 — tap the winners and type the goals on the " +
-        "Bracket tab. A live feed will overlay goals automatically once the knockout begins.</p>" +
+        (liveData
+          ? "<p>✅ Scores land straight from FIFA's live feed and finished matches advance the " +
+            "bracket automatically — no one has to touch anything. The commissioner can still " +
+            "override any result by hand on the Bracket tab.</p>"
+          : "<p>The live feed is catching its breath — the commissioner keeps the bracket " +
+            "current by hand until it's back.</p>") +
         "<p class=\"muted\">Disputes about goals or advancement? The official FIFA match report wins, then the commissioner.</p>";
     }
   }
@@ -1443,8 +1679,36 @@
     if (!(opts && opts.noScroll)) window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  /* Open the Schedule tab and scroll to one fixture, flashing it briefly.
+     Forces the "all" filter first so the target is guaranteed to be mounted. */
+  function gotoScheduleAt(anchorId) {
+    scheduleFilter = "all";
+    document.querySelectorAll("#schedule-filters .chip[data-filter]").forEach(function (c) {
+      var on = c.dataset.filter === "all";
+      c.classList.toggle("is-active", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    renderSchedule(lastScheduleFixtures);
+    setTab("schedule", { noScroll: true });
+    // Let the panel unhide/layout, then center the anchor and flash it.
+    setTimeout(function () {
+      var node = anchorId && document.getElementById("sched-" + anchorId);
+      if (!node) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+      var y = node.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + 40;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      node.classList.add("flash");
+      setTimeout(function () { node.classList.remove("flash"); }, 1500);
+    }, 60);
+  }
+
   function wireTabs() {
     document.addEventListener("click", function (e) {
+      var jump = e.target.closest("[data-goto-schedule]");
+      if (jump) {
+        e.preventDefault();
+        gotoScheduleAt(jump.getAttribute("data-goto-schedule"));
+        return;
+      }
       var btn = e.target.closest("[data-tab]");
       if (!btn) return;
       var name = btn.getAttribute("data-tab");
@@ -1555,7 +1819,16 @@
     });
   }
 
+  /* The newest live payload we've seen. Data-less re-renders (the shared-
+     bracket sync, draft actions) reuse it instead of wiping the live overlay —
+     otherwise the boot race (results.json resolving after live.json) strips
+     scores from ctx until the next 2-minute refresh. A feed that later goes
+     down keeps showing its last payload; the freshness pill ages it honestly. */
+  var lastLiveData = null;
+
   function renderAll(liveData) {
+    if (liveData) lastLiveData = liveData;
+    else liveData = lastLiveData;
     /* Live mutations are no-ops pre-draft (Live guards internally). */
     var matches = (liveData && liveData.matches) || [];
     Live.applyMatches(matches);

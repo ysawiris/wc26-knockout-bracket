@@ -7,7 +7,8 @@
      draftOrder : [abbr] — the 12-team knockout draft order (seed)
      pickLog    : [countryId] in the exact order countries were drafted
      results    : { matchId: { ga, gb, winner } } — bracket results,
-                  where `winner` is a countryId
+                  where `winner` is a countryId; entries decided on
+                  penalties may also carry the shootout tally { pa, pb }
      draftVersion : monotonic int — the OWNER-published draft revision.
                   GATES draft adoption (draftOrder/pickLog/draftDirection)
                   INDEPENDENTLY of `updatedAt`. This exists because the live
@@ -238,8 +239,9 @@ function exportState() {
    - AUTO-FEED: applyAutoResults() below FILLS empty matches only.
 
    applyAutoResults(derived): `derived` is the output of
-   Live.deriveResults(fixtures) -> { matchId: { winnerId, ga, gb } } for
-   FINISHED fixtures with a clear winner. For each matchId, if STATE.results
+   Live.deriveResults(fixtures) -> { matchId: { winnerId, ga, gb } } (plus
+   { pa, pb } when a shootout decided it) for FINISHED fixtures with a
+   clear winner. For each matchId, if STATE.results
    already has ANY entry (manual or shared/committed), it is left untouched —
    auto NEVER overrides an existing result. Otherwise the match is filled with
    the current resolved slot ids (from buildBracket) so the B1 stale-goal
@@ -269,7 +271,7 @@ function applyAutoResults(derived) {
     var slots = slotsById[matchId];
     if (!slots) return;
 
-    state.results[matchId] = {
+    var entry = {
       winner: d.winnerId,
       ga: typeof d.ga === "number" ? d.ga : null,
       gb: typeof d.gb === "number" ? d.gb : null,
@@ -277,6 +279,13 @@ function applyAutoResults(derived) {
       bId: slots.bId,
       manual: false
     };
+    /* Shootout tally rides along only when the feed supplied one — never
+       write undefined keys into the persisted results map. */
+    if (typeof d.pa === "number" && typeof d.pb === "number") {
+      entry.pa = d.pa;
+      entry.pb = d.pb;
+    }
+    state.results[matchId] = entry;
     changed = true;
   });
 
@@ -377,6 +386,7 @@ function slotFor(countryId, goals) {
        winnerId: countryId|null,      // internal scoring winner
        winner:   "home"|"away"|null,  // blueprint renderer winner
        homeGoals, awayGoals,          // fixture-compat mirrors of *.goals
+       homePens, awayPens,            // shootout tally (null unless on pens)
        status: "SCHEDULED"|"IN_PLAY"|"FINISHED"
      } */
 function buildBracket(state) {
@@ -401,16 +411,22 @@ function buildBracket(state) {
       var res = state.results[id] || {};
       var ga = typeof res.ga === "number" ? res.ga : null;
       var gb = typeof res.gb === "number" ? res.gb : null;
+      // Shootout tally, when the stored result carried one (optional keys).
+      var pa = typeof res.pa === "number" ? res.pa : null;
+      var pb = typeof res.pb === "number" ? res.pb : null;
 
       // Goal-attribution guard: a stored result is only valid while the
       // match's slots still hold the same countries they did when the
       // result was entered. If aId/bId were recorded (non-legacy) and they
-      // no longer match the current resolved slots, drop the stale goals.
+      // no longer match the current resolved slots, drop the stale goals
+      // (and the shootout tally that belongs to the same stale result).
       // Missing aId/bId (legacy saved state) -> no change.
       if (typeof res.aId !== "undefined" && typeof res.bId !== "undefined" &&
           (res.aId !== aId || res.bId !== bId)) {
         ga = null;
         gb = null;
+        pa = null;
+        pb = null;
       }
 
       // A stored winner only stands while both teams are present, and (when
@@ -438,6 +454,8 @@ function buildBracket(state) {
         winner: winner,
         homeGoals: ga,
         awayGoals: gb,
+        homePens: pa,
+        awayPens: pb,
         status: status
       });
     }

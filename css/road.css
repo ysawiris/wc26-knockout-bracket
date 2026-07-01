@@ -137,6 +137,12 @@
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .rg-flags { letter-spacing: 0.12em; font-size: 0.95rem; }
+/* "Next: your country plays…" line — shown when nothing is live. */
+.road-next {
+  margin-top: 7px; display: block;
+  font-size: 0.78rem; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
 
 /* ---------- metrics ---------- */
 

@@ -2,16 +2,18 @@
    standings. The model walks the bracket forward from its current
    state: every pending match is decided by a win probability derived
    from XG.fixtureXg (Elo-informed expected goals) when both countries
-   have a rating, else from the seed gap; finished matches lock their
+   have a rating, else from the seed gap; in-play matches resolve from
+   the current score plus a simulated remainder (a tie = ET/pens, which
+   falls back to the strength prob); finished matches lock their
    entered winner. Each sim plays the whole tree out — advancing a
    winner through every TBD slot — banks advancement points (R32=3,
    R16=5, QF=8, SF=13, Final=21) plus a per-goal bonus to whichever
    fantasy team drafted each surviving country, then ranks the 12 teams
-   by total points (advancePoints + goalBonus, the real standings
-   comparator) with a per-sim coin-flip on exact ties. Results are
-   cached on a fingerprint of the banked points, live minutes and match
-   statuses, so the forecast ticks over as winners are entered while
-   idle re-renders reuse the cache. Daily No. 1 snapshots persist in
+   by total points (advancePoints + goalBonus), tiebreaking on
+   advancement points then draft order (the real standings comparator).
+   Results are cached on a fingerprint of the banked points, live
+   minutes/scores and match statuses, so the forecast ticks over as
+   winners are entered while idle re-renders reuse the cache. Daily No. 1 snapshots persist in
    localStorage for movement chips and sparklines. Renders into
    #odds-host (inside the Forecast tab); one delegated click/keydown
    listener on the host drives the Projected Advancement round-by-round
@@ -136,14 +138,16 @@
     var fin = 0;
     var live = 0;
     var minutes = 0;
+    var liveG = 0; // in-play goals aren't in standings, so key on them too
     eachMatch(ctx, function (mt) {
       if (FIN[mt.status]) fin += 1;
       else if (LIVE_ST[mt.status]) {
         live += 1;
         minutes += parseMinute(mt.minute, mt.status);
+        liveG += (mt.homeGoals || 0) + (mt.awayGoals || 0);
       }
     });
-    return [Math.round(banked * 10), bankedG, fin, live, minutes,
+    return [Math.round(banked * 10), bankedG, fin, live, minutes, liveG,
       ctx.standings.length, ctx.draft.complete ? 1 : 0].join("|");
   }
 
@@ -185,6 +189,7 @@
           live: live,
           homeGoals: mt.homeGoals,
           awayGoals: mt.awayGoals,
+          minute: mt.minute || null,
           prob: baseWinProb(hName, aName,
             seedById[(mt.home && mt.home.countryId)],
             seedById[(mt.away && mt.away.countryId)]),
@@ -226,14 +231,21 @@
     var model = buildModel(ctx);
     var owners = (ctx.draft && ctx.draft.ownersByCountry) || {};
 
-    /* Index teams like standings, plus baseline banked points/goals. */
+    /* Index teams like standings, plus baseline banked points/goals and
+       each team's draft-order position (the real final tiebreaker). */
+    var orderIdx = {};
+    ((ctx.draft && ctx.draft.order) || []).forEach(function (abbr, i) {
+      orderIdx[abbr] = i;
+    });
     var abbrIdx = {};
     var baseAdv = [];   // advancement points already locked
     var baseGoals = []; // goals already banked
+    var draftPos = [];  // standings index -> draft-order position
     standings.forEach(function (row, i) {
       abbrIdx[row.team.abbr] = i;
       baseAdv[i] = row.advancePoints || 0;
       baseGoals[i] = row.goals || 0;
+      draftPos[i] = (orderIdx[row.team.abbr] != null) ? orderIdx[row.team.abbr] : i;
     });
 
     /* Per-round projection (banked vs expected remaining advancement
@@ -265,6 +277,7 @@
           home: mt.homeName, homeFlag: mt.homeFlag, homeOwner: hOwn,
           away: mt.awayName, awayFlag: mt.awayFlag, awayOwner: aOwn,
           homeGoals: mt.homeGoals, awayGoals: mt.awayGoals,
+          minute: mt.minute,
           fin: mt.fin, live: mt.live, owned: !!(hOwn || aOwn),
           prob: mt.prob, points: rd.points,
           tbd: !(mt.homeId && mt.awayId)
@@ -290,7 +303,6 @@
     var simAdv = new Array(n);   // advancement points this sim
     var simGoals = new Array(n); // simulated + banked goals this sim
     var simPts = new Array(n);   // total points = advance + goalBonus*goals
-    var rnd = new Array(n);
     var idx = new Array(n);
     var winnerOf = {};           // matchId -> countryId for this sim
 
@@ -301,9 +313,11 @@
     }
 
     /* The real standings comparator: total points desc (advancePoints +
-       goalBonus), tiebreak advancePoints desc, then a per-sim coin flip. */
+       goalBonus), tiebreak advancePoints desc, then draft order (the same
+       final tiebreak store.js buildStandings uses). */
     function cmp(a, b) {
-      return (simPts[b] - simPts[a]) || (simAdv[b] - simAdv[a]) || (rnd[a] - rnd[b]);
+      return (simPts[b] - simPts[a]) || (simAdv[b] - simAdv[a]) ||
+        (draftPos[a] - draftPos[b]);
     }
 
     var nRounds = model.rounds.length;
@@ -312,7 +326,6 @@
       for (i = 0; i < n; i++) {
         simAdv[i] = baseAdv[i];
         simGoals[i] = baseGoals[i];
-        rnd[i] = Math.random();
         idx[i] = i;
       }
       winnerOf = {};
@@ -333,14 +346,25 @@
           if (mt.fin && mt.winnerId) {
             winId = mt.winnerId; // banked goals already in baseGoals
           } else {
-            /* Sample goals for the unplayed share; decide the winner by
-               the strength-derived base prob. */
-            var rem = mt.remFrac > 0 ? mt.remFrac : 1;
+            /* Sample goals for the unplayed share of the match. */
+            var rem = mt.live ? mt.remFrac : 1;
             var hg = poisson(Math.exp(-mt.sgHome * rem));
             var ag = poisson(Math.exp(-mt.sgAway * rem));
+            var homeAdvances;
+            if (mt.live) {
+              /* In-play: decide from the current score plus the simulated
+                 remainder. The live goals aren't in baseGoals (standings
+                 only bank entered/finished results), so credit them here
+                 too. A level total = ET/pens — fall back to the strength
+                 prob for the shootout. */
+              hg += mt.homeGoals || 0;
+              ag += mt.awayGoals || 0;
+              homeAdvances = hg > ag || (hg === ag && Math.random() < mt.prob);
+            } else {
+              homeAdvances = Math.random() < mt.prob;
+            }
             awardGoals(homeId, hg);
             awardGoals(awayId, ag);
-            var homeAdvances = Math.random() < mt.prob;
             winId = homeAdvances ? homeId : awayId;
             if (winId == null) winId = homeAdvances ? awayId : homeId;
           }
@@ -663,10 +687,13 @@
     var cls;
     var right;
     if (d.fin) {
-      cls = "fin";
+      cls = "fin" + (d.owned ? " own" : "");
       right = (d.owned ? "+" + d.points + " pts" : "no league owner") + " ✓";
     } else {
       cls = d.live ? "live" : "up";
+      if (d.live && d.minute) {
+        left += ' · <span class="od-rd-min">' + esc(String(d.minute)) + "</span>";
+      }
       var pHome = Math.round(d.prob * 100);
       var src = (window.XG && XG.RATINGS) ? "Elo" : "seed";
       right = esc(firstWord(d.home)) + " " + pHome + "% · " +
@@ -853,6 +880,11 @@
     if (p >= SHOW_PCT) {
       txt = Math.round(p * 100) + "%";
       if (p >= 0.55) cls += " hot";
+    } else if (p >= 0.01) {
+      /* Single-digit percents print as dim numbers (no % sign) instead
+         of an unexplained dot field. */
+      txt = String(Math.round(p * 100));
+      cls += " lo";
     } else if (p > 0) {
       txt = "·";
       cls += " dot";
@@ -891,7 +923,9 @@
         "<thead>" + head + "</thead><tbody>" + body + "</tbody>" +
       "</table></div>" +
       '<p class="od-foot">Each cell: how often that team finished in that ' +
-        "final standing slot across the sims. avg = their average finish.</p>" +
+        "final standing slot across the sims. avg = their average finish. " +
+        "Faint numbers = a small percent · dot = under 1% · blank = never " +
+        "happened in the sims.</p>" +
       "</section>";
   }
 
@@ -912,6 +946,9 @@
       "A computer plays the rest of the bracket out " + fmtSims(res.sims) +
         " times, advancing a winner in every tie and banking the points to " +
         "whichever league team drafted them.",
+      "Scores land automatically from the live FIFA feed; finished matches " +
+        "advance the bracket and the forecast re-runs on the spot — nobody " +
+        "types anything in.",
       "How often your team finishes with the most points across all those " +
         "runs = your odds to land the No. 1 final standing.",
       "Betting-odds format: +480 means a $100 bet would profit $480 — " +
@@ -921,7 +958,8 @@
     ];
     var method = fmtSims(res.sims) +
       " sims · " + ratingSrc + " · winners advance through the bracket · " +
-      "ties break on advancement points then draft order";
+      "ties break on advancement points then draft order · " +
+      "in-play matches are simulated from the current score & minute";
     return '<section class="od-block">' +
       '<div class="od-head">📖 How this works</div>' +
       '<div class="od-how"><ol>' +
@@ -990,7 +1028,7 @@
       var scrollX = scroller ? scroller.scrollLeft : 0;
 
       host.innerHTML = '<div class="od-wrap">' +
-        (res.pre ? '<div class="od-banner">Strength-based forecast — sharpens with every result you enter.</div>' : "") +
+        (res.pre ? '<div class="od-banner">Strength-based forecast — sharpens automatically as results come in.</div>' : "") +
         heroHtml(ctx, res, board, mine) +
         projHtml(ctx, res) +
         boardHtml(ctx, board, hist, todayKey, mineAbbr) +

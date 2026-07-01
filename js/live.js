@@ -133,8 +133,10 @@ var Live = (function () {
   /* BB2 (feed half): derive auto-results from FINISHED fixtures with a clear
      winner. Pure read-only — builds { matchId: { winnerId, ga, gb } } for each
      fixture whose status is in FINISHED and whose homeGoals/awayGoals are both
-     numbers AND not equal. Skips TBD slots, equal scores (manual shootout call),
-     and non-finished matches. Returns {} when nothing qualifies. The caller
+     numbers AND not equal. When a level match was decided on penalties the
+     entry also carries the shootout tally as { pa, pb }. Skips TBD slots,
+     undecidable level scores (no usable shootout tally = manual call), and
+     non-finished matches. Returns {} when nothing qualifies. The caller
      (store.applyAutoResults) decides precedence; this never writes anywhere. */
   function deriveResults(fixtures) {
     var out = {};
@@ -149,6 +151,7 @@ var Live = (function () {
       if (typeof ga !== "number" || typeof gb !== "number") return;
 
       var winSide;
+      var onPens = false;
       if (ga !== gb) {
         winSide = ga > gb ? fx.home : fx.away;
       } else {
@@ -158,10 +161,19 @@ var Live = (function () {
         var pb = fx.awayPens;
         if (typeof pa !== "number" || typeof pb !== "number" || pa === pb) return;
         winSide = pa > pb ? fx.home : fx.away;
+        onPens = true;
       }
       if (!winSide || winSide.countryId == null) return; // TBD slot, no clear winner
 
-      out[fx.id] = { winnerId: winSide.countryId, ga: ga, gb: gb };
+      var entry = { winnerId: winSide.countryId, ga: ga, gb: gb };
+      // Keep the shootout tally on the derived result so the stored record
+      // (and the bracket built from it) can show "4–2 on pens" after the
+      // live feed has moved on.
+      if (onPens) {
+        entry.pa = pa;
+        entry.pb = pb;
+      }
+      out[fx.id] = entry;
     });
 
     return out;

@@ -79,7 +79,15 @@
     }
     var t = teamByAbbr(abbr);
     if (t && t.managers && t.managers.length) return t.managers.join(" & ");
-    return "Awaiting draft picks";
+    /* No picks and no managers. Only claim the draft is pending when the
+       device has actually seen the league (an adopted feed carries a
+       draftVersion; local picks mean a draft is underway) — otherwise
+       we're just in the pre-sync window before data/results.json lands. */
+    var st = (typeof loadState === "function" && typeof draftComplete === "function")
+      ? loadState() : null;
+    var synced = !!st && ((st.draftVersion || 0) > 0 || st.pickLog.length > 0);
+    if (synced && !draftComplete(st)) return "Awaiting draft picks";
+    return "Syncing league draft…";
   }
 
   function setTeam(abbr) {
@@ -145,11 +153,8 @@
 
     var p = document.createElement("p");
     p.className = "tp-sub";
-    var done = (typeof draftComplete === "function") && draftComplete(loadState());
-    p.textContent = (done
-      ? "Pick your team and the hub highlights your drafted countries, knockout matches and points. "
-      : "Pick your team now so the hub can highlight your picks, matches and points once the draft is done. ") +
-      "Saved on this device — change it anytime from the 🏷 pill up top.";
+    /* Copy is owned by refreshPicker() so the pre/post-draft phrasing
+       tracks the live ctx instead of being baked in at build time. */
     panel.appendChild(p);
 
     var grid = document.createElement("div");
@@ -198,18 +203,31 @@
     });
   }
 
+  /* Re-sync the built panel with the latest ctx: the subtitle's pre/post-
+     draft copy, each team's selection highlight and its drafted-countries
+     summary. Runs on every open AND on every Hub render while the overlay
+     is visible, so an open picker live-updates the moment the league sync
+     lands (no stale "Awaiting draft picks" mid-tournament). */
+  function refreshPicker() {
+    if (!overlay) return;
+    var sub = overlay.querySelector(".tp-sub");
+    if (sub) {
+      sub.textContent = (draftDoneCtx()
+        ? "Pick your team and the hub highlights your drafted countries, knockout matches and points. "
+        : "Pick your team now so the hub can highlight your picks, matches and points once the draft is done. ") +
+        "Saved on this device — change it anytime from the 🏷 pill up top.";
+    }
+    var mine = current();
+    overlay.querySelectorAll(".tp-team").forEach(function (b, i) {
+      b.classList.toggle("current", !!mine && TEAMS[i].abbr === mine.abbr);
+      var grp = b.querySelector(".tp-grp");
+      if (grp) grp.textContent = summaryFor(TEAMS[i].abbr);
+    });
+  }
+
   function openPicker() {
     if (!overlay) buildPicker();
-    else {
-      /* Refresh selection highlight and the drafted-countries summary,
-         which may have changed since the picker was last built. */
-      var mine = current();
-      overlay.querySelectorAll(".tp-team").forEach(function (b, i) {
-        b.classList.toggle("current", !!mine && TEAMS[i].abbr === mine.abbr);
-        var grp = b.querySelector(".tp-grp");
-        if (grp) grp.textContent = summaryFor(TEAMS[i].abbr);
-      });
-    }
+    refreshPicker();
     overlay.hidden = false;
     document.body.classList.add("tp-open");
   }
@@ -240,20 +258,38 @@
   /* Auto-open the picker on first visit only while the draft is still
      open (false-safe: if ctx is missing we treat the draft as not yet
      complete and still offer the picker). Once the draft is complete we
-     never steal focus on load — the viewer can open it from the pill. */
-  function draftComplete() {
+     never steal focus on load — the viewer can open it from the pill.
+     Reads Hub.ctx(), NOT store state — named draftDoneCtx so it doesn't
+     shadow store.js's draftComplete(state). */
+  function draftDoneCtx() {
     var ctx = ctxOrNull();
     return !!(ctx && ctx.draft && ctx.draft.complete);
   }
 
   var autoOpened = false;
+  var autoOpenTimer = null;
   document.addEventListener("DOMContentLoaded", function () {
     if (!window.Hub) return;
     Hub.onRender(function () {
       renderPill();
-      if (!autoOpened && !current() && !read(SKIP_KEY) && !draftComplete()) {
-        autoOpened = true;
-        openPicker();
+      /* An open picker tracks every re-render, so the league sync landing
+         mid-look swaps in the real draft summaries. */
+      if (overlay && !overlay.hidden) refreshPicker();
+      /* Deferred auto-open: boot's first render fires BEFORE the league
+         sync (data/results.json) lands, so ctx still reads "draft
+         incomplete" mid-tournament. Never open at the gate directly —
+         arm ONE short timer and re-check the gate against the LATEST
+         ctx when it fires. Post-sync the draft reads complete and the
+         picker stays closed; genuinely pre-draft (or offline) visitors
+         still get it. */
+      if (!autoOpened && !autoOpenTimer &&
+          !current() && !read(SKIP_KEY) && !draftDoneCtx()) {
+        autoOpenTimer = setTimeout(function () {
+          if (!current() && !read(SKIP_KEY) && !draftDoneCtx()) {
+            autoOpened = true;
+            openPicker();
+          }
+        }, 1500);
       }
     });
   });

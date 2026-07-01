@@ -7,9 +7,10 @@
    cares about mid-tournament: "where do I stand, and what do I
    need?" — your draft-slot rank, points back of #1, the cushion on
    the team chasing you, how many knockout rounds your 2 drafted
-   countries still have left, the points still on the table, and
-   how many of your countries are still alive — plus the model's
-   read on your finish (reused straight from window.PickOdds.forecast).
+   countries still have left, the points still on the table, how
+   many of your countries are still alive, and the next fixture one
+   of them plays — plus the model's read on your finish (reused
+   straight from window.PickOdds.forecast).
 
    Self-contained Hub module: registers Hub.onRender, writes into
    #road-host, re-derives on every refresh. No team claimed → a
@@ -27,6 +28,8 @@
   }
 
   function inplay(st) { return !!(window.Live && Live.INPLAY && Live.INPLAY[st]); }
+
+  function finished(st) { return !!(window.Live && Live.FINISHED && Live.FINISHED[st]); }
 
   /* Best-effort projection from the shared odds engine. Cached there by
      fingerprint, so calling it every render is cheap; null if odds.js
@@ -94,24 +97,31 @@
     return sum;
   }
 
-  /* Rounds a still-alive country has left to play: every round after the
-     furthest it has appeared in. A country that won the Final has 0. */
+  /* Rounds a still-alive country has left to play. The bracket slots a
+     winner into the next round immediately, so the furthest round a country
+     appears in is still UNPLAYED unless it already won it (a finalist has
+     1 round left, the champion 0) — same wonFurthest bookkeeping as
+     pointsOnTableForCountry above. */
   function roundsLeftForCountry(ctx, countryId) {
     var rounds = ctx.bracket.rounds || [];
     var playedOrd = 0;
     var alive = true;
+    var wonFurthest = false; // already won its furthest round (nothing left there)
     rounds.forEach(function (round) {
       round.matches.forEach(function (mt) {
         var inMatch = (mt.home && mt.home.countryId === countryId) ||
           (mt.away && mt.away.countryId === countryId);
         if (!inMatch) return;
-        if (round.ordinal > playedOrd) playedOrd = round.ordinal;
+        if (round.ordinal > playedOrd) {
+          playedOrd = round.ordinal;
+          wonFurthest = mt.winnerId === countryId;
+        }
         if (mt.winnerId && mt.winnerId !== countryId) alive = false;
       });
     });
     if (!alive || !playedOrd) return 0;
     var total = rounds.length; // 5 (R32..Final)
-    return Math.max(0, total - playedOrd);
+    return Math.max(0, total - playedOrd + (wonFurthest ? 0 : 1));
   }
 
   function derive(ctx, mine) {
@@ -139,6 +149,17 @@
         (fx.away && myIds[fx.away.countryId]);
     });
 
+    /* The next scheduled fixture involving one of my countries — neither
+       finished nor in-play, earliest kickoff first. A next-round tie with
+       a TBD opponent still counts (it has a real date). */
+    var nextFx = (ctx.fixtures || []).filter(function (fx) {
+      if (finished(fx.status) || inplay(fx.status) || fx.winner) return false;
+      return (fx.home && myIds[fx.home.countryId]) ||
+        (fx.away && myIds[fx.away.countryId]);
+    }).sort(function (a, b) {
+      return ctx.helpers.fxDate(a) - ctx.helpers.fxDate(b);
+    })[0] || null;
+
     /* Rounds left + points still on the table, summed over my countries. */
     var roundsLeft = 0, pointsOnTable = 0;
     if (complete) {
@@ -150,6 +171,16 @@
 
     var proj = projectionFor(ctx, mine.abbr);
     var eliminated = complete && started && row.aliveCount === 0;
+
+    /* An eliminated team's total is locked, but its PLACE isn't — chasers
+       can still pass it. Only call the place final once nobody can: the
+       tournament Final has a winner, or the team is already last. */
+    var rounds = ctx.bracket.rounds || [];
+    var lastRound = rounds[rounds.length - 1];
+    var finalDone = !!(lastRound && (lastRound.matches || []).some(function (mt) {
+      return !!mt.winnerId;
+    }));
+    var placeFinal = eliminated && (finalDone || row.rank === n);
 
     return {
       ctx: ctx, team: mine, row: row, n: n,
@@ -163,8 +194,10 @@
       reached: row.reached,
       aliveCount: row.aliveCount,
       eliminated: eliminated,
+      placeFinal: placeFinal,
       drafted: drafted,
       liveFx: liveFx,
+      nextFx: nextFx,
       roundsLeft: roundsLeft,
       pointsOnTable: pointsOnTable,
       amLeader: started && row.rank === 1,
@@ -194,6 +227,28 @@
     return names[0] + " & " + names[1];
   }
 
+  /* "Next: 🇦🇷 Argentina vs Mexico · Round of 16 · Sat · Jul 4 · 12:00 PM" —
+     your country first; the opponent slot may still be TBD. Shared by the
+     card line and the copy-status text. */
+  function nextFxLine(d) {
+    var fx = d.nextFx;
+    if (!fx) return null;
+    var h = d.ctx.helpers;
+    var isMine = {};
+    d.drafted.forEach(function (c) { isMine[c.id] = true; });
+    var homeMine = !!(fx.home && isMine[fx.home.countryId]);
+    var mine = homeMine ? fx.home : fx.away;
+    var opp = homeMine ? fx.away : fx.home;
+    var parts = [
+      fx.roundLabel || h.roundLabel(fx.round) || "",
+      h.fmtDay(h.fxDate(fx))
+    ];
+    var time = h.fmtTime(fx);
+    if (time) parts.push(time);
+    return "Next: " + (mine.flag ? mine.flag + " " : "") + (mine.name || "TBD") +
+      " vs " + ((opp && opp.name) || "TBD") + " · " + parts.join(" · ");
+  }
+
   function statusLine(d) {
     var T = d.team.name;
     if (!d.complete) {
@@ -208,9 +263,15 @@
         " knockout rounds and every advancement point still up for grabs.";
     }
     if (d.eliminated) {
+      var placeOrd = d.rank + d.ctx.helpers.ordinal(d.rank);
+      var run = d.reached && d.reached !== "—" ? " Best run to the " + d.reached + "." : "";
+      if (d.placeFinal) {
+        return T + " is out — " + who + " have both been knocked out, locking your total at " +
+          fmtPts(d.points) + " points (finished " + placeOrd + ")." + run;
+      }
       return T + " is out — " + who + " have both been knocked out, locking your total at " +
-        fmtPts(d.points) + " points (finished " + d.rank + d.ctx.helpers.ordinal(d.rank) +
-        (d.reached && d.reached !== "—" ? ", best run to the " + d.reached : "") + ").";
+        fmtPts(d.points) + " points — you sit " + placeOrd +
+        ", but chasers can still pass you." + run;
     }
     var lead;
     if (d.amLeader) {
@@ -291,7 +352,8 @@
     } else if (!d.started) {
       line2 = "🟢 Level at 0 — " + draftedNames(d) + " drafted, bracket about to kick off";
     } else if (d.eliminated) {
-      line2 = "🪦 Out — finished " + d.rank + d.ctx.helpers.ordinal(d.rank) + " on " + fmtPts(d.points) + " pts";
+      line2 = "🪦 Out — " + (d.placeFinal ? "finished " : "sitting ") +
+        d.rank + d.ctx.helpers.ordinal(d.rank) + " on " + fmtPts(d.points) + " pts";
     } else if (d.amLeader) {
       line2 = "👑 Leads on " + fmtPts(d.points) + " pts" +
         (d.cushion != null ? " (+" + fmtPts(d.cushion) + " on " + first(d.belowName) + ")" : "");
@@ -313,6 +375,9 @@
       line2,
       line3
     ];
+    if (!d.eliminated && !d.liveFx.length && d.nextFx) {
+      lines.push(nextFxLine(d));
+    }
     if (d.proj) {
       var ep = Math.round(d.proj.row.expSlot);
       lines.push("Model: " + pct(d.proj.row.probs[0]) + " for #1 · projected ~" + ep + d.ctx.helpers.ordinal(ep));
@@ -373,7 +438,8 @@
     }
     if (d.eliminated) {
       return metric(fmtPts(d.points), "final points", "is-out") +
-        metric(d.rank + esc(d.ctx.helpers.ordinal(d.rank)), "final place") +
+        metric(d.rank + esc(d.ctx.helpers.ordinal(d.rank)),
+          d.placeFinal ? "final place" : "place today") +
         metric("0", "countries alive") +
         metric(d.reached && d.reached !== "—" ? esc(d.reached) : "—", "best run");
     }
@@ -437,10 +503,16 @@
     var rankOrd = ord(d.rank);
     var rankLabel = !d.complete ? "your draft slot"
       : !d.started ? "draft slot"
-        : d.eliminated ? "final place"
+        : d.eliminated ? (d.placeFinal ? "final place" : "place today")
           : "your slot";
 
     var pl = projLine(d);
+
+    var nextHtml = "";
+    if (!d.eliminated && !d.liveFx.length && d.nextFx) {
+      var nx = nextFxLine(d);
+      if (nx) nextHtml = '<div class="road-next">' + esc(nx) + "</div>";
+    }
 
     host.innerHTML =
       '<div class="road-card' + (d.eliminated ? " is-eliminated" : "") + '" style="--team-accent:' + accent + '">' +
@@ -461,6 +533,7 @@
             '<p class="road-line">' + esc(statusLine(d)) + "</p>" +
             (pl ? '<p class="road-proj-line">' + esc(pl) + "</p>" : "") +
             '<div class="road-group">Your countries <span class="rg-flags">' + flags + "</span></div>" +
+            nextHtml +
           "</div>" +
         "</div>" +
         '<div class="road-metrics">' + metricsFor(d, esc) + "</div>" +

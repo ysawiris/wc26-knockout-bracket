@@ -10,6 +10,8 @@
   var SITE_URL = "https://ysawiris.github.io/wc26-knockout-bracket/";
   var STORE_KEY = "wc26ko.rankSnapshots";
   var COPY_RESTORE_MS = 1600;
+  var MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
 
   /* Official WhatsApp glyph (Simple Icons path) — inlined so the desktop
      share button is instantly recognizable without a network request. */
@@ -99,9 +101,23 @@
 
   /* ---------------- copy / share ---------------- */
 
+  /* Stamp for the copy text: the live feed's fetch time when the feed is
+     on, else today — never the hand-bumped league.lastUpdated seed string.
+     Formatted like that seed ("July 1, 2026") so the output line keeps
+     its shape; a dated digest like stats.js wireDigest. */
+  function syncStamp(ctx) {
+    var d = null;
+    if (ctx.liveData && ctx.liveData.fetchedAt) {
+      var fetched = new Date(ctx.liveData.fetchedAt);
+      if (!isNaN(fetched)) d = fetched;
+    }
+    if (!d) d = new Date();
+    return MONTH_NAMES[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+
   function buildOrderText(ctx) {
     var title = ctx.started ? "Knockout Standings" : "Provisional Draft Order";
-    var stamp = (ctx.league && ctx.league.lastUpdated) || "live";
+    var stamp = syncStamp(ctx);
     var lines = ["🏆 WC26 " + title + " — " + stamp];
 
     ctx.standings.forEach(function (row) {
@@ -332,6 +348,14 @@
     return extras;
   }
 
+  /* Tie-group key — mirrors the standings comparator in store.js, where
+     rows sharing (points, advancePoints) share a rank. Means no row holds
+     rank 12 while the cellar is tied, so "last place" must be judged by
+     tie group, not by rank === standings.length. */
+  function tieKey(row) {
+    return row.points + "|" + row.advancePoints;
+  }
+
   function injectFlourishes(ctx, li, row, extras) {
     if (!ctx.started) return;
 
@@ -354,11 +378,17 @@
       name.insertAdjacentElement("afterend", crown);
     }
 
-    if (row.rank === ctx.standings.length && extras) {
+    /* Last-place pill: worn by the whole bottom tie group. Skipped when the
+       entire table shares one key (everyone tied — nobody is "last"). */
+    var last = ctx.standings[ctx.standings.length - 1];
+    if (extras && last && tieKey(row) === tieKey(last) &&
+        tieKey(ctx.standings[0]) !== tieKey(last)) {
       var pill = document.createElement("span");
       pill.className = "bx-lastpick";
       pill.textContent = "last place 😬";
-      pill.title = "Currently bottom of the standings";
+      pill.title = row.tied
+        ? "Tied for the bottom of the standings"
+        : "Currently bottom of the standings";
       extras.appendChild(pill);
     }
   }
