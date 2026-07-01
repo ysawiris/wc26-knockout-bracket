@@ -1,8 +1,53 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-01T05:03:42.429Z",
-  "count": 7,
+  "generatedAt": "2026-07-01T18:12:27.325Z",
+  "count": 8,
   "byId": {
+    "400021512": {
+      "id": "400021512",
+      "round": "R32",
+      "home": "England",
+      "away": "DR Congo",
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "venue": "Atlanta Stadium",
+      "utcDate": "2026-07-01T16:00:00Z",
+      "goals": [
+        {
+          "minute": "7'",
+          "order": 7,
+          "player": "Brian Cipenga",
+          "team": "DR Congo",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "75'",
+          "order": 75,
+          "player": "Harry Kane",
+          "team": "England",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "86'",
+          "order": 86,
+          "player": "Harry Kane",
+          "team": "England",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "England see off DR Congo",
+      "summary": "In a thrilling Round of 32 clash, England rallies to beat DR Congo 2-1. Brian Cipenga puts DR Congo ahead early, but Harry Kane strikes twice in the final 15 minutes to secure the victory. England advances to the next round, showcasing Kane's clutch performance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"England\",\"DR Congo\",2,1,[[\"7'\",\"Brian Cipenga\",\"DR Congo\",\"away\",false,false],[\"75'\",\"Harry Kane\",\"England\",\"home\",false,false],[\"86'\",\"Harry Kane\",\"England\",\"home\",false,false]]]"
+    },
     "400021513": {
       "id": "400021513",
       "round": "R32",
