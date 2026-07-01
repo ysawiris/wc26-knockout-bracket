@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-01T18:12:27.325Z",
-  "count": 8,
+  "generatedAt": "2026-07-01T22:53:55.660Z",
+  "count": 9,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -443,6 +443,60 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"Sweden\",3,0,[[\"45'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"53'\",\"Bradley Barcola\",\"France\",\"home\",false,false],[\"74'\",\"Kylian Mbappe\",\"France\",\"home\",false,false]]]"
+    },
+    "400021525": {
+      "id": "400021525",
+      "round": "R32",
+      "home": "Belgium",
+      "away": "Senegal",
+      "homeGoals": 3,
+      "awayGoals": 2,
+      "venue": "Seattle Stadium",
+      "utcDate": "2026-07-01T20:00:00Z",
+      "goals": [
+        {
+          "minute": "24'",
+          "order": 24,
+          "player": "Habib Diarra",
+          "team": "Senegal",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "51'",
+          "order": 51,
+          "player": "Ismaila Sarr",
+          "team": "Senegal",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "86'",
+          "order": 86,
+          "player": "Romelu Lukaku",
+          "team": "Belgium",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "89'",
+          "order": 89,
+          "player": "Youri Tielemans",
+          "team": "Belgium",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Belgium see off Senegal",
+      "summary": "Belgium edges out Senegal 3-2 in a thrilling Round of 32 clash in Seattle. Habib Diarra and Ismaila Sarr give Senegal an early lead, but Romelu Lukaku and Youri Tielemans strike late to secure Belgium's comeback. Belgium advances to the next round, showcasing resilience and firepower.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Belgium\",\"Senegal\",3,2,[[\"24'\",\"Habib Diarra\",\"Senegal\",\"away\",false,false],[\"51'\",\"Ismaila Sarr\",\"Senegal\",\"away\",false,false],[\"86'\",\"Romelu Lukaku\",\"Belgium\",\"home\",false,false],[\"89'\",\"Youri Tielemans\",\"Belgium\",\"home\",false,false]]]"
     }
   }
 }
