@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-06-30T22:59:05.874Z",
-  "count": 6,
+  "generatedAt": "2026-07-01T05:03:42.429Z",
+  "count": 7,
   "byId": {
     "400021513": {
       "id": "400021513",
@@ -222,6 +222,44 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"South Africa\",\"Canada\",0,1,[[\"90'+2'\",\"Stephen Eustaquio\",\"Canada\",\"away\",false,false]]]"
+    },
+    "400021520": {
+      "id": "400021520",
+      "round": "R32",
+      "home": "Mexico",
+      "away": "Ecuador",
+      "homeGoals": 2,
+      "awayGoals": 0,
+      "venue": "Mexico City Stadium",
+      "utcDate": "2026-07-01T02:00:00Z",
+      "goals": [
+        {
+          "minute": "22'",
+          "order": 22,
+          "player": "Julian Quinones",
+          "team": "Mexico",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "31'",
+          "order": 31,
+          "player": "Raul Jimenez",
+          "team": "Mexico",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [
+        "Piero HINCAPIE (Ecuador) is sent off!"
+      ],
+      "headline": "Mexico see off Ecuador",
+      "summary": "Mexico dominates Ecuador 2-0 in the Round of 32, with Julian Quinones opening the scoring in the 22nd minute and Raul Jimenez adding to the lead just nine minutes later. Ecuador's Piero Hincapie receives a red card, leaving them a man down as Mexico advances to the next round with a commanding performance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Mexico\",\"Ecuador\",2,0,[[\"22'\",\"Julian Quinones\",\"Mexico\",\"home\",false,false],[\"31'\",\"Raul Jimenez\",\"Mexico\",\"home\",false,false]]]"
     },
     "400021522": {
       "id": "400021522",
