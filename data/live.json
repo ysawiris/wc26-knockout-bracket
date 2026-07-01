@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-01T15:11:07.345Z",
+  "fetchedAt": "2026-07-01T16:10:05.560Z",
   "matchCount": 31,
   "matches": [
     {
@@ -105,16 +105,16 @@
     {
       "id": "400021512",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "England",
       "away": "Congo DR",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-01T16:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": "0'"
+      "minute": "9'"
     },
     {
       "id": "400021525",
