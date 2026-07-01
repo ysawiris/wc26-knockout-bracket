@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-01T22:01:36.517Z",
+  "fetchedAt": "2026-07-01T22:39:43.076Z",
   "matchCount": 31,
   "matches": [
     {
@@ -128,7 +128,7 @@
       "awayPens": null,
       "utcDate": "2026-07-01T20:00:00Z",
       "venue": "Seattle Stadium",
-      "minute": null
+      "minute": "120'+1'"
     },
     {
       "id": "400021524",
@@ -142,7 +142,7 @@
       "awayPens": null,
       "utcDate": "2026-07-02T00:00:00Z",
       "venue": "San Francisco Bay Area Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021519",
