@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-01T03:46:55.724Z",
+  "fetchedAt": "2026-07-01T05:20:06.239Z",
   "matchCount": 31,
   "matches": [
     {
@@ -91,7 +91,7 @@
     {
       "id": "400021520",
       "round": "Round of 32",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Mexico",
       "away": "Ecuador",
       "homeGoals": 2,
@@ -100,7 +100,7 @@
       "awayPens": null,
       "utcDate": "2026-07-01T02:00:00Z",
       "venue": "Mexico City Stadium",
-      "minute": "84'"
+      "minute": "99'"
     },
     {
       "id": "400021512",
@@ -274,7 +274,7 @@
       "id": "400021531",
       "round": "Round of 16",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Mexico",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
