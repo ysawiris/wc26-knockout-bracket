@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-01T20:04:15.531Z",
+  "fetchedAt": "2026-07-01T20:47:14.638Z",
   "matchCount": 31,
   "matches": [
     {
@@ -123,12 +123,12 @@
       "home": "Belgium",
       "away": "Senegal",
       "homeGoals": 0,
-      "awayGoals": 0,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-01T20:00:00Z",
       "venue": "Seattle Stadium",
-      "minute": "3'"
+      "minute": "45'+1'"
     },
     {
       "id": "400021524",
