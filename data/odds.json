@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-01T01:25:06.606Z",
-  "matchCount": 13,
+  "fetchedAt": "2026-07-01T05:52:48.516Z",
+  "matchCount": 12,
   "lines": [
-    {
-      "espnId": "760491",
-      "date": "2026-06-30",
-      "home": "Mexico",
-      "away": "Ecuador",
-      "homeRaw": "Mexico",
-      "awayRaw": "Ecuador",
-      "line": 1.5,
-      "overUS": "-140",
-      "underUS": "+110",
-      "impliedTotal": 1.85
-    },
     {
       "espnId": "760493",
       "date": "2026-07-01",
@@ -24,9 +12,9 @@
       "homeRaw": "Belgium",
       "awayRaw": "Senegal",
       "line": 2.5,
-      "overUS": "-105",
+      "overUS": "+100",
       "underUS": "-120",
-      "impliedTotal": 2.61
+      "impliedTotal": 2.59
     },
     {
       "espnId": "760495",
@@ -49,8 +37,8 @@
       "awayRaw": "Bosnia-Herzegovina",
       "line": 2.5,
       "overUS": "-135",
-      "underUS": "+110",
-      "impliedTotal": 2.87
+      "underUS": "+105",
+      "impliedTotal": 2.84
     },
     {
       "espnId": "760496",
@@ -96,9 +84,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Cape Verde",
       "line": 2.5,
-      "overUS": "-145",
+      "overUS": "-150",
       "underUS": "+120",
-      "impliedTotal": 2.95
+      "impliedTotal": 2.97
     },
     {
       "espnId": "760499",
