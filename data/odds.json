@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-01T05:52:48.516Z",
+  "fetchedAt": "2026-07-01T09:29:23.810Z",
   "matchCount": 12,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Belgium",
       "awayRaw": "Senegal",
       "line": 2.5,
-      "overUS": "+100",
+      "overUS": "-105",
       "underUS": "-120",
-      "impliedTotal": 2.59
+      "impliedTotal": 2.61
     },
     {
       "espnId": "760495",
@@ -36,9 +36,9 @@
       "homeRaw": "United States",
       "awayRaw": "Bosnia-Herzegovina",
       "line": 2.5,
-      "overUS": "-135",
-      "underUS": "+105",
-      "impliedTotal": 2.84
+      "overUS": "-140",
+      "underUS": "+110",
+      "impliedTotal": 2.89
     },
     {
       "espnId": "760496",
@@ -120,9 +120,9 @@
       "homeRaw": "Canada",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+125",
-      "underUS": "-155",
-      "impliedTotal": 2.37
+      "overUS": "+130",
+      "underUS": "-160",
+      "impliedTotal": 2.34
     },
     {
       "espnId": "760503",
@@ -145,8 +145,8 @@
       "awayRaw": "Norway",
       "line": 2.5,
       "overUS": "-105",
-      "underUS": "-120",
-      "impliedTotal": 2.61
+      "underUS": "-115",
+      "impliedTotal": 2.63
     }
   ]
 }
