@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-02T21:36:28.508Z",
+  "fetchedAt": "2026-07-02T23:47:38.826Z",
   "matchCount": 31,
   "matches": [
     {
@@ -161,16 +161,16 @@
     {
       "id": "400021526",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Portugal",
       "away": "Croatia",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-02T23:00:00Z",
       "venue": "Toronto Stadium",
-      "minute": "0'"
+      "minute": "45'+2'"
     },
     {
       "id": "400021527",
