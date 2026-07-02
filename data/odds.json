@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-02T01:19:15.970Z",
+  "fetchedAt": "2026-07-02T07:44:36.151Z",
   "matchCount": 11,
   "lines": [
-    {
-      "espnId": "760494",
-      "date": "2026-07-01",
-      "home": "United States",
-      "away": "Bosnia & Herzegovina",
-      "homeRaw": "United States",
-      "awayRaw": "Bosnia-Herzegovina",
-      "line": 2.5,
-      "overUS": "-155",
-      "underUS": "+125",
-      "impliedTotal": 3
-    },
     {
       "espnId": "760496",
       "date": "2026-07-02",
@@ -24,9 +12,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Croatia",
       "line": 2.5,
-      "overUS": "-115",
-      "underUS": "-105",
-      "impliedTotal": 2.72
+      "overUS": "-130",
+      "underUS": "+105",
+      "impliedTotal": 2.83
     },
     {
       "espnId": "760497",
@@ -36,9 +24,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Austria",
       "line": 2.5,
-      "overUS": "-130",
-      "underUS": "+105",
-      "impliedTotal": 2.83
+      "overUS": "-140",
+      "underUS": "+115",
+      "impliedTotal": 2.91
     },
     {
       "espnId": "760498",
@@ -60,9 +48,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Cape Verde",
       "line": 2.5,
-      "overUS": "-155",
+      "overUS": "-150",
       "underUS": "+125",
-      "impliedTotal": 3
+      "impliedTotal": 2.99
     },
     {
       "espnId": "760499",
@@ -84,9 +72,9 @@
       "homeRaw": "Colombia",
       "awayRaw": "Ghana",
       "line": 2.5,
-      "overUS": "+120",
+      "overUS": "+125",
       "underUS": "-150",
-      "impliedTotal": 2.4
+      "impliedTotal": 2.38
     },
     {
       "espnId": "760502",
@@ -132,9 +120,21 @@
       "homeRaw": "Mexico",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "+145",
-      "underUS": "-180",
-      "impliedTotal": 2.24
+      "overUS": "+150",
+      "underUS": "-185",
+      "impliedTotal": 2.21
+    },
+    {
+      "espnId": "760507",
+      "date": "2026-07-06",
+      "home": "United States",
+      "away": "Belgium",
+      "homeRaw": "United States",
+      "awayRaw": "Belgium",
+      "line": 2.5,
+      "overUS": "-130",
+      "underUS": "+105",
+      "impliedTotal": 2.83
     }
   ]
 }
