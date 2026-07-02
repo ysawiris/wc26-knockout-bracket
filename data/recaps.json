@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-02T03:10:25.127Z",
-  "count": 10,
+  "generatedAt": "2026-07-02T21:44:31.652Z",
+  "count": 11,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -267,6 +267,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"South Africa\",\"Canada\",0,1,[[\"90'+2'\",\"Stephen Eustaquio\",\"Canada\",\"away\",false,false]]]"
+    },
+    "400021519": {
+      "id": "400021519",
+      "round": "R32",
+      "home": "Spain",
+      "away": "Austria",
+      "homeGoals": 3,
+      "awayGoals": 0,
+      "venue": "Los Angeles Stadium",
+      "utcDate": "2026-07-02T19:00:00Z",
+      "goals": [
+        {
+          "minute": "36'",
+          "order": 36,
+          "player": "Mikel Oyarzabal",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "66'",
+          "order": 66,
+          "player": "Pedro Porro",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "89'",
+          "order": 89,
+          "player": "Mikel Oyarzabal",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Spain see off Austria",
+      "summary": "Spain dominates Austria 3-0 in the Round of 32, showcasing their offensive prowess. Mikel Oyarzabal nets a brace, scoring in the 36th and 89th minutes, while Pedro Porro adds another in the 66th. Spain advances to the knockout stage with a commanding performance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Spain\",\"Austria\",3,0,[[\"36'\",\"Mikel Oyarzabal\",\"Spain\",\"home\",false,false],[\"66'\",\"Pedro Porro\",\"Spain\",\"home\",false,false],[\"89'\",\"Mikel Oyarzabal\",\"Spain\",\"home\",false,false]]]"
     },
     "400021520": {
       "id": "400021520",
