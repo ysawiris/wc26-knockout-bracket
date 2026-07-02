@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-02T18:50:26.826Z",
+  "fetchedAt": "2026-07-02T20:17:22.272Z",
   "matchCount": 31,
   "matches": [
     {
@@ -147,16 +147,16 @@
     {
       "id": "400021519",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Spain",
       "away": "Austria",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 1,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-02T19:00:00Z",
       "venue": "Los Angeles Stadium",
-      "minute": "0'"
+      "minute": "55'"
     },
     {
       "id": "400021526",
