@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-02T11:01:44.247Z",
+  "fetchedAt": "2026-07-02T14:29:56.469Z",
   "matchCount": 11,
   "lines": [
     {
@@ -13,8 +13,8 @@
       "awayRaw": "Croatia",
       "line": 2.5,
       "overUS": "-135",
-      "underUS": "+110",
-      "impliedTotal": 2.87
+      "underUS": "+105",
+      "impliedTotal": 2.84
     },
     {
       "espnId": "760497",
@@ -24,9 +24,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Austria",
       "line": 2.5,
-      "overUS": "-145",
-      "underUS": "+115",
-      "impliedTotal": 2.93
+      "overUS": "-150",
+      "underUS": "+120",
+      "impliedTotal": 2.97
     },
     {
       "espnId": "760498",
@@ -37,8 +37,8 @@
       "awayRaw": "Algeria",
       "line": 2.5,
       "overUS": "+120",
-      "underUS": "-145",
-      "impliedTotal": 2.42
+      "underUS": "-150",
+      "impliedTotal": 2.4
     },
     {
       "espnId": "760500",
