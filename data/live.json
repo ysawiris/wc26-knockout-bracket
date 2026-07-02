@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-01T23:09:32.318Z",
+  "fetchedAt": "2026-07-02T00:15:38.007Z",
   "matchCount": 31,
   "matches": [
     {
@@ -133,16 +133,16 @@
     {
       "id": "400021524",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "USA",
       "away": "Bosnia and Herzegovina",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-02T00:00:00Z",
       "venue": "San Francisco Bay Area Stadium",
-      "minute": "0'"
+      "minute": "15'"
     },
     {
       "id": "400021519",
