@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-01T22:53:55.660Z",
-  "count": 9,
+  "generatedAt": "2026-07-02T03:10:25.127Z",
+  "count": 10,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -443,6 +443,44 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"Sweden\",3,0,[[\"45'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"53'\",\"Bradley Barcola\",\"France\",\"home\",false,false],[\"74'\",\"Kylian Mbappe\",\"France\",\"home\",false,false]]]"
+    },
+    "400021524": {
+      "id": "400021524",
+      "round": "R32",
+      "home": "United States",
+      "away": "Bosnia & Herzegovina",
+      "homeGoals": 2,
+      "awayGoals": 0,
+      "venue": "San Francisco Bay Area Stadium",
+      "utcDate": "2026-07-02T00:00:00Z",
+      "goals": [
+        {
+          "minute": "45'",
+          "order": 45,
+          "player": "Folarin Balogun",
+          "team": "United States",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "82'",
+          "order": 82,
+          "player": "Malik Tillman",
+          "team": "United States",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [
+        "Folarin BALOGUN (USA) is sent off!"
+      ],
+      "headline": "United States see off Bosnia & Herzegovina",
+      "summary": "The United States defeats Bosnia & Herzegovina 2-0 in the Round of 32, advancing to the next stage. Folarin Balogun opens the scoring just before halftime, while Malik Tillman seals the victory with a goal in the 82nd minute. Despite Balogun's red card, the US holds firm for the win.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"United States\",\"Bosnia & Herzegovina\",2,0,[[\"45'\",\"Folarin Balogun\",\"United States\",\"home\",false,false],[\"82'\",\"Malik Tillman\",\"United States\",\"home\",false,false]]]"
     },
     "400021525": {
       "id": "400021525",
