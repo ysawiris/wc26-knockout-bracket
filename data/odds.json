@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-03T04:10:17.005Z",
-  "matchCount": 10,
+  "fetchedAt": "2026-07-03T07:38:40.011Z",
+  "matchCount": 9,
   "lines": [
-    {
-      "espnId": "760498",
-      "date": "2026-07-02",
-      "home": "Switzerland",
-      "away": "Algeria",
-      "homeRaw": "Switzerland",
-      "awayRaw": "Algeria",
-      "line": 2.5,
-      "overUS": "+115",
-      "underUS": "-145",
-      "impliedTotal": 2.44
-    },
     {
       "espnId": "760500",
       "date": "2026-07-03",
@@ -25,8 +13,8 @@
       "awayRaw": "Cape Verde",
       "line": 2.5,
       "overUS": "-165",
-      "underUS": "+135",
-      "impliedTotal": 3.08
+      "underUS": "+130",
+      "impliedTotal": 3.05
     },
     {
       "espnId": "760499",
@@ -36,9 +24,9 @@
       "homeRaw": "Australia",
       "awayRaw": "Egypt",
       "line": 1.5,
-      "overUS": "-165",
-      "underUS": "+135",
-      "impliedTotal": 2
+      "overUS": "-175",
+      "underUS": "+140",
+      "impliedTotal": 2.04
     },
     {
       "espnId": "760501",
@@ -120,9 +108,9 @@
       "homeRaw": "United States",
       "awayRaw": "Belgium",
       "line": 2.5,
-      "overUS": "-130",
-      "underUS": "+105",
-      "impliedTotal": 2.83
+      "overUS": "-135",
+      "underUS": "+110",
+      "impliedTotal": 2.87
     }
   ]
 }
