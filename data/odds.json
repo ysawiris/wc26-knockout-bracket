@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-02T21:33:51.508Z",
+  "fetchedAt": "2026-07-03T04:10:17.005Z",
   "matchCount": 10,
   "lines": [
-    {
-      "espnId": "760496",
-      "date": "2026-07-02",
-      "home": "Portugal",
-      "away": "Croatia",
-      "homeRaw": "Portugal",
-      "awayRaw": "Croatia",
-      "line": 2.5,
-      "overUS": "-125",
-      "underUS": "+100",
-      "impliedTotal": 2.78
-    },
     {
       "espnId": "760498",
       "date": "2026-07-02",
@@ -36,9 +24,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Cape Verde",
       "line": 2.5,
-      "overUS": "-160",
-      "underUS": "+125",
-      "impliedTotal": 3.02
+      "overUS": "-165",
+      "underUS": "+135",
+      "impliedTotal": 3.08
     },
     {
       "espnId": "760499",
@@ -60,9 +48,9 @@
       "homeRaw": "Colombia",
       "awayRaw": "Ghana",
       "line": 2.5,
-      "overUS": "+110",
-      "underUS": "-140",
-      "impliedTotal": 2.47
+      "overUS": "+105",
+      "underUS": "-130",
+      "impliedTotal": 2.53
     },
     {
       "espnId": "760502",
@@ -72,9 +60,9 @@
       "homeRaw": "Canada",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+130",
-      "underUS": "-160",
-      "impliedTotal": 2.34
+      "overUS": "+125",
+      "underUS": "-155",
+      "impliedTotal": 2.37
     },
     {
       "espnId": "760503",
@@ -96,9 +84,9 @@
       "homeRaw": "Brazil",
       "awayRaw": "Norway",
       "line": 2.5,
-      "overUS": "-130",
-      "underUS": "+105",
-      "impliedTotal": 2.83
+      "overUS": "-135",
+      "underUS": "+110",
+      "impliedTotal": 2.87
     },
     {
       "espnId": "760505",
@@ -108,9 +96,21 @@
       "homeRaw": "Mexico",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "+150",
-      "underUS": "-185",
-      "impliedTotal": 2.21
+      "overUS": "+140",
+      "underUS": "-175",
+      "impliedTotal": 2.27
+    },
+    {
+      "espnId": "760506",
+      "date": "2026-07-06",
+      "home": "Portugal",
+      "away": "Spain",
+      "homeRaw": "Portugal",
+      "awayRaw": "Spain",
+      "line": 2.5,
+      "overUS": "-105",
+      "underUS": "-120",
+      "impliedTotal": 2.61
     },
     {
       "espnId": "760507",
