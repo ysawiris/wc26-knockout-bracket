@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-03T21:03:12.767Z",
+  "fetchedAt": "2026-07-03T22:14:09.473Z",
   "matchCount": 31,
   "matches": [
     {
@@ -203,16 +203,16 @@
     {
       "id": "400021521",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Argentina",
       "away": "Cabo Verde",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-03T22:00:00Z",
       "venue": "Miami Stadium",
-      "minute": "0'"
+      "minute": "14'"
     },
     {
       "id": "400021517",
