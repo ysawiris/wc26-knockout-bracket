@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-03T05:25:59.158Z",
-  "count": 13,
+  "generatedAt": "2026-07-03T22:04:05.470Z",
+  "count": 14,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -195,6 +195,89 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Ivory Coast\",\"Norway\",1,2,[[\"39'\",\"Antonio Nusa\",\"Norway\",\"away\",false,false],[\"74'\",\"Amad Diallo\",\"Ivory Coast\",\"home\",false,false],[\"86'\",\"Erling Haaland\",\"Norway\",\"away\",false,false]]]"
+    },
+    "400021515": {
+      "id": "400021515",
+      "round": "R32",
+      "home": "Australia",
+      "away": "Egypt",
+      "homeGoals": 1,
+      "awayGoals": 1,
+      "venue": "Dallas Stadium",
+      "utcDate": "2026-07-03T18:00:00Z",
+      "goals": [
+        {
+          "minute": "13'",
+          "order": 13,
+          "player": "Emam Ashour",
+          "team": "Egypt",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "55'",
+          "order": 55,
+          "player": "Mohamed Hany",
+          "team": "Australia",
+          "side": "home",
+          "ownGoal": true,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "shootout": {
+        "home": 2,
+        "away": 4,
+        "winner": "away",
+        "kicks": [
+          {
+            "side": "home",
+            "scored": false,
+            "player": "Harry Souttar"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Mahmoud Saber"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Jackson Irvine"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Ramy Rabia"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Awer Mabil"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Mohamed Salah"
+          },
+          {
+            "side": "home",
+            "scored": false,
+            "player": "Lucas Herrington"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Hossam Abdelmaguid"
+          }
+        ]
+      },
+      "headline": "Egypt win 4–2 on penalties",
+      "summary": "In a thrilling Round of 32 clash, Egypt takes an early lead with Emam Ashour's 13th-minute goal, but Australia equalizes through an own goal by Mohamed Hany in the 55th minute. The match goes to penalties, where Egypt triumphs 4-2, securing their place in the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Australia\",\"Egypt\",1,1,[[\"13'\",\"Emam Ashour\",\"Egypt\",\"away\",false,false],[\"55'\",\"Mohamed Hany\",\"Australia\",\"home\",true,false]],[2,4,[[\"home\",false],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",true]]]]"
     },
     "400021516": {
       "id": "400021516",
