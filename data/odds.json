@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-03T14:33:08.503Z",
+  "fetchedAt": "2026-07-03T17:48:52.733Z",
   "matchCount": 9,
   "lines": [
     {
@@ -24,9 +24,9 @@
       "homeRaw": "Australia",
       "awayRaw": "Egypt",
       "line": 1.5,
-      "overUS": "-185",
-      "underUS": "+145",
-      "impliedTotal": 2.08
+      "overUS": "-170",
+      "underUS": "+135",
+      "impliedTotal": 2.01
     },
     {
       "espnId": "760501",
@@ -60,9 +60,9 @@
       "homeRaw": "Paraguay",
       "awayRaw": "France",
       "line": 2.5,
-      "overUS": "-145",
+      "overUS": "-140",
       "underUS": "+115",
-      "impliedTotal": 2.93
+      "impliedTotal": 2.91
     },
     {
       "espnId": "760504",
