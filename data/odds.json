@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-03T10:50:40.022Z",
+  "fetchedAt": "2026-07-03T14:33:08.503Z",
   "matchCount": 9,
   "lines": [
     {
@@ -24,9 +24,9 @@
       "homeRaw": "Australia",
       "awayRaw": "Egypt",
       "line": 1.5,
-      "overUS": "-175",
-      "underUS": "+140",
-      "impliedTotal": 2.04
+      "overUS": "-185",
+      "underUS": "+145",
+      "impliedTotal": 2.08
     },
     {
       "espnId": "760501",
@@ -37,8 +37,8 @@
       "awayRaw": "Ghana",
       "line": 2.5,
       "overUS": "+105",
-      "underUS": "-135",
-      "impliedTotal": 2.51
+      "underUS": "-130",
+      "impliedTotal": 2.53
     },
     {
       "espnId": "760502",
@@ -61,8 +61,8 @@
       "awayRaw": "France",
       "line": 2.5,
       "overUS": "-145",
-      "underUS": "+120",
-      "impliedTotal": 2.95
+      "underUS": "+115",
+      "impliedTotal": 2.93
     },
     {
       "espnId": "760504",
@@ -96,9 +96,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-110",
+      "overUS": "-115",
       "underUS": "-110",
-      "impliedTotal": 2.67
+      "impliedTotal": 2.7
     },
     {
       "espnId": "760507",
