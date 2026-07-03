@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-03T18:12:21.405Z",
+  "fetchedAt": "2026-07-03T19:52:55.311Z",
   "matchCount": 31,
   "matches": [
     {
@@ -192,13 +192,13 @@
       "status": "IN_PLAY",
       "home": "Australia",
       "away": "Egypt",
-      "homeGoals": 0,
-      "awayGoals": 0,
+      "homeGoals": 1,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-03T18:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "12'"
+      "minute": "90'+1'"
     },
     {
       "id": "400021521",
