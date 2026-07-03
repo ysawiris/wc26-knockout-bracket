@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-03T19:52:55.311Z",
+  "fetchedAt": "2026-07-03T21:03:12.767Z",
   "matchCount": 31,
   "matches": [
     {
@@ -189,16 +189,16 @@
     {
       "id": "400021515",
       "round": "Round of 32",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Australia",
       "away": "Egypt",
       "homeGoals": 1,
       "awayGoals": 1,
-      "homePens": null,
-      "awayPens": null,
+      "homePens": 2,
+      "awayPens": 4,
       "utcDate": "2026-07-03T18:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "90'+1'"
+      "minute": "129'"
     },
     {
       "id": "400021521",
@@ -212,7 +212,7 @@
       "awayPens": null,
       "utcDate": "2026-07-03T22:00:00Z",
       "venue": "Miami Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021517",
@@ -317,7 +317,7 @@
       "round": "Round of 16",
       "status": "TIMED",
       "home": "TBD",
-      "away": "TBD",
+      "away": "Egypt",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
