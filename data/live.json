@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-03T16:55:42.964Z",
+  "fetchedAt": "2026-07-03T18:12:21.405Z",
   "matchCount": 31,
   "matches": [
     {
@@ -189,16 +189,16 @@
     {
       "id": "400021515",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Australia",
       "away": "Egypt",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-03T18:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "0'"
+      "minute": "12'"
     },
     {
       "id": "400021521",
