@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-02T21:44:31.652Z",
-  "count": 11,
+  "generatedAt": "2026-07-03T05:25:59.158Z",
+  "count": 13,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -580,6 +580,78 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Belgium\",\"Senegal\",3,2,[[\"24'\",\"Habib Diarra\",\"Senegal\",\"away\",false,false],[\"51'\",\"Ismaila Sarr\",\"Senegal\",\"away\",false,false],[\"86'\",\"Romelu Lukaku\",\"Belgium\",\"home\",false,false],[\"89'\",\"Youri Tielemans\",\"Belgium\",\"home\",false,false]]]"
+    },
+    "400021526": {
+      "id": "400021526",
+      "round": "R32",
+      "home": "Portugal",
+      "away": "Croatia",
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "venue": "Toronto Stadium",
+      "utcDate": "2026-07-02T23:00:00Z",
+      "goals": [
+        {
+          "minute": "53'",
+          "order": 53,
+          "player": "Ivan Perisic",
+          "team": "Croatia",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+4'",
+          "order": 90.04,
+          "player": "Goncalo Ramos",
+          "team": "Portugal",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Portugal see off Croatia",
+      "summary": "In a thrilling Round of 32 clash, Portugal edges Croatia 2-1 in Toronto. Ivan Perisic puts Croatia ahead in the 53rd minute, but Goncalo Ramos delivers a dramatic equalizer in stoppage time at 90'+4'. Portugal advances to the next round, showcasing tenacity and skill in a nail-biting encounter.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Portugal\",\"Croatia\",2,1,[[\"53'\",\"Ivan Perisic\",\"Croatia\",\"away\",false,false],[\"90'+4'\",\"Goncalo Ramos\",\"Portugal\",\"home\",false,false]]]"
+    },
+    "400021527": {
+      "id": "400021527",
+      "round": "R32",
+      "home": "Switzerland",
+      "away": "Algeria",
+      "homeGoals": 2,
+      "awayGoals": 0,
+      "venue": "BC Place Vancouver",
+      "utcDate": "2026-07-03T03:00:00Z",
+      "goals": [
+        {
+          "minute": "10'",
+          "order": 10,
+          "player": "Breel Embolo",
+          "team": "Switzerland",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "46'",
+          "order": 46,
+          "player": "Dan Ndoye",
+          "team": "Switzerland",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Switzerland see off Algeria",
+      "summary": "Switzerland dominates Algeria 2-0 in the Round of 32 at BC Place, Vancouver. Breel Embolo opens the scoring in the 10th minute, followed by Dan Ndoye’s strike just after halftime. With this victory, Switzerland advances to the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Switzerland\",\"Algeria\",2,0,[[\"10'\",\"Breel Embolo\",\"Switzerland\",\"home\",false,false],[\"46'\",\"Dan Ndoye\",\"Switzerland\",\"home\",false,false]]]"
     }
   }
 }
