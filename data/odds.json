@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-03T07:38:40.011Z",
+  "fetchedAt": "2026-07-03T10:50:40.022Z",
   "matchCount": 9,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Cape Verde",
       "line": 2.5,
-      "overUS": "-165",
+      "overUS": "-160",
       "underUS": "+130",
-      "impliedTotal": 3.05
+      "impliedTotal": 3.04
     },
     {
       "espnId": "760499",
@@ -37,8 +37,8 @@
       "awayRaw": "Ghana",
       "line": 2.5,
       "overUS": "+105",
-      "underUS": "-130",
-      "impliedTotal": 2.53
+      "underUS": "-135",
+      "impliedTotal": 2.51
     },
     {
       "espnId": "760502",
@@ -60,9 +60,9 @@
       "homeRaw": "Paraguay",
       "awayRaw": "France",
       "line": 2.5,
-      "overUS": "-160",
-      "underUS": "+130",
-      "impliedTotal": 3.04
+      "overUS": "-145",
+      "underUS": "+120",
+      "impliedTotal": 2.95
     },
     {
       "espnId": "760504",
@@ -96,9 +96,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-105",
-      "underUS": "-120",
-      "impliedTotal": 2.61
+      "overUS": "-110",
+      "underUS": "-110",
+      "impliedTotal": 2.67
     },
     {
       "espnId": "760507",
@@ -109,8 +109,8 @@
       "awayRaw": "Belgium",
       "line": 2.5,
       "overUS": "-135",
-      "underUS": "+110",
-      "impliedTotal": 2.87
+      "underUS": "+105",
+      "impliedTotal": 2.84
     }
   ]
 }
