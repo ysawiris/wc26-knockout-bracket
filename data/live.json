@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-03T01:21:28.906Z",
+  "fetchedAt": "2026-07-03T05:13:20.436Z",
   "matchCount": 31,
   "matches": [
     {
@@ -175,16 +175,16 @@
     {
       "id": "400021527",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "home": "Switzerland",
       "away": "Algeria",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 2,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-03T03:00:00Z",
       "venue": "BC Place Vancouver",
-      "minute": null
+      "minute": "97'"
     },
     {
       "id": "400021515",
@@ -330,7 +330,7 @@
       "id": "400021535",
       "round": "Round of 16",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Switzerland",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
