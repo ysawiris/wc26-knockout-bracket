@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-03T22:04:05.470Z",
-  "count": 14,
+  "generatedAt": "2026-07-04T02:52:21.353Z",
+  "count": 15,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -433,6 +433,69 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Mexico\",\"Ecuador\",2,0,[[\"22'\",\"Julian Quinones\",\"Mexico\",\"home\",false,false],[\"31'\",\"Raul Jimenez\",\"Mexico\",\"home\",false,false]]]"
+    },
+    "400021521": {
+      "id": "400021521",
+      "round": "R32",
+      "home": "Argentina",
+      "away": "Cape Verde",
+      "homeGoals": 3,
+      "awayGoals": 2,
+      "venue": "Miami Stadium",
+      "utcDate": "2026-07-03T22:00:00Z",
+      "goals": [
+        {
+          "minute": "29'",
+          "order": 29,
+          "player": "Lionel Messi",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "59'",
+          "order": 59,
+          "player": "Deroy Duarte",
+          "team": "Cape Verde",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "92'",
+          "order": 92,
+          "player": "Lisandro Martinez",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "103'",
+          "order": 103,
+          "player": "Sidny Lopes Cabral",
+          "team": "Cape Verde",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "111'",
+          "order": 111,
+          "player": "Diney Borges",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": true,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Argentina see off Cape Verde",
+      "summary": "Argentina edges past Cape Verde in a thrilling 3-2 knockout clash. Lionel Messi opens the scoring at 29', but Cape Verde equalizes with Deroy Duarte's strike in the second half. Late drama ensues with Lisandro Martinez's goal and an own goal by Diney Borges, sealing Argentina's victory and a spot in the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Argentina\",\"Cape Verde\",3,2,[[\"29'\",\"Lionel Messi\",\"Argentina\",\"home\",false,false],[\"59'\",\"Deroy Duarte\",\"Cape Verde\",\"away\",false,false],[\"92'\",\"Lisandro Martinez\",\"Argentina\",\"home\",false,false],[\"103'\",\"Sidny Lopes Cabral\",\"Cape Verde\",\"away\",false,false],[\"111'\",\"Diney Borges\",\"Argentina\",\"home\",true,false]]]"
     },
     "400021522": {
       "id": "400021522",
