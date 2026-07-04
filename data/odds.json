@@ -1,33 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-03T21:32:53.517Z",
-  "matchCount": 8,
+  "fetchedAt": "2026-07-04T04:03:11.763Z",
+  "matchCount": 7,
   "lines": [
-    {
-      "espnId": "760500",
-      "date": "2026-07-03",
-      "home": "Argentina",
-      "away": "Cape Verde",
-      "homeRaw": "Argentina",
-      "awayRaw": "Cape Verde",
-      "line": 2.5,
-      "overUS": "-165",
-      "underUS": "+130",
-      "impliedTotal": 3.05
-    },
-    {
-      "espnId": "760501",
-      "date": "2026-07-03",
-      "home": "Colombia",
-      "away": "Ghana",
-      "homeRaw": "Colombia",
-      "awayRaw": "Ghana",
-      "line": 2.5,
-      "overUS": "+105",
-      "underUS": "-130",
-      "impliedTotal": 2.53
-    },
     {
       "espnId": "760502",
       "date": "2026-07-04",
@@ -36,9 +12,9 @@
       "homeRaw": "Canada",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+125",
-      "underUS": "-155",
-      "impliedTotal": 2.37
+      "overUS": "+115",
+      "underUS": "-145",
+      "impliedTotal": 2.44
     },
     {
       "espnId": "760503",
@@ -48,9 +24,9 @@
       "homeRaw": "Paraguay",
       "awayRaw": "France",
       "line": 2.5,
-      "overUS": "-145",
-      "underUS": "+115",
-      "impliedTotal": 2.93
+      "overUS": "-160",
+      "underUS": "+125",
+      "impliedTotal": 3.02
     },
     {
       "espnId": "760504",
@@ -72,9 +48,9 @@
       "homeRaw": "Mexico",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "+140",
-      "underUS": "-175",
-      "impliedTotal": 2.27
+      "overUS": "+135",
+      "underUS": "-170",
+      "impliedTotal": 2.3
     },
     {
       "espnId": "760506",
@@ -84,9 +60,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-120",
+      "overUS": "-115",
       "underUS": "-105",
-      "impliedTotal": 2.74
+      "impliedTotal": 2.72
     },
     {
       "espnId": "760507",
@@ -99,6 +75,18 @@
       "overUS": "-135",
       "underUS": "+105",
       "impliedTotal": 2.84
+    },
+    {
+      "espnId": "760509",
+      "date": "2026-07-07",
+      "home": "Argentina",
+      "away": "Egypt",
+      "homeRaw": "Argentina",
+      "awayRaw": "Egypt",
+      "line": 2.5,
+      "overUS": "-105",
+      "underUS": "-120",
+      "impliedTotal": 2.61
     }
   ]
 }
