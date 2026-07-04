@@ -1,8 +1,8 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-04T04:03:11.763Z",
-  "matchCount": 7,
+  "fetchedAt": "2026-07-04T07:15:35.467Z",
+  "matchCount": 8,
   "lines": [
     {
       "espnId": "760502",
@@ -25,8 +25,8 @@
       "awayRaw": "France",
       "line": 2.5,
       "overUS": "-160",
-      "underUS": "+125",
-      "impliedTotal": 3.02
+      "underUS": "+130",
+      "impliedTotal": 3.04
     },
     {
       "espnId": "760504",
@@ -87,6 +87,18 @@
       "overUS": "-105",
       "underUS": "-120",
       "impliedTotal": 2.61
+    },
+    {
+      "espnId": "760508",
+      "date": "2026-07-07",
+      "home": "Switzerland",
+      "away": "Colombia",
+      "homeRaw": "Switzerland",
+      "awayRaw": "Colombia",
+      "line": 2.5,
+      "overUS": "+130",
+      "underUS": "-160",
+      "impliedTotal": 2.34
     }
   ]
 }
