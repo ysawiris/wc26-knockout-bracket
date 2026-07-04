@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T21:05:26.911Z",
+  "fetchedAt": "2026-07-04T22:08:51.216Z",
   "matchCount": 31,
   "matches": [
     {
@@ -254,7 +254,7 @@
       "awayPens": null,
       "utcDate": "2026-07-04T21:00:00Z",
       "venue": "Philadelphia Stadium",
-      "minute": "1'"
+      "minute": null
     },
     {
       "id": "400021532",
