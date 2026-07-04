@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T01:10:14.796Z",
+  "fetchedAt": "2026-07-04T04:54:52.925Z",
   "matchCount": 31,
   "matches": [
     {
@@ -217,16 +217,16 @@
     {
       "id": "400021517",
       "round": "Round of 32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "home": "Colombia",
       "away": "Ghana",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 1,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-04T01:30:00Z",
       "venue": "Kansas City Stadium",
-      "minute": "0'"
+      "minute": "98'"
     },
     {
       "id": "400021530",
@@ -331,7 +331,7 @@
       "round": "Round of 16",
       "status": "TIMED",
       "home": "Switzerland",
-      "away": "TBD",
+      "away": "Colombia",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
