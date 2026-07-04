@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T07:44:45.191Z",
+  "fetchedAt": "2026-07-04T09:53:42.150Z",
   "matchCount": 31,
   "matches": [
     {
@@ -240,7 +240,7 @@
       "awayPens": null,
       "utcDate": "2026-07-04T17:00:00Z",
       "venue": "Houston Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021533",
@@ -254,7 +254,7 @@
       "awayPens": null,
       "utcDate": "2026-07-04T21:00:00Z",
       "venue": "Philadelphia Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021532",
@@ -268,7 +268,7 @@
       "awayPens": null,
       "utcDate": "2026-07-05T20:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021531",
@@ -282,7 +282,7 @@
       "awayPens": null,
       "utcDate": "2026-07-06T00:00:00Z",
       "venue": "Mexico City Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021529",
@@ -296,7 +296,7 @@
       "awayPens": null,
       "utcDate": "2026-07-06T19:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021534",
@@ -310,7 +310,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T00:00:00Z",
       "venue": "Seattle Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021528",
@@ -324,7 +324,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T16:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021535",
@@ -338,7 +338,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T20:00:00Z",
       "venue": "BC Place Vancouver",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021536",
