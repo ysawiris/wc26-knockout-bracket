@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T15:35:34.522Z",
+  "fetchedAt": "2026-07-04T17:42:25.054Z",
   "matchCount": 31,
   "matches": [
     {
@@ -231,16 +231,16 @@
     {
       "id": "400021530",
       "round": "Round of 16",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Canada",
       "away": "Morocco",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-04T17:00:00Z",
       "venue": "Houston Stadium",
-      "minute": "0'"
+      "minute": "41'"
     },
     {
       "id": "400021533",
