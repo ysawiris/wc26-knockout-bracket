@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-04T07:15:35.467Z",
+  "fetchedAt": "2026-07-04T10:26:20.824Z",
   "matchCount": 8,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Canada",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "+115",
+      "overUS": "+120",
       "underUS": "-145",
-      "impliedTotal": 2.44
+      "impliedTotal": 2.42
     },
     {
       "espnId": "760503",
@@ -37,8 +37,8 @@
       "awayRaw": "Norway",
       "line": 2.5,
       "overUS": "-135",
-      "underUS": "+110",
-      "impliedTotal": 2.87
+      "underUS": "+105",
+      "impliedTotal": 2.84
     },
     {
       "espnId": "760505",
@@ -49,8 +49,8 @@
       "awayRaw": "England",
       "line": 2.5,
       "overUS": "+135",
-      "underUS": "-170",
-      "impliedTotal": 2.3
+      "underUS": "-165",
+      "impliedTotal": 2.31
     },
     {
       "espnId": "760506",
@@ -60,9 +60,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-115",
+      "overUS": "-120",
       "underUS": "-105",
-      "impliedTotal": 2.72
+      "impliedTotal": 2.74
     },
     {
       "espnId": "760507",
@@ -84,9 +84,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Egypt",
       "line": 2.5,
-      "overUS": "-105",
+      "overUS": "+100",
       "underUS": "-120",
-      "impliedTotal": 2.61
+      "impliedTotal": 2.59
     },
     {
       "espnId": "760508",
@@ -97,8 +97,8 @@
       "awayRaw": "Colombia",
       "line": 2.5,
       "overUS": "+130",
-      "underUS": "-160",
-      "impliedTotal": 2.34
+      "underUS": "-165",
+      "impliedTotal": 2.33
     }
   ]
 }
