@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-04T13:59:33.517Z",
+  "fetchedAt": "2026-07-04T17:20:24.984Z",
   "matchCount": 8,
   "lines": [
     {
@@ -49,8 +49,8 @@
       "awayRaw": "England",
       "line": 2.5,
       "overUS": "+135",
-      "underUS": "-165",
-      "impliedTotal": 2.31
+      "underUS": "-170",
+      "impliedTotal": 2.3
     },
     {
       "espnId": "760506",
