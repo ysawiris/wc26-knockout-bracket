@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T22:08:51.216Z",
+  "fetchedAt": "2026-07-04T23:12:16.539Z",
   "matchCount": 31,
   "matches": [
     {
@@ -245,16 +245,16 @@
     {
       "id": "400021533",
       "round": "Round of 16",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Paraguay",
       "away": "France",
       "homeGoals": 0,
-      "awayGoals": 0,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-04T21:00:00Z",
       "venue": "Philadelphia Stadium",
-      "minute": null
+      "minute": "101'"
     },
     {
       "id": "400021532",
