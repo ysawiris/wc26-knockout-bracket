@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-04T06:20:16.404Z",
-  "count": 16,
+  "generatedAt": "2026-07-04T19:12:17.064Z",
+  "count": 17,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -825,6 +825,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Switzerland\",\"Algeria\",2,0,[[\"10'\",\"Breel Embolo\",\"Switzerland\",\"home\",false,false],[\"46'\",\"Dan Ndoye\",\"Switzerland\",\"home\",false,false]]]"
+    },
+    "400021530": {
+      "id": "400021530",
+      "round": "R16",
+      "home": "Canada",
+      "away": "Morocco",
+      "homeGoals": 0,
+      "awayGoals": 3,
+      "venue": "Houston Stadium",
+      "utcDate": "2026-07-04T17:00:00Z",
+      "goals": [
+        {
+          "minute": "50'",
+          "order": 50,
+          "player": "Azzedine Ounahi",
+          "team": "Morocco",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "82'",
+          "order": 82,
+          "player": "Azzedine Ounahi",
+          "team": "Morocco",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+8'",
+          "order": 90.08,
+          "player": "Soufiane Rahimi",
+          "team": "Morocco",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Morocco see off Canada",
+      "summary": "Morocco dominates Canada with a commanding 3-0 victory in the Round of 16. Azzedine Ounahi shines, netting two goals in the second half at 50' and 82', while Soufiane Rahimi seals the win with a late strike in stoppage time. Morocco advances to the quarter-finals, showcasing a powerful performance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Canada\",\"Morocco\",0,3,[[\"50'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"82'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"90'+8'\",\"Soufiane Rahimi\",\"Morocco\",\"away\",false,false]]]"
     }
   }
 }
