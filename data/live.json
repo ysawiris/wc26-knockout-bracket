@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T09:53:42.150Z",
+  "fetchedAt": "2026-07-04T15:35:34.522Z",
   "matchCount": 31,
   "matches": [
     {
@@ -240,7 +240,7 @@
       "awayPens": null,
       "utcDate": "2026-07-04T17:00:00Z",
       "venue": "Houston Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021533",
