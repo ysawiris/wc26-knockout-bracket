@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-05T21:44:01.258Z",
+  "fetchedAt": "2026-07-05T22:43:08.443Z",
   "matchCount": 31,
   "matches": [
     {
@@ -259,16 +259,16 @@
     {
       "id": "400021532",
       "round": "Round of 16",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Brazil",
       "away": "Norway",
-      "homeGoals": 0,
-      "awayGoals": 1,
+      "homeGoals": 1,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-05T20:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": "81'"
+      "minute": "102'"
     },
     {
       "id": "400021531",
@@ -282,7 +282,7 @@
       "awayPens": null,
       "utcDate": "2026-07-06T00:00:00Z",
       "venue": "Mexico City Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021529",
@@ -372,7 +372,7 @@
       "id": "400021539",
       "round": "Quarter-final",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Norway",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
