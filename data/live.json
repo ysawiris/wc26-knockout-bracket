@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-04T23:12:16.539Z",
+  "fetchedAt": "2026-07-05T00:15:44.268Z",
   "matchCount": 31,
   "matches": [
     {
@@ -344,7 +344,7 @@
       "id": "400021536",
       "round": "Quarter-final",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "France",
       "away": "Morocco",
       "homeGoals": null,
       "awayGoals": null,
