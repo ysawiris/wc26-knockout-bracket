@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-04T19:12:17.064Z",
-  "count": 17,
+  "generatedAt": "2026-07-05T00:00:52.675Z",
+  "count": 18,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -870,6 +870,23 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Canada\",\"Morocco\",0,3,[[\"50'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"82'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"90'+8'\",\"Soufiane Rahimi\",\"Morocco\",\"away\",false,false]]]"
+    },
+    "400021533": {
+      "id": "400021533",
+      "round": "R16",
+      "home": "Paraguay",
+      "away": "France",
+      "homeGoals": 0,
+      "awayGoals": 1,
+      "venue": "Philadelphia Stadium",
+      "utcDate": "2026-07-04T21:00:00Z",
+      "goals": [],
+      "reds": [],
+      "headline": "France see off Paraguay",
+      "summary": "France edges Paraguay 1-0 in a tense Round of 16 clash at Philadelphia Stadium, with Kylian Mbappé scoring the decisive goal. The French defense holds strong, ensuring their spot in the quarter-finals.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Paraguay\",\"France\",0,1,[]]"
     }
   }
 }
