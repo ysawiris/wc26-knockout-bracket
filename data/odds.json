@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-05T10:28:23.258Z",
+  "fetchedAt": "2026-07-05T14:10:09.650Z",
   "matchCount": 7,
   "lines": [
     {
@@ -24,9 +24,9 @@
       "homeRaw": "Mexico",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "+130",
+      "overUS": "+135",
       "underUS": "-165",
-      "impliedTotal": 2.33
+      "impliedTotal": 2.31
     },
     {
       "espnId": "760506",
@@ -36,9 +36,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-130",
+      "overUS": "-135",
       "underUS": "+105",
-      "impliedTotal": 2.83
+      "impliedTotal": 2.84
     },
     {
       "espnId": "760507",
