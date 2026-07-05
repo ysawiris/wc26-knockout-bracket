@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-05T00:00:52.675Z",
-  "count": 18,
+  "generatedAt": "2026-07-05T22:08:57.180Z",
+  "count": 19,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -870,6 +870,42 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Canada\",\"Morocco\",0,3,[[\"50'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"82'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"90'+8'\",\"Soufiane Rahimi\",\"Morocco\",\"away\",false,false]]]"
+    },
+    "400021532": {
+      "id": "400021532",
+      "round": "R16",
+      "home": "Brazil",
+      "away": "Norway",
+      "homeGoals": 1,
+      "awayGoals": 2,
+      "venue": "New York/New Jersey Stadium",
+      "utcDate": "2026-07-05T20:00:00Z",
+      "goals": [
+        {
+          "minute": "79'",
+          "order": 79,
+          "player": "Erling Haaland",
+          "team": "Norway",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'",
+          "order": 90,
+          "player": "Erling Haaland",
+          "team": "Norway",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Norway see off Brazil",
+      "summary": "Norway pulls off a stunning upset, defeating Brazil 2-1 in the Round of 16 at New York/New Jersey Stadium. Erling Haaland shines with a late brace, scoring in the 79th and 90th minutes to secure the victory. Norway advances to the quarter-finals, leaving Brazil stunned.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Brazil\",\"Norway\",1,2,[[\"79'\",\"Erling Haaland\",\"Norway\",\"away\",false,false],[\"90'\",\"Erling Haaland\",\"Norway\",\"away\",false,false]]]"
     },
     "400021533": {
       "id": "400021533",
