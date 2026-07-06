@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-06T03:30:13.984Z",
-  "count": 20,
+  "generatedAt": "2026-07-06T21:55:08.126Z",
+  "count": 21,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -825,6 +825,33 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Switzerland\",\"Algeria\",2,0,[[\"10'\",\"Breel Embolo\",\"Switzerland\",\"home\",false,false],[\"46'\",\"Dan Ndoye\",\"Switzerland\",\"home\",false,false]]]"
+    },
+    "400021529": {
+      "id": "400021529",
+      "round": "R16",
+      "home": "Portugal",
+      "away": "Spain",
+      "homeGoals": 0,
+      "awayGoals": 1,
+      "venue": "Dallas Stadium",
+      "utcDate": "2026-07-06T19:00:00Z",
+      "goals": [
+        {
+          "minute": "90'+1'",
+          "order": 90.01,
+          "player": "Mikel Merino",
+          "team": "Spain",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Spain see off Portugal",
+      "summary": "Spain edges past Portugal with a dramatic last-minute goal from Mikel Merino in stoppage time, sealing a 1-0 victory in the Round of 16. The Iberian rivals clash fiercely, but Spain advances to the quarterfinals, showcasing their resilience and tactical prowess in Dallas Stadium.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Portugal\",\"Spain\",0,1,[[\"90'+1'\",\"Mikel Merino\",\"Spain\",\"away\",false,false]]]"
     },
     "400021530": {
       "id": "400021530",
