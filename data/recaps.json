@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-05T22:08:57.180Z",
-  "count": 19,
+  "generatedAt": "2026-07-06T03:30:13.984Z",
+  "count": 20,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -870,6 +870,53 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Canada\",\"Morocco\",0,3,[[\"50'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"82'\",\"Azzedine Ounahi\",\"Morocco\",\"away\",false,false],[\"90'+8'\",\"Soufiane Rahimi\",\"Morocco\",\"away\",false,false]]]"
+    },
+    "400021531": {
+      "id": "400021531",
+      "round": "R16",
+      "home": "Mexico",
+      "away": "England",
+      "homeGoals": 2,
+      "awayGoals": 3,
+      "venue": "Mexico City Stadium",
+      "utcDate": "2026-07-06T01:00:00Z",
+      "goals": [
+        {
+          "minute": "36'",
+          "order": 36,
+          "player": "Jude Bellingham",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "38'",
+          "order": 38,
+          "player": "Jude Bellingham",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "42'",
+          "order": 42,
+          "player": "Julian Quinones",
+          "team": "Mexico",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [
+        "Jarell QUANSAH (England) is sent off!"
+      ],
+      "headline": "England see off Mexico",
+      "summary": "England edges past Mexico 3-2 in a thrilling Round of 16 clash at the Mexico City Stadium. Jude Bellingham scores twice in quick succession before Julian Quinones pulls one back for Mexico. Despite Jarell Quansah's red card, England holds on to secure their spot in the quarter-finals.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Mexico\",\"England\",2,3,[[\"36'\",\"Jude Bellingham\",\"England\",\"away\",false,false],[\"38'\",\"Jude Bellingham\",\"England\",\"away\",false,false],[\"42'\",\"Julian Quinones\",\"Mexico\",\"home\",false,false]]]"
     },
     "400021532": {
       "id": "400021532",
