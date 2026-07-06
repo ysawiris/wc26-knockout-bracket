@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-06T21:03:23.339Z",
+  "fetchedAt": "2026-07-06T23:37:23.089Z",
   "matchCount": 31,
   "matches": [
     {
@@ -310,7 +310,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T00:00:00Z",
       "venue": "Seattle Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021528",
