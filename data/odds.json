@@ -1,33 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-05T21:20:29.464Z",
-  "matchCount": 7,
+  "fetchedAt": "2026-07-06T04:40:17.792Z",
+  "matchCount": 6,
   "lines": [
-    {
-      "espnId": "760504",
-      "date": "2026-07-05",
-      "home": "Brazil",
-      "away": "Norway",
-      "homeRaw": "Brazil",
-      "awayRaw": "Norway",
-      "line": 2.5,
-      "overUS": "-150",
-      "underUS": "+120",
-      "impliedTotal": 2.97
-    },
-    {
-      "espnId": "760505",
-      "date": "2026-07-05",
-      "home": "Mexico",
-      "away": "England",
-      "homeRaw": "Mexico",
-      "awayRaw": "England",
-      "line": 2.5,
-      "overUS": "+140",
-      "underUS": "-175",
-      "impliedTotal": 2.27
-    },
     {
       "espnId": "760506",
       "date": "2026-07-06",
@@ -36,9 +12,9 @@
       "homeRaw": "Portugal",
       "awayRaw": "Spain",
       "line": 2.5,
-      "overUS": "-135",
-      "underUS": "+110",
-      "impliedTotal": 2.87
+      "overUS": "-125",
+      "underUS": "+100",
+      "impliedTotal": 2.78
     },
     {
       "espnId": "760507",
@@ -48,9 +24,9 @@
       "homeRaw": "United States",
       "awayRaw": "Belgium",
       "line": 2.5,
-      "overUS": "-150",
+      "overUS": "-145",
       "underUS": "+120",
-      "impliedTotal": 2.97
+      "impliedTotal": 2.95
     },
     {
       "espnId": "760509",
@@ -60,9 +36,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Egypt",
       "line": 2.5,
-      "overUS": "+100",
-      "underUS": "-125",
-      "impliedTotal": 2.57
+      "overUS": "+105",
+      "underUS": "-130",
+      "impliedTotal": 2.53
     },
     {
       "espnId": "760508",
@@ -85,8 +61,20 @@
       "awayRaw": "Morocco",
       "line": 2.5,
       "overUS": "+100",
-      "underUS": "-120",
-      "impliedTotal": 2.59
+      "underUS": "-125",
+      "impliedTotal": 2.57
+    },
+    {
+      "espnId": "760512",
+      "date": "2026-07-11",
+      "home": "Norway",
+      "away": "England",
+      "homeRaw": "Norway",
+      "awayRaw": "England",
+      "line": 2.5,
+      "overUS": "-110",
+      "underUS": "-115",
+      "impliedTotal": 2.65
     }
   ]
 }
