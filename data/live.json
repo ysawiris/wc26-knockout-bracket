@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-06T19:15:00.155Z",
+  "fetchedAt": "2026-07-06T21:03:23.339Z",
   "matchCount": 31,
   "matches": [
     {
@@ -287,16 +287,16 @@
     {
       "id": "400021529",
       "round": "Round of 16",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Portugal",
       "away": "Spain",
       "homeGoals": 0,
-      "awayGoals": 0,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-06T19:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "15'"
+      "minute": "99'"
     },
     {
       "id": "400021534",
@@ -358,7 +358,7 @@
       "id": "400021538",
       "round": "Quarter-final",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Spain",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
