@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-05T22:43:08.443Z",
+  "fetchedAt": "2026-07-06T01:28:40.326Z",
   "matchCount": 31,
   "matches": [
     {
@@ -273,16 +273,16 @@
     {
       "id": "400021531",
       "round": "Round of 16",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Mexico",
       "away": "England",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
-      "utcDate": "2026-07-06T00:00:00Z",
+      "utcDate": "2026-07-06T01:00:00Z",
       "venue": "Mexico City Stadium",
-      "minute": "0'"
+      "minute": "28'"
     },
     {
       "id": "400021529",
