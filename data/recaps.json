@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-07T19:54:28.043Z",
-  "count": 23,
+  "generatedAt": "2026-07-07T23:57:22.135Z",
+  "count": 24,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1125,6 +1125,80 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"United States\",\"Belgium\",1,4,[[\"0'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"31'\",\"Malik Tillman\",\"United States\",\"home\",false,false],[\"33'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"57'\",\"Hans Vanaken\",\"Belgium\",\"away\",false,false],[\"90'+3'\",\"Romelu Lukaku\",\"Belgium\",\"away\",false,false]]]"
+    },
+    "400021535": {
+      "id": "400021535",
+      "round": "R16",
+      "home": "Switzerland",
+      "away": "Colombia",
+      "homeGoals": 0,
+      "awayGoals": 0,
+      "venue": "BC Place Vancouver",
+      "utcDate": "2026-07-07T20:00:00Z",
+      "goals": [],
+      "reds": [],
+      "shootout": {
+        "home": 4,
+        "away": 3,
+        "winner": "home",
+        "kicks": [
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Juan Quintero"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Granit Xhaka"
+          },
+          {
+            "side": "away",
+            "scored": false,
+            "player": "Davinson Sanchez"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Zeki Amdouni"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Jaminton Campaz"
+          },
+          {
+            "side": "home",
+            "scored": false,
+            "player": "Manuel Akanji"
+          },
+          {
+            "side": "away",
+            "scored": false,
+            "player": "Cucho Hernandez"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Cedric Itten"
+          },
+          {
+            "side": "away",
+            "scored": true,
+            "player": "Luis Diaz"
+          },
+          {
+            "side": "home",
+            "scored": true,
+            "player": "Ruben Vargas"
+          }
+        ]
+      },
+      "headline": "Switzerland win 4–3 on penalties",
+      "summary": "Switzerland and Colombia battle to a tense 0-0 draw, pushing the match to penalties. Switzerland clinches victory, winning the shootout 4-3, and advances to the quarterfinals. A thrilling display of skill and nerve defines this knockout clash!",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Switzerland\",\"Colombia\",0,0,[],[4,3,[[\"away\",true],[\"home\",true],[\"away\",false],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",true],[\"away\",true],[\"home\",true]]]]"
     }
   }
 }
