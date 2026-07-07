@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-07T18:21:08.069Z",
+  "fetchedAt": "2026-07-07T21:42:40.399Z",
   "matchCount": 4,
   "lines": [
     {
@@ -25,8 +25,8 @@
       "awayRaw": "Morocco",
       "line": 2.5,
       "overUS": "-105",
-      "underUS": "-120",
-      "impliedTotal": 2.61
+      "underUS": "-115",
+      "impliedTotal": 2.63
     },
     {
       "espnId": "760511",
@@ -48,9 +48,9 @@
       "homeRaw": "Norway",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "-135",
+      "overUS": "-140",
       "underUS": "+110",
-      "impliedTotal": 2.87
+      "impliedTotal": 2.89
     }
   ]
 }
