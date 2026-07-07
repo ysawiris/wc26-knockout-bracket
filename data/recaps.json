@@ -1,6 +1,6 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-07T05:37:05.230Z",
+  "generatedAt": "2026-07-07T17:33:22.631Z",
   "count": 22,
   "byId": {
     "400021512": {
@@ -1009,8 +1009,8 @@
       "utcDate": "2026-07-07T00:00:00Z",
       "goals": [
         {
-          "minute": "9'",
-          "order": 9,
+          "minute": "0'",
+          "order": 0,
           "player": "Charles De Ketelaere",
           "team": "Belgium",
           "side": "away",
@@ -1056,10 +1056,10 @@
       ],
       "reds": [],
       "headline": "Belgium see off United States",
-      "summary": "Belgium dominates the United States 4-1 in the Round of 16, with Charles De Ketelaere scoring twice and Hans Vanaken adding another. Malik Tillman briefly equalizes for the U.S. before Romelu Lukaku seals the victory in stoppage time. Belgium advances to the quarter-finals with a commanding performance.",
+      "summary": "Belgium dominates the United States 4-1 in the Round of 16, with Charles De Ketelaere netting twice early on. Malik Tillman briefly equalizes, but Belgium pulls away with goals from Hans Vanaken and Romelu Lukaku, sealing their spot in the quarterfinals.",
       "ai": true,
       "aiVia": "GitHub Models",
-      "fingerprint": "[\"United States\",\"Belgium\",1,4,[[\"9'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"31'\",\"Malik Tillman\",\"United States\",\"home\",false,false],[\"33'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"57'\",\"Hans Vanaken\",\"Belgium\",\"away\",false,false],[\"90'+3'\",\"Romelu Lukaku\",\"Belgium\",\"away\",false,false]]]"
+      "fingerprint": "[\"United States\",\"Belgium\",1,4,[[\"0'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"31'\",\"Malik Tillman\",\"United States\",\"home\",false,false],[\"33'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"57'\",\"Hans Vanaken\",\"Belgium\",\"away\",false,false],[\"90'+3'\",\"Romelu Lukaku\",\"Belgium\",\"away\",false,false]]]"
     }
   }
 }
