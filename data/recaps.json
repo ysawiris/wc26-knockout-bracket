@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-06T21:55:08.126Z",
-  "count": 21,
+  "generatedAt": "2026-07-07T05:37:05.230Z",
+  "count": 22,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -997,6 +997,69 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Paraguay\",\"France\",0,1,[]]"
+    },
+    "400021534": {
+      "id": "400021534",
+      "round": "R16",
+      "home": "United States",
+      "away": "Belgium",
+      "homeGoals": 1,
+      "awayGoals": 4,
+      "venue": "Seattle Stadium",
+      "utcDate": "2026-07-07T00:00:00Z",
+      "goals": [
+        {
+          "minute": "9'",
+          "order": 9,
+          "player": "Charles De Ketelaere",
+          "team": "Belgium",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "31'",
+          "order": 31,
+          "player": "Malik Tillman",
+          "team": "United States",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "33'",
+          "order": 33,
+          "player": "Charles De Ketelaere",
+          "team": "Belgium",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "57'",
+          "order": 57,
+          "player": "Hans Vanaken",
+          "team": "Belgium",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+3'",
+          "order": 90.03,
+          "player": "Romelu Lukaku",
+          "team": "Belgium",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Belgium see off United States",
+      "summary": "Belgium dominates the United States 4-1 in the Round of 16, with Charles De Ketelaere scoring twice and Hans Vanaken adding another. Malik Tillman briefly equalizes for the U.S. before Romelu Lukaku seals the victory in stoppage time. Belgium advances to the quarter-finals with a commanding performance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"United States\",\"Belgium\",1,4,[[\"9'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"31'\",\"Malik Tillman\",\"United States\",\"home\",false,false],[\"33'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"57'\",\"Hans Vanaken\",\"Belgium\",\"away\",false,false],[\"90'+3'\",\"Romelu Lukaku\",\"Belgium\",\"away\",false,false]]]"
     }
   }
 }
