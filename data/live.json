@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-07T20:29:39.665Z",
+  "fetchedAt": "2026-07-07T21:55:53.021Z",
   "matchCount": 31,
   "matches": [
     {
@@ -338,7 +338,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T20:00:00Z",
       "venue": "BC Place Vancouver",
-      "minute": "29'"
+      "minute": null
     },
     {
       "id": "400021536",
