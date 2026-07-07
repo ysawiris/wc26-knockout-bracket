@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-07T17:33:22.631Z",
-  "count": 22,
+  "generatedAt": "2026-07-07T19:54:28.043Z",
+  "count": 23,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -825,6 +825,71 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Switzerland\",\"Algeria\",2,0,[[\"10'\",\"Breel Embolo\",\"Switzerland\",\"home\",false,false],[\"46'\",\"Dan Ndoye\",\"Switzerland\",\"home\",false,false]]]"
+    },
+    "400021528": {
+      "id": "400021528",
+      "round": "R16",
+      "home": "Argentina",
+      "away": "Egypt",
+      "homeGoals": 3,
+      "awayGoals": 2,
+      "venue": "Atlanta Stadium",
+      "utcDate": "2026-07-07T16:00:00Z",
+      "goals": [
+        {
+          "minute": "15'",
+          "order": 15,
+          "player": "Yasser Ibrahim",
+          "team": "Egypt",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "67'",
+          "order": 67,
+          "player": "Mostafa Zico",
+          "team": "Egypt",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "79'",
+          "order": 79,
+          "player": "Cristian Romero",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "83'",
+          "order": 83,
+          "player": "Lionel Messi",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+2'",
+          "order": 90.02,
+          "player": "Enzo Fernandez",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [
+        "SAAFAN ELSAGHIR (Staff) (Egypt) is sent off!"
+      ],
+      "headline": "Argentina see off Egypt",
+      "summary": "Argentina rallies to defeat Egypt 3-2 in a thrilling Round of 16 clash at Atlanta Stadium. Yasser Ibrahim and Mostafa Zico score for Egypt, but Cristian Romero, Lionel Messi, and Enzo Fernandez strike back for Argentina, sealing their place in the quarterfinals. Egypt's Saafan Elsaghir receives a red card, adding to their woes.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Argentina\",\"Egypt\",3,2,[[\"15'\",\"Yasser Ibrahim\",\"Egypt\",\"away\",false,false],[\"67'\",\"Mostafa Zico\",\"Egypt\",\"away\",false,false],[\"79'\",\"Cristian Romero\",\"Argentina\",\"home\",false,false],[\"83'\",\"Lionel Messi\",\"Argentina\",\"home\",false,false],[\"90'+2'\",\"Enzo Fernandez\",\"Argentina\",\"home\",false,false]]]"
     },
     "400021529": {
       "id": "400021529",
