@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-07T16:31:10.632Z",
+  "fetchedAt": "2026-07-07T18:34:17.242Z",
   "matchCount": 31,
   "matches": [
     {
@@ -315,16 +315,16 @@
     {
       "id": "400021528",
       "round": "Round of 16",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Argentina",
       "away": "Egypt",
-      "homeGoals": 0,
-      "awayGoals": 1,
+      "homeGoals": 3,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-07T16:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": "29'"
+      "minute": "102'"
     },
     {
       "id": "400021535",
@@ -338,7 +338,7 @@
       "awayPens": null,
       "utcDate": "2026-07-07T20:00:00Z",
       "venue": "BC Place Vancouver",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021536",
@@ -386,7 +386,7 @@
       "id": "400021537",
       "round": "Quarter-final",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "Argentina",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
