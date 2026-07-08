@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-08T17:52:28.065Z",
+  "fetchedAt": "2026-07-08T21:32:04.717Z",
   "matchCount": 4,
   "lines": [
     {
@@ -36,9 +36,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Switzerland",
       "line": 2.5,
-      "overUS": "+120",
-      "underUS": "-150",
-      "impliedTotal": 2.4
+      "overUS": "+125",
+      "underUS": "-155",
+      "impliedTotal": 2.37
     },
     {
       "espnId": "760512",
