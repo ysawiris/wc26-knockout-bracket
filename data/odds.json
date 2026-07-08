@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-08T14:41:50.386Z",
+  "fetchedAt": "2026-07-08T17:52:28.065Z",
   "matchCount": 4,
   "lines": [
     {
@@ -48,9 +48,9 @@
       "homeRaw": "Norway",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "-140",
-      "underUS": "+115",
-      "impliedTotal": 2.91
+      "overUS": "-130",
+      "underUS": "+105",
+      "impliedTotal": 2.83
     }
   ]
 }
