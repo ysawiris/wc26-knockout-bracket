@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-08T21:32:04.717Z",
+  "fetchedAt": "2026-07-09T07:54:59.842Z",
   "matchCount": 4,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "Morocco",
       "line": 2.5,
-      "overUS": "-105",
+      "overUS": "+100",
       "underUS": "-120",
-      "impliedTotal": 2.61
+      "impliedTotal": 2.59
     },
     {
       "espnId": "760511",
