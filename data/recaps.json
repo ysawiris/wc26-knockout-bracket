@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-07T23:57:22.135Z",
-  "count": 24,
+  "generatedAt": "2026-07-09T22:49:56.994Z",
+  "count": 25,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1199,6 +1199,42 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Switzerland\",\"Colombia\",0,0,[],[4,3,[[\"away\",true],[\"home\",true],[\"away\",false],[\"home\",true],[\"away\",true],[\"home\",false],[\"away\",false],[\"home\",true],[\"away\",true],[\"home\",true]]]]"
+    },
+    "400021536": {
+      "id": "400021536",
+      "round": "QF",
+      "home": "France",
+      "away": "Morocco",
+      "homeGoals": 2,
+      "awayGoals": 0,
+      "venue": "Boston Stadium",
+      "utcDate": "2026-07-09T20:00:00Z",
+      "goals": [
+        {
+          "minute": "60'",
+          "order": 60,
+          "player": "Kylian Mbappe",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "66'",
+          "order": 66,
+          "player": "Ousmane Dembele",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "France see off Morocco",
+      "summary": "France dispatches Morocco 2-0 in the quarterfinals at Boston Stadium. Kylian Mbappe opens the scoring in the 60th minute, followed by Ousmane Dembele's strike just six minutes later. With this victory, France advances to the semifinals.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"France\",\"Morocco\",2,0,[[\"60'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"66'\",\"Ousmane Dembele\",\"France\",\"home\",false,false]]]"
     }
   }
 }
