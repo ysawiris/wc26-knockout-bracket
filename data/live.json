@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-09T20:18:03.349Z",
+  "fetchedAt": "2026-07-09T21:51:44.605Z",
   "matchCount": 31,
   "matches": [
     {
@@ -346,13 +346,13 @@
       "status": "IN_PLAY",
       "home": "France",
       "away": "Morocco",
-      "homeGoals": 0,
+      "homeGoals": 2,
       "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-09T20:00:00Z",
       "venue": "Boston Stadium",
-      "minute": "17'"
+      "minute": "87'"
     },
     {
       "id": "400021538",
