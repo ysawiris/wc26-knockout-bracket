@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-09T21:46:26.849Z",
-  "matchCount": 4,
+  "fetchedAt": "2026-07-10T04:15:40.684Z",
+  "matchCount": 3,
   "lines": [
-    {
-      "espnId": "760510",
-      "date": "2026-07-09",
-      "home": "France",
-      "away": "Morocco",
-      "homeRaw": "France",
-      "awayRaw": "Morocco",
-      "line": 2.5,
-      "overUS": "+100",
-      "underUS": "-125",
-      "impliedTotal": 2.57
-    },
     {
       "espnId": "760511",
       "date": "2026-07-10",
@@ -24,9 +12,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Belgium",
       "line": 2.5,
-      "overUS": "-130",
-      "underUS": "+105",
-      "impliedTotal": 2.83
+      "overUS": "-125",
+      "underUS": "+100",
+      "impliedTotal": 2.78
     },
     {
       "espnId": "760513",
