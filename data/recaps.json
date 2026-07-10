@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-09T22:49:56.994Z",
-  "count": 25,
+  "generatedAt": "2026-07-10T22:02:18.994Z",
+  "count": 26,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1235,6 +1235,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"Morocco\",2,0,[[\"60'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"66'\",\"Ousmane Dembele\",\"France\",\"home\",false,false]]]"
+    },
+    "400021538": {
+      "id": "400021538",
+      "round": "QF",
+      "home": "Spain",
+      "away": "Belgium",
+      "homeGoals": 2,
+      "awayGoals": 1,
+      "venue": "Los Angeles Stadium",
+      "utcDate": "2026-07-10T19:00:00Z",
+      "goals": [
+        {
+          "minute": "30'",
+          "order": 30,
+          "player": "Fabian Ruiz",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "41'",
+          "order": 41,
+          "player": "Charles De Ketelaere",
+          "team": "Belgium",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "88'",
+          "order": 88,
+          "player": "Mikel Merino",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Spain see off Belgium",
+      "summary": "Spain edges past Belgium 2-1 in a thrilling quarterfinal at Los Angeles Stadium. Fabian Ruiz opens the scoring at 30 minutes, but Charles De Ketelaere equalizes just before halftime. Mikel Merino nets the winner in the 88th minute, sending Spain to the semifinals.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Spain\",\"Belgium\",2,1,[[\"30'\",\"Fabian Ruiz\",\"Spain\",\"home\",false,false],[\"41'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"88'\",\"Mikel Merino\",\"Spain\",\"home\",false,false]]]"
     }
   }
 }
