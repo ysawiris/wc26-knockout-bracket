@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-10T19:09:58.282Z",
+  "fetchedAt": "2026-07-10T20:42:27.964Z",
   "matchCount": 31,
   "matches": [
     {
@@ -360,13 +360,13 @@
       "status": "IN_PLAY",
       "home": "Spain",
       "away": "Belgium",
-      "homeGoals": 0,
-      "awayGoals": 0,
+      "homeGoals": 1,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-10T19:00:00Z",
       "venue": "Los Angeles Stadium",
-      "minute": "9'"
+      "minute": "80'"
     },
     {
       "id": "400021539",
