@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-10T08:00:05.512Z",
+  "fetchedAt": "2026-07-10T11:14:09.093Z",
   "matchCount": 31,
   "matches": [
     {
@@ -366,7 +366,7 @@
       "awayPens": null,
       "utcDate": "2026-07-10T19:00:00Z",
       "venue": "Los Angeles Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021539",
@@ -380,7 +380,7 @@
       "awayPens": null,
       "utcDate": "2026-07-11T21:00:00Z",
       "venue": "Miami Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021537",
@@ -394,7 +394,7 @@
       "awayPens": null,
       "utcDate": "2026-07-12T01:00:00Z",
       "venue": "Kansas City Stadium",
-      "minute": "0'"
+      "minute": null
     },
     {
       "id": "400021541",
