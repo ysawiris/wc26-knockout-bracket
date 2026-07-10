@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-10T20:42:27.964Z",
+  "fetchedAt": "2026-07-10T21:44:08.100Z",
   "matchCount": 31,
   "matches": [
     {
@@ -357,16 +357,16 @@
     {
       "id": "400021538",
       "round": "Quarter-final",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Spain",
       "away": "Belgium",
-      "homeGoals": 1,
+      "homeGoals": 2,
       "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-10T19:00:00Z",
       "venue": "Los Angeles Stadium",
-      "minute": "80'"
+      "minute": "98'"
     },
     {
       "id": "400021539",
@@ -401,7 +401,7 @@
       "round": "Semi-final",
       "status": "TIMED",
       "home": "France",
-      "away": "TBD",
+      "away": "Spain",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
