@@ -1,21 +1,9 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-10T18:02:41.963Z",
-  "matchCount": 3,
+  "fetchedAt": "2026-07-10T21:28:35.501Z",
+  "matchCount": 2,
   "lines": [
-    {
-      "espnId": "760511",
-      "date": "2026-07-10",
-      "home": "Spain",
-      "away": "Belgium",
-      "homeRaw": "Spain",
-      "awayRaw": "Belgium",
-      "line": 2.5,
-      "overUS": "-140",
-      "underUS": "+110",
-      "impliedTotal": 2.89
-    },
     {
       "espnId": "760513",
       "date": "2026-07-11",
