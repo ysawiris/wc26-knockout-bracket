@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-11T21:04:03.346Z",
+  "fetchedAt": "2026-07-11T22:02:48.531Z",
   "matchCount": 31,
   "matches": [
     {
@@ -374,13 +374,13 @@
       "status": "IN_PLAY",
       "home": "Norway",
       "away": "England",
-      "homeGoals": 0,
-      "awayGoals": 0,
+      "homeGoals": 1,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-11T21:00:00Z",
       "venue": "Miami Stadium",
-      "minute": "2'"
+      "minute": null
     },
     {
       "id": "400021537",
