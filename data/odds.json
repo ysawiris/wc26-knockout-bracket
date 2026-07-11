@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-11T13:55:22.256Z",
+  "fetchedAt": "2026-07-11T17:16:41.359Z",
   "matchCount": 3,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Argentina",
       "awayRaw": "Switzerland",
       "line": 2.5,
-      "overUS": "+125",
-      "underUS": "-155",
-      "impliedTotal": 2.37
+      "overUS": "+130",
+      "underUS": "-160",
+      "impliedTotal": 2.34
     },
     {
       "espnId": "760512",
@@ -24,9 +24,9 @@
       "homeRaw": "Norway",
       "awayRaw": "England",
       "line": 2.5,
-      "overUS": "-150",
+      "overUS": "-145",
       "underUS": "+120",
-      "impliedTotal": 2.97
+      "impliedTotal": 2.95
     },
     {
       "espnId": "760514",
