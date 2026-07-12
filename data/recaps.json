@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-10T22:02:18.994Z",
-  "count": 26,
+  "generatedAt": "2026-07-12T01:05:20.324Z",
+  "count": 27,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1280,6 +1280,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Spain\",\"Belgium\",2,1,[[\"30'\",\"Fabian Ruiz\",\"Spain\",\"home\",false,false],[\"41'\",\"Charles De Ketelaere\",\"Belgium\",\"away\",false,false],[\"88'\",\"Mikel Merino\",\"Spain\",\"home\",false,false]]]"
+    },
+    "400021539": {
+      "id": "400021539",
+      "round": "QF",
+      "home": "Norway",
+      "away": "England",
+      "homeGoals": 1,
+      "awayGoals": 2,
+      "venue": "Miami Stadium",
+      "utcDate": "2026-07-11T21:00:00Z",
+      "goals": [
+        {
+          "minute": "36'",
+          "order": 36,
+          "player": "Andreas Schjelderup",
+          "team": "Norway",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "45'+2'",
+          "order": 45.02,
+          "player": "Jude Bellingham",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "93'",
+          "order": 93,
+          "player": "Jude Bellingham",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "England see off Norway",
+      "summary": "In a thrilling quarterfinal clash, England edges past Norway 2-1 in Miami. Andreas Schjelderup opens the scoring for Norway, but Jude Bellingham strikes twice, equalizing just before halftime and netting the winner in stoppage time. England advances to the semifinals, showcasing Bellingham's brilliance on the world stage.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Norway\",\"England\",1,2,[[\"36'\",\"Andreas Schjelderup\",\"Norway\",\"home\",false,false],[\"45'+2'\",\"Jude Bellingham\",\"England\",\"away\",false,false],[\"93'\",\"Jude Bellingham\",\"England\",\"away\",false,false]]]"
     }
   }
 }
