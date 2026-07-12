@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-12T01:05:20.324Z",
-  "count": 27,
+  "generatedAt": "2026-07-12T04:52:32.348Z",
+  "count": 28,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1235,6 +1235,60 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"Morocco\",2,0,[[\"60'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"66'\",\"Ousmane Dembele\",\"France\",\"home\",false,false]]]"
+    },
+    "400021537": {
+      "id": "400021537",
+      "round": "QF",
+      "home": "Argentina",
+      "away": "Switzerland",
+      "homeGoals": 3,
+      "awayGoals": 1,
+      "venue": "Kansas City Stadium",
+      "utcDate": "2026-07-12T01:00:00Z",
+      "goals": [
+        {
+          "minute": "10'",
+          "order": 10,
+          "player": "Alexis Mac Allister",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "67'",
+          "order": 67,
+          "player": "Dan Ndoye",
+          "team": "Switzerland",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "112'",
+          "order": 112,
+          "player": "Julian Alvarez",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "120'+1'",
+          "order": 120.01,
+          "player": "Lautaro Martinez",
+          "team": "Argentina",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Argentina see off Switzerland",
+      "summary": "Argentina powers through to the semifinals with a 3-1 victory over Switzerland in Kansas City. Alexis Mac Allister opens the scoring early, while Dan Ndoye equalizes for Switzerland. Julian Alvarez and Lautaro Martinez seal the win in extra time, sending Argentina to the next round.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Argentina\",\"Switzerland\",3,1,[[\"10'\",\"Alexis Mac Allister\",\"Argentina\",\"home\",false,false],[\"67'\",\"Dan Ndoye\",\"Switzerland\",\"away\",false,false],[\"112'\",\"Julian Alvarez\",\"Argentina\",\"home\",false,false],[\"120'+1'\",\"Lautaro Martinez\",\"Argentina\",\"home\",false,false]]]"
     },
     "400021538": {
       "id": "400021538",
