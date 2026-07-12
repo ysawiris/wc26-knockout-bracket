@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-12T00:06:24.765Z",
+  "fetchedAt": "2026-07-12T03:51:58.446Z",
   "matchCount": 31,
   "matches": [
     {
@@ -385,16 +385,16 @@
     {
       "id": "400021537",
       "round": "Quarter-final",
-      "status": "TIMED",
+      "status": "FINISHED",
       "home": "Argentina",
       "away": "Switzerland",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 3,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-12T01:00:00Z",
       "venue": "Kansas City Stadium",
-      "minute": "0'"
+      "minute": "125'"
     },
     {
       "id": "400021541",
@@ -415,7 +415,7 @@
       "round": "Semi-final",
       "status": "TIMED",
       "home": "England",
-      "away": "TBD",
+      "away": "Argentina",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
