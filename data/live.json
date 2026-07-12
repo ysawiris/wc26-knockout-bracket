@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-11T22:02:48.531Z",
+  "fetchedAt": "2026-07-12T00:06:24.765Z",
   "matchCount": 31,
   "matches": [
     {
@@ -371,16 +371,16 @@
     {
       "id": "400021539",
       "round": "Quarter-final",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "Norway",
       "away": "England",
       "homeGoals": 1,
-      "awayGoals": 1,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-11T21:00:00Z",
       "venue": "Miami Stadium",
-      "minute": null
+      "minute": "123'"
     },
     {
       "id": "400021537",
@@ -394,7 +394,7 @@
       "awayPens": null,
       "utcDate": "2026-07-12T01:00:00Z",
       "venue": "Kansas City Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021541",
@@ -414,7 +414,7 @@
       "id": "400021540",
       "round": "Semi-final",
       "status": "TIMED",
-      "home": "TBD",
+      "home": "England",
       "away": "TBD",
       "homeGoals": null,
       "awayGoals": null,
