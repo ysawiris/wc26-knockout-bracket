@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-14T18:51:42.600Z",
+  "fetchedAt": "2026-07-14T20:08:48.452Z",
   "matchCount": 32,
   "matches": [
     {
@@ -399,16 +399,16 @@
     {
       "id": "400021541",
       "round": "Semi-final",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "France",
       "away": "Spain",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 1,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-14T19:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": "0'"
+      "minute": "46'"
     },
     {
       "id": "400021540",
