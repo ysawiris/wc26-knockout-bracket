@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-12T04:52:32.348Z",
-  "count": 28,
+  "generatedAt": "2026-07-14T21:57:28.523Z",
+  "count": 29,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1379,6 +1379,33 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Norway\",\"England\",1,2,[[\"36'\",\"Andreas Schjelderup\",\"Norway\",\"home\",false,false],[\"45'+2'\",\"Jude Bellingham\",\"England\",\"away\",false,false],[\"93'\",\"Jude Bellingham\",\"England\",\"away\",false,false]]]"
+    },
+    "400021541": {
+      "id": "400021541",
+      "round": "SF",
+      "home": "France",
+      "away": "Spain",
+      "homeGoals": 0,
+      "awayGoals": 2,
+      "venue": "Dallas Stadium",
+      "utcDate": "2026-07-14T19:00:00Z",
+      "goals": [
+        {
+          "minute": "58'",
+          "order": 58,
+          "player": "Pedro Porro",
+          "team": "Spain",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Spain see off France",
+      "summary": "In a thrilling semifinal at Dallas Stadium, Spain secures their spot in the World Cup final with a 2-0 victory over France. Pedro Porro opens the scoring in the 58th minute, followed by a late goal from Alvaro Morata. Spain's solid defense keeps the French attack at bay, sealing their advance.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"France\",\"Spain\",0,2,[[\"58'\",\"Pedro Porro\",\"Spain\",\"away\",false,false]]]"
     }
   }
 }
