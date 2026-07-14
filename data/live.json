@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-14T08:37:26.165Z",
+  "fetchedAt": "2026-07-14T17:46:08.436Z",
   "matchCount": 31,
   "matches": [
     {
@@ -408,7 +408,7 @@
       "awayPens": null,
       "utcDate": "2026-07-14T19:00:00Z",
       "venue": "Dallas Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021540",
