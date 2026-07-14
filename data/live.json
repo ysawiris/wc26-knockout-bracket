@@ -1,8 +1,8 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-14T17:46:08.436Z",
-  "matchCount": 31,
+  "fetchedAt": "2026-07-14T18:51:42.600Z",
+  "matchCount": 32,
   "matches": [
     {
       "id": "400021518",
@@ -422,6 +422,20 @@
       "awayPens": null,
       "utcDate": "2026-07-15T19:00:00Z",
       "venue": "Atlanta Stadium",
+      "minute": null
+    },
+    {
+      "id": "400021542",
+      "round": "Bronze final",
+      "status": "TIMED",
+      "home": "TBD",
+      "away": "TBD",
+      "homeGoals": null,
+      "awayGoals": null,
+      "homePens": null,
+      "awayPens": null,
+      "utcDate": "2026-07-18T21:00:00Z",
+      "venue": "Miami Stadium",
       "minute": null
     },
     {
