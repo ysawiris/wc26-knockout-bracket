@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-15T19:22:05.607Z",
+  "fetchedAt": "2026-07-15T20:32:11.824Z",
   "matchCount": 32,
   "matches": [
     {
@@ -416,13 +416,13 @@
       "status": "IN_PLAY",
       "home": "England",
       "away": "Argentina",
-      "homeGoals": 0,
+      "homeGoals": 1,
       "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-15T19:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": "22'"
+      "minute": "69'"
     },
     {
       "id": "400021542",
