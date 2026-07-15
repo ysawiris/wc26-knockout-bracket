@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-14T21:57:28.523Z",
-  "count": 29,
+  "generatedAt": "2026-07-15T22:00:04.518Z",
+  "count": 30,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1379,6 +1379,51 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"Norway\",\"England\",1,2,[[\"36'\",\"Andreas Schjelderup\",\"Norway\",\"home\",false,false],[\"45'+2'\",\"Jude Bellingham\",\"England\",\"away\",false,false],[\"93'\",\"Jude Bellingham\",\"England\",\"away\",false,false]]]"
+    },
+    "400021540": {
+      "id": "400021540",
+      "round": "SF",
+      "home": "England",
+      "away": "Argentina",
+      "homeGoals": 1,
+      "awayGoals": 2,
+      "venue": "Atlanta Stadium",
+      "utcDate": "2026-07-15T19:00:00Z",
+      "goals": [
+        {
+          "minute": "55'",
+          "order": 55,
+          "player": "Anthony Gordon",
+          "team": "England",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "85'",
+          "order": 85,
+          "player": "Enzo Fernandez",
+          "team": "Argentina",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+2'",
+          "order": 90.02,
+          "player": "Lautaro Martinez",
+          "team": "Argentina",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Argentina see off England",
+      "summary": "In a thrilling semifinal at Atlanta Stadium, Argentina edges past England 2-1. Anthony Gordon opens the scoring for England in the 55th minute, but Enzo Fernandez equalizes in the 85th before Lautaro Martinez clinches victory with a dramatic goal in stoppage time. Argentina advances to the final, showcasing their resilience and flair.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"England\",\"Argentina\",1,2,[[\"55'\",\"Anthony Gordon\",\"England\",\"home\",false,false],[\"85'\",\"Enzo Fernandez\",\"Argentina\",\"away\",false,false],[\"90'+2'\",\"Lautaro Martinez\",\"Argentina\",\"away\",false,false]]]"
     },
     "400021541": {
       "id": "400021541",
