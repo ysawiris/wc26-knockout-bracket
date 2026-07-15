@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-15T20:32:11.824Z",
+  "fetchedAt": "2026-07-15T21:34:37.140Z",
   "matchCount": 32,
   "matches": [
     {
@@ -413,23 +413,23 @@
     {
       "id": "400021540",
       "round": "Semi-final",
-      "status": "IN_PLAY",
+      "status": "FINISHED",
       "home": "England",
       "away": "Argentina",
       "homeGoals": 1,
-      "awayGoals": 0,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-15T19:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": "69'"
+      "minute": "102'"
     },
     {
       "id": "400021542",
       "round": "Bronze final",
       "status": "TIMED",
       "home": "France",
-      "away": "TBD",
+      "away": "England",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
@@ -443,7 +443,7 @@
       "round": "Final",
       "status": "TIMED",
       "home": "Spain",
-      "away": "TBD",
+      "away": "Argentina",
       "homeGoals": null,
       "awayGoals": null,
       "homePens": null,
