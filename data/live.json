@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-15T10:16:57.695Z",
+  "fetchedAt": "2026-07-15T17:58:30.452Z",
   "matchCount": 32,
   "matches": [
     {
@@ -422,7 +422,7 @@
       "awayPens": null,
       "utcDate": "2026-07-15T19:00:00Z",
       "venue": "Atlanta Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021542",
