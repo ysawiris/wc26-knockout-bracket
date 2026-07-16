@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-16T14:24:29.070Z",
+  "fetchedAt": "2026-07-16T17:41:13.028Z",
   "matchCount": 2,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "France",
       "awayRaw": "England",
       "line": 3.5,
-      "overUS": "+115",
-      "underUS": "-140",
-      "impliedTotal": 3.41
+      "overUS": "+110",
+      "underUS": "-135",
+      "impliedTotal": 3.45
     },
     {
       "espnId": "760517",
@@ -24,9 +24,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Argentina",
       "line": 2.5,
-      "overUS": "+135",
-      "underUS": "-170",
-      "impliedTotal": 2.3
+      "overUS": "+130",
+      "underUS": "-165",
+      "impliedTotal": 2.33
     }
   ]
 }
