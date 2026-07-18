@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-18T19:47:56.752Z",
+  "fetchedAt": "2026-07-18T21:31:43.605Z",
   "matchCount": 32,
   "matches": [
     {
@@ -427,16 +427,16 @@
     {
       "id": "400021542",
       "round": "Bronze final",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "France",
       "away": "England",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 2,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-18T21:00:00Z",
       "venue": "Miami Stadium",
-      "minute": "0'"
+      "minute": "32'"
     },
     {
       "id": "400021543",
