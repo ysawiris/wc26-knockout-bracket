@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-15T22:00:04.518Z",
-  "count": 30,
+  "generatedAt": "2026-07-18T23:53:23.444Z",
+  "count": 31,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1451,6 +1451,105 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"Spain\",0,2,[[\"58'\",\"Pedro Porro\",\"Spain\",\"away\",false,false]]]"
+    },
+    "400021542": {
+      "id": "400021542",
+      "round": "Final",
+      "home": "France",
+      "away": "England",
+      "homeGoals": 4,
+      "awayGoals": 6,
+      "venue": "Miami Stadium",
+      "utcDate": "2026-07-18T21:00:00Z",
+      "goals": [
+        {
+          "minute": "3'",
+          "order": 3,
+          "player": "Declan Rice",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "18'",
+          "order": 18,
+          "player": "Ezri Konsa",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "37'",
+          "order": 37,
+          "player": "Bukayo Saka",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "45'+1'",
+          "order": 45.01,
+          "player": "Bukayo Saka",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "48'",
+          "order": 48,
+          "player": "Kylian Mbappe",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "54'",
+          "order": 54,
+          "player": "Bradley Barcola",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "66'",
+          "order": 66,
+          "player": "Kylian Mbappe",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+6'",
+          "order": 90.06,
+          "player": "Ousmane Dembele",
+          "team": "France",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        },
+        {
+          "minute": "90'+8'",
+          "order": 90.08,
+          "player": "Jude Bellingham",
+          "team": "England",
+          "side": "away",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "England see off France",
+      "summary": "In a thrilling knockout match, England outlasts France 6-4 in Miami. Declan Rice, Ezri Konsa, and Bukayo Saka each net goals, with Saka scoring twice. Despite a late surge from Kylian Mbappe and Ousmane Dembele, England holds strong, advancing to the next round with an impressive victory.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"France\",\"England\",4,6,[[\"3'\",\"Declan Rice\",\"England\",\"away\",false,false],[\"18'\",\"Ezri Konsa\",\"England\",\"away\",false,false],[\"37'\",\"Bukayo Saka\",\"England\",\"away\",false,false],[\"45'+1'\",\"Bukayo Saka\",\"England\",\"away\",false,false],[\"48'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"54'\",\"Bradley Barcola\",\"France\",\"home\",false,false],[\"66'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"90'+6'\",\"Ousmane Dembele\",\"France\",\"home\",false,false],[\"90'+8'\",\"Jude Bellingham\",\"England\",\"away\",false,false]]]"
     }
   }
 }
