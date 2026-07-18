@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-17T09:00:08.790Z",
+  "fetchedAt": "2026-07-18T19:47:56.752Z",
   "matchCount": 32,
   "matches": [
     {
@@ -436,7 +436,7 @@
       "awayPens": null,
       "utcDate": "2026-07-18T21:00:00Z",
       "venue": "Miami Stadium",
-      "minute": null
+      "minute": "0'"
     },
     {
       "id": "400021543",
