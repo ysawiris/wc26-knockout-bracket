@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-18T23:29:18.849Z",
+  "fetchedAt": "2026-07-19T07:11:18.649Z",
   "matchCount": 32,
   "matches": [
     {
@@ -450,7 +450,7 @@
       "awayPens": null,
       "utcDate": "2026-07-19T19:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": null
+      "minute": "0'"
     }
   ],
   "cards": {
