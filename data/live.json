@@ -1,7 +1,7 @@
 {
   "source": "fifa.com",
   "competition": "FWC2026-knockout",
-  "fetchedAt": "2026-07-19T18:27:09.827Z",
+  "fetchedAt": "2026-07-19T19:41:44.732Z",
   "matchCount": 32,
   "matches": [
     {
@@ -441,16 +441,16 @@
     {
       "id": "400021543",
       "round": "Final",
-      "status": "TIMED",
+      "status": "IN_PLAY",
       "home": "Spain",
       "away": "Argentina",
-      "homeGoals": null,
-      "awayGoals": null,
+      "homeGoals": 0,
+      "awayGoals": 0,
       "homePens": null,
       "awayPens": null,
       "utcDate": "2026-07-19T19:00:00Z",
       "venue": "New York/New Jersey Stadium",
-      "minute": "0'"
+      "minute": "36'"
     }
   ],
   "cards": {
