@@ -1,7 +1,7 @@
 {
   "competition": "FWC2026-knockout",
-  "generatedAt": "2026-07-18T23:53:23.444Z",
-  "count": 31,
+  "generatedAt": "2026-07-19T22:51:32.122Z",
+  "count": 32,
   "byId": {
     "400021512": {
       "id": "400021512",
@@ -1550,6 +1550,33 @@
       "ai": true,
       "aiVia": "GitHub Models",
       "fingerprint": "[\"France\",\"England\",4,6,[[\"3'\",\"Declan Rice\",\"England\",\"away\",false,false],[\"18'\",\"Ezri Konsa\",\"England\",\"away\",false,false],[\"37'\",\"Bukayo Saka\",\"England\",\"away\",false,false],[\"45'+1'\",\"Bukayo Saka\",\"England\",\"away\",false,false],[\"48'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"54'\",\"Bradley Barcola\",\"France\",\"home\",false,false],[\"66'\",\"Kylian Mbappe\",\"France\",\"home\",false,false],[\"90'+6'\",\"Ousmane Dembele\",\"France\",\"home\",false,false],[\"90'+8'\",\"Jude Bellingham\",\"England\",\"away\",false,false]]]"
+    },
+    "400021543": {
+      "id": "400021543",
+      "round": "Final",
+      "home": "Spain",
+      "away": "Argentina",
+      "homeGoals": 1,
+      "awayGoals": 0,
+      "venue": "New York/New Jersey Stadium",
+      "utcDate": "2026-07-19T19:00:00Z",
+      "goals": [
+        {
+          "minute": "106'",
+          "order": 106,
+          "player": "Ferran Torres",
+          "team": "Spain",
+          "side": "home",
+          "ownGoal": false,
+          "penalty": false
+        }
+      ],
+      "reds": [],
+      "headline": "Spain see off Argentina",
+      "summary": "In a thrilling knockout clash, Spain edges Argentina 1-0 in extra time, with Ferran Torres netting the decisive goal in the 106th minute. Spain advances to the next round, showcasing tactical brilliance and resilience against a formidable opponent.",
+      "ai": true,
+      "aiVia": "GitHub Models",
+      "fingerprint": "[\"Spain\",\"Argentina\",1,0,[[\"106'\",\"Ferran Torres\",\"Spain\",\"home\",false,false]]]"
     }
   }
 }
