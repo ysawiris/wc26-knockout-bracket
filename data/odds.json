@@ -1,7 +1,7 @@
 {
   "source": "espn-bets",
   "provider": "DraftKings",
-  "fetchedAt": "2026-07-19T06:43:29.559Z",
+  "fetchedAt": "2026-07-19T10:01:46.141Z",
   "matchCount": 1,
   "lines": [
     {
@@ -12,9 +12,9 @@
       "homeRaw": "Spain",
       "awayRaw": "Argentina",
       "line": 2.5,
-      "overUS": "+135",
-      "underUS": "-165",
-      "impliedTotal": 2.31
+      "overUS": "+130",
+      "underUS": "-160",
+      "impliedTotal": 2.34
     }
   ]
 }
